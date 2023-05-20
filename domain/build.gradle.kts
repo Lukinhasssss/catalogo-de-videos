@@ -14,7 +14,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 
-    testImplementation("io.github.serpro69:kotlin-faker:1.13.0")
+    testImplementation("net.datafaker:datafaker:1.9.0")
 }
 
 configurations {
