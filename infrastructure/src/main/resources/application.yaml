@@ -1,0 +1,63 @@
+logging:
+  level:
+    root: warn
+    com.lukinhasssss: info
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json # Comma-separated list of MIME types that should be compressed.
+    min-response-size: 1024 # Minimum "Content-Length" value that is required for compression to be performed.
+  undertow:
+    threads:
+      worker: 64 # Number of worker threads. The default is 8 times the number of I/O threads. Generally this should be reasonably high, at least 10 per CPU core: https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#listeners-2
+      io: 4 # Number of I/O threads to create for the worker. The default is derived from the number of available processors.
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
+          issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+  servlet:
+    multipart:
+      max-file-size: 10GB
+      max-request-size: 100GB
+
+management:
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  metrics:
+    enable:
+      jvm: true
+    distribution:
+      slo:
+        http: 50ms, 100ms, 200ms, 300ms, 500ms, 1s
+    tags:
+      application: catalogo-de-videos
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+info:
+  app:
+    name: Catálogo de Vídeos
+    description: Microsserviço de catálogo de vídeos
+    version: 1.0
+    java:
+      version: ${java.version}
