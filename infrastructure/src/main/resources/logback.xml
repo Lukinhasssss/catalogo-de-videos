@@ -1,0 +1,85 @@
+<!-- LOG NO FORMATO JSON UTILIZANDO LOGSTASH -->
+<configuration>
+    <appender name="json-stdout-info" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+
+                    <pattern>
+                        {
+                        "timestamp": "%d{dd-MM-yyyy HH:mm:ss.SSS}",
+                        "level": "%-5level",
+                        "logger": "%logger{0}",
+                        "message": "#tryJson{%msg}"
+                        }
+                    </pattern>
+                </pattern>
+
+                <stackTrace>
+                    <fieldName>exception</fieldName>
+
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <exclude>^org\.</exclude>
+                        <exclude>^com\.</exclude>
+                        <exclude>^net\.</exclude>
+                        <exclude>^jdk\.internal</exclude>
+                        <exclude>^sun\.</exclude>
+                        <exclude>^com\.sun</exclude>
+                        <exclude>^java\.lang\.reflect\.Method\.invoke</exclude>
+                        <exclude>^javax\.servlet\.http\.HttpServlet\.service</exclude>
+                        <exclude>^software\.amazon\.awssdk\.core\.internal</exclude>
+                        <exclude>BySpringCGLIB</exclude>
+                        <shortenedClassNameLength>1</shortenedClassNameLength>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <appender name="json-stdout-warning" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+
+                    <pattern>
+                        {
+                        "timestamp": "%d{dd-MM-yyyy HH:mm:ss.SSS}",
+                        "level": "%-5level",
+                        "logger": "%logger{0}",
+                        "message": "#tryJson{%msg}"
+                        }
+                    </pattern>
+                </pattern>
+
+                <stackTrace>
+                    <fieldName>exception</fieldName>
+
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <exclude>^org\.</exclude>
+                        <exclude>^com\.</exclude>
+                        <exclude>^net\.</exclude>
+                        <exclude>^jdk\.internal</exclude>
+                        <exclude>^sun\.</exclude>
+                        <exclude>^com\.sun</exclude>
+                        <exclude>^java\.lang\.reflect\.Method\.invoke</exclude>
+                        <exclude>^javax\.servlet\.http\.HttpServlet\.service</exclude>
+                        <exclude>^software\.amazon\.awssdk\.core\.internal</exclude>
+                        <exclude>BySpringCGLIB</exclude>
+                        <shortenedClassNameLength>1</shortenedClassNameLength>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="warn">
+        <appender-ref ref="json-stdout-warning"/>
+    </root>
+
+    <logger level="info" name="com.lukinhasssss" additivity="false">
+        <appender-ref ref="json-stdout-info"/>
+    </logger>
+</configuration>
