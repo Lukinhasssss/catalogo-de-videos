@@ -18,11 +18,11 @@ data class Category(
         fun with(
             anId: String,
             aName: String,
-            aDescription: String?,
+            aDescription: String? = null,
             isActive: Boolean,
             createdAt: Instant,
             updatedAt: Instant,
-            deletedAt: Instant?
+            deletedAt: Instant? = null
         ) = Category(
             id = anId,
             name = aName,
