@@ -1,5 +1,7 @@
 package com.lukinhasssss.catalogo.domain.category
 
+import com.lukinhasssss.catalogo.domain.validation.Error
+import com.lukinhasssss.catalogo.domain.validation.ValidationHandler
 import java.time.Instant
 
 data class Category(
@@ -42,5 +44,17 @@ data class Category(
                 deletedAt = deletedAt
             )
         }
+    }
+
+    fun validate(aHandler: ValidationHandler): Category {
+        if (id.isBlank()) {
+            aHandler.append(anError = Error("'id' should not be empty"))
+        }
+
+        if (name.isBlank()) {
+            aHandler.append(anError = Error("'name' should not be empty"))
+        }
+
+        return this
     }
 }
