@@ -55,10 +55,10 @@ class ListCategoryUseCaseTest : UseCaseTest() {
 
         // then
         with(actualOutput) {
-            assertEquals(expectedPage, currentPage)
-            assertEquals(expectedPerPage, perPage)
-            assertEquals(expectedItemsCount, items.size)
-            assertTrue(expectedItems.size == items.size && expectedItems.containsAll(items))
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedItemsCount, meta.total.toInt())
+            assertTrue(expectedItems.size == data.size && expectedItems.containsAll(data))
         }
     }
 }

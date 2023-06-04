@@ -1,14 +1,23 @@
 package com.lukinhasssss.catalogo.domain.pagination
 
 data class Pagination<T>(
-    val currentPage: Int,
-    val perPage: Int,
-    val total: Long,
-    val items: List<T>
+    val meta: Metadata,
+    val data: List<T>
 ) {
-    fun <R> map(mapper: (T) -> R): Pagination<R> {
-        val aNewList = items.stream().map(mapper).toList()
 
-        return Pagination(currentPage, perPage, total, aNewList)
+    constructor(
+        currentPage: Int,
+        perPage: Int,
+        total: Long,
+        items: List<T>
+    ) : this(
+        meta = Metadata(currentPage, perPage, total),
+        data = items
+    )
+
+    fun <R> map(mapper: (T) -> R): Pagination<R> {
+        val aNewList = data.stream().map(mapper).toList()
+
+        return Pagination(meta, aNewList)
     }
 }
