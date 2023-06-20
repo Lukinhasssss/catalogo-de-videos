@@ -45,6 +45,7 @@ dependencies {
         exclude(group = "io.undertow", module = "undertow-websockets-jsr")
     }
 
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
@@ -58,6 +59,7 @@ dependencies {
     testImplementation(project(path = ":domain", configuration = "testClasses"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.security:spring-security-test")
 
     testImplementation("com.ninja-squad:springmockk:4.0.2")
