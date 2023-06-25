@@ -1,4 +1,4 @@
-package com.lukinhasssss.catalogo
+package com.lukinhasssss.catalogo.infrastructure
 
 import com.lukinhasssss.catalogo.infrastructure.configuration.ObjectMapperConfig
 import org.junit.jupiter.api.Tag
