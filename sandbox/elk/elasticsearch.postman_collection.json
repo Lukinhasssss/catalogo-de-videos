@@ -1,0 +1,443 @@
+{
+	"info": {
+		"_postman_id": "571b43f1-d26c-4178-a419-15515f937c77",
+		"name": "Elasticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14555839"
+	},
+	"item": [
+		{
+			"name": "ES 8.x.x",
+			"item": [
+				{
+					"name": "Cluster",
+					"item": [
+						{
+							"name": "Health Check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}?pretty",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"query": [
+										{
+											"key": "pretty",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Count documents in the cluster",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}/_count?pretty",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"_count"
+									],
+									"query": [
+										{
+											"key": "pretty",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Index",
+					"item": [
+						{
+							"name": "Count",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create index",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"settings\": {\n    \"index\": {\n      \"number_of_shards\": 1,\n      \"number_of_replicas\": 2\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flush index",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh index",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Re-index",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Open index",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Close index",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete index",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}",
+									"host": [
+										"{{elasticsearch_url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Mapping",
+					"item": [
+						{
+							"name": "Get mapping",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_mapping",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_mapping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put mapping",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"properties\": {\n    \"id\": {\n      \"type\": \"keyword\"\n    },\n    \"name\": {\n      \"type\": \"text\",\n      \"fields\": {\n        \"keyword\": {\n          \"type\": \"keyword\",\n          \"ignore_above\": 256\n        }\n      }\n    },\n    \"description\": {\n      \"type\": \"text\"\n    },\n    \"active\": {\n      \"type\": \"boolean\"\n    },\n    \"created_at\": {\n      \"type\": \"date\"\n    },\n    \"updated_at\": {\n      \"type\": \"date\"\n    },\n    \"deleted_at\": {\n      \"type\": \"date\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_mapping",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_mapping"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Document",
+					"item": [
+						{
+							"name": "Indexing a document with ID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 1,\n  \"name\": \"Animes\",\n  \"description\": \"A categoria mais assistida\",\n  \"active\": true,\n  \"created_at\": \"2024-01-14T13:15:00.000Z\",\n  \"updated_at\": \"2024-01-14T13:15:00.000Z\",\n  \"deleted_at\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_doc/1",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get document by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_doc/1",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Search DSL",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": {\n    \"match\": {\n      \"name\": \"Animes\"\n    }\n  },\n  \"size\": 2,\n  \"sort\": [\n    {\n      \"name.keyword\": {\n        \"order\": \"asc\"\n      }\n    }\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_search",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search lite",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_search?q=name:Animes",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "name:Animes"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Full-Text",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": {\n    \"wildcard\": {\n      \"name\": \"*a*\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_search",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Phrase",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": {\n    \"match_phrase\": {\n      \"name\": \"animes\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_search",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query\": {\n    \"match_all\": {}\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{elasticsearch_url}}/categories/_search",
+									"host": [
+										"{{elasticsearch_url}}"
+									],
+									"path": [
+										"categories",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
