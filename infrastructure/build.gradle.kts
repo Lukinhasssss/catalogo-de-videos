@@ -61,6 +61,7 @@ dependencies {
     testImplementation(project(path = ":domain", configuration = "testClasses"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.security:spring-security-test")
 
