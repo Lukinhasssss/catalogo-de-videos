@@ -1,4 +1,4 @@
-package com.lukinhasssss.catalogo.infrastructure.utils.log
+package com.lukinhasssss.catalogo.infrastructure.utils
 
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
 import org.slf4j.LoggerFactory

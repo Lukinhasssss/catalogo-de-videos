@@ -37,9 +37,6 @@ class CategoryGraphQLController(
     }
 
     @MutationMapping
-    fun saveCategory(@Argument input: CategoryDTO): Category {
-        val aCategory = input.toCategory()
-        saveCategoryUseCase.execute(aCategory)
-        return aCategory
-    }
+    fun saveCategory(@Argument input: CategoryDTO): Category =
+        saveCategoryUseCase.execute(input.toCategory())
 }

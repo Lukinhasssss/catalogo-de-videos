@@ -2,8 +2,11 @@ package com.lukinhasssss.catalogo.infrastructure.graphql
 
 import com.lukinhasssss.catalogo.application.category.list.ListCategoryOutput
 import com.lukinhasssss.catalogo.application.category.list.ListCategoryUseCase
+import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
+import com.lukinhasssss.catalogo.domain.utils.IdUtils
+import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import com.lukinhasssss.catalogo.infrastructure.GraphQLControllerTest
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -19,6 +22,9 @@ class CategoryGraphQLControllerTest {
 
     @MockkBean
     private lateinit var listCategoryUseCase: ListCategoryUseCase
+
+    @MockkBean
+    private lateinit var saveCategoryUseCase: SaveCategoryUseCase
 
     @Autowired
     private lateinit var graphql: GraphQlTester
@@ -120,6 +126,63 @@ class CategoryGraphQLControllerTest {
                     assertEquals(expectedSort, it.sort)
                     assertEquals(expectedDirection, it.direction)
                     assertEquals(expectedSearch, it.terms)
+                }
+            )
+        }
+    }
+
+    @Test
+    fun givenCategoryInput_whenCallsSaveCategoryMutation_shouldPersistAndReturn() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedName = "Animes"
+        val expectedDescription = "A melhor categoria"
+        val expectedActive = false
+        val expectedCreatedAt = InstantUtils.now()
+        val expectedUpdatedAt = InstantUtils.now()
+        val expectedDeletedAt = InstantUtils.now()
+
+        val input = mapOf(
+            "id" to expectedId,
+            "name" to expectedName,
+            "description" to expectedDescription,
+            "active" to expectedActive,
+            "createdAt" to expectedCreatedAt,
+            "updatedAt" to expectedUpdatedAt,
+            "deletedAt" to expectedDeletedAt
+        )
+
+        val query = """
+            mutation SaveCategory(${'$'}input: CategoryInput!) {
+                category: saveCategory(input: ${'$'}input) {
+                    id
+                    name
+                    description
+                }
+            }
+        """.trimIndent()
+
+        every { saveCategoryUseCase.execute(any()) } answers { firstArg() }
+
+        // when
+        graphql.document(query)
+            .variable("input", input)
+            .execute()
+            .path("category.id").entity(String::class.java).isEqualTo(expectedId)
+            .path("category.name").entity(String::class.java).isEqualTo(expectedName)
+            .path("category.description").entity(String::class.java).isEqualTo(expectedDescription)
+
+        // then
+        verify {
+            saveCategoryUseCase.execute(
+                withArg {
+                    assertEquals(expectedId, it.id)
+                    assertEquals(expectedName, it.name)
+                    assertEquals(expectedDescription, it.description)
+                    assertEquals(expectedActive, it.isActive)
+                    assertEquals(expectedCreatedAt, it.createdAt)
+                    assertEquals(expectedUpdatedAt, it.updatedAt)
+                    assertEquals(expectedDeletedAt, it.deletedAt)
                 }
             )
         }
