@@ -1,4 +1,4 @@
-package com.lukinhasssss.catalogo.infrastructure
+package com.lukinhasssss.catalogo
 
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
 import org.junit.jupiter.api.Tag

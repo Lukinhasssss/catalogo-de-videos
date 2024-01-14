@@ -1,5 +1,6 @@
 package com.lukinhasssss.catalogo.infrastructure.graphql
 
+import com.lukinhasssss.catalogo.GraphQLControllerTest
 import com.lukinhasssss.catalogo.application.category.list.ListCategoryOutput
 import com.lukinhasssss.catalogo.application.category.list.ListCategoryUseCase
 import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
@@ -7,7 +8,6 @@ import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
-import com.lukinhasssss.catalogo.infrastructure.GraphQLControllerTest
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify

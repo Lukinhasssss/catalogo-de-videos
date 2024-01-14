@@ -1,4 +1,4 @@
-package com.lukinhasssss.catalogo.infrastructure
+package com.lukinhasssss.catalogo
 
 import org.junit.jupiter.api.Tag
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
