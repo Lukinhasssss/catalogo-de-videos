@@ -48,6 +48,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")
@@ -68,6 +69,7 @@ dependencies {
     testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
 
     testImplementation("org.testcontainers:testcontainers:${Version.TEST_CONTAINERS}")
+    testImplementation("org.testcontainers:elasticsearch:${Version.TEST_CONTAINERS}")
     testImplementation("org.testcontainers:junit-jupiter:${Version.TEST_CONTAINERS}")
     testImplementation("com.github.dasniko:testcontainers-keycloak:2.5.0")
     testImplementation("org.keycloak:keycloak-core:23.0.4")
