@@ -19,7 +19,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 tasks.withType<BootJar> {
     archiveBaseName.set("application")
-    destinationDirectory.set(file("${rootProject.layout.buildDirectory}/libs"))
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
 
 repositories {
