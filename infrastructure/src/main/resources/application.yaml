@@ -1,3 +1,7 @@
+elasticsearch:
+  connect-timeout: 250
+  socket-timeout: 1_000
+
 graphql:
   graphiql: false
 
@@ -20,6 +24,12 @@ server:
       io: 4 # Number of I/O threads to create for the worker. The default is derived from the number of available processors.
 
 spring:
+  elasticsearch:
+    uris: ${elasticsearch.uris}
+    username: ${elasticsearch.username}
+    password: ${elasticsearch.password}
+    connect-timeout: ${elasticsearch.connect-timeout}
+    socket-timeout: ${elasticsearch.socket-timeout}
   graphql:
     graphiql:
       enabled: ${graphql.graphiql}

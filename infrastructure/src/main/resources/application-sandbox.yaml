@@ -1,3 +1,8 @@
+elasticsearch:
+  uris: http://localhost:9200
+  username: elastic
+  password: elastic
+
 keycloak:
   realm: codeflix
   host: http://localhost:18080
