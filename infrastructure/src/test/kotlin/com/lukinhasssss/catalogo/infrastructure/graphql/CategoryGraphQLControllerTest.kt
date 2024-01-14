@@ -14,7 +14,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@GraphQLControllerTest
+@GraphQLControllerTest(controllers = [CategoryGraphQLController::class])
 class CategoryGraphQLControllerTest {
 
     @MockkBean
@@ -90,16 +90,22 @@ class CategoryGraphQLControllerTest {
         } returns Pagination(expectedPage, expectedPerPage, expectedCategories.size.toLong(), expectedCategories)
 
         val query = """
-            {
-              categories(search: "%s", page: %s, perPage: %s, sort: "%s", direction: "%s") {
-                id
-                name
-              }
+            query AllCategories(${'$'}search: String, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}sort: String, ${'$'}direction: String) {
+                categories(search: ${'$'}search, page: ${'$'}page, perPage: ${'$'}perPage, sort: ${'$'}sort, direction: ${'$'}direction) {
+                    id
+                    name
+                }
             }
-        """.trimIndent().format(expectedSearch, expectedPage, expectedPerPage, expectedSort, expectedDirection)
+        """.trimIndent()
 
         // when
-        val res = graphql.document(query).execute()
+        val res = graphql.document(query)
+            .variable("search", expectedSearch)
+            .variable("page", expectedPage)
+            .variable("perPage", expectedPerPage)
+            .variable("sort", expectedSort)
+            .variable("direction", expectedDirection)
+            .execute()
 
         val actualCategories = res.path("categories").entityList(ListCategoryOutput::class.java).get()
 
