@@ -11,6 +11,6 @@ repositories {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         javaParameters = true
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 }
