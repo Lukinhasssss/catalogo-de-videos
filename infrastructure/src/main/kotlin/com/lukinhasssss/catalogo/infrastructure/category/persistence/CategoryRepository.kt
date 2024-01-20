@@ -1,6 +1,5 @@
-package com.lukinhasssss.catalogo.infrastructure.category
+package com.lukinhasssss.catalogo.infrastructure.category.persistence
 
-import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryDocument
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 interface CategoryRepository : ElasticsearchRepository<CategoryDocument, String>
