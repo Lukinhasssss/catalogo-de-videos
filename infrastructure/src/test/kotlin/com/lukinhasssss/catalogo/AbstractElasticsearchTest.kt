@@ -1,5 +1,6 @@
 package com.lukinhasssss.catalogo
 
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +23,16 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @ImportTestcontainers(value = [ElasticsearchTestContainer::class])
 @Testcontainers
 abstract class AbstractElasticsearchTest {
+
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun startElasticsearch(): Unit = ElasticsearchTestContainer.CatalogoElasticsearchContainer().start()
+
+        // @JvmStatic
+        // @AfterAll
+        // fun stopElasticsearchContainer() = ElasticsearchTestContainer.CatalogoElasticsearchContainer().stop()
+    }
 
     @Autowired
     private lateinit var repositories: Collection<ElasticsearchRepository<*, *>>

@@ -22,7 +22,7 @@ interface ElasticsearchTestContainer {
     ) {
 
         private companion object {
-            const val IMAGE = "elasticsearch:8.11.4"
+            const val IMAGE = "elasticsearch:7.17.9"
             const val COMPATIBLE = "docker.elastic.co/elasticsearch/elasticsearch"
             const val CLUSTER_NAME = "codeflix"
             const val CLUSTER_USER = "elastic"
@@ -31,15 +31,13 @@ interface ElasticsearchTestContainer {
 
         init {
             addFixedExposedPort(9200, 9200)
+            addFixedExposedPort(9300, 9300)
             withLogConsumer(Slf4jLogConsumer(LoggerFactory.getLogger(CatalogoElasticsearchContainer::class.java)))
             withPassword(CLUSTER_PWD)
             setWaitStrategy(httpWaitStrategy())
 
             envMap["cluster.name"] = CLUSTER_NAME
             envMap["ES_JAVA_OPTS"] = "-Xms512m -Xmx512m"
-            // envMap["http.cors.enabled"] = "true"
-            // envMap["http.cors.allow-origin"] = "*"
-            // envMap["xpack.security.enabled"] = "false"
         }
 
         private fun httpWaitStrategy(): HttpWaitStrategy {
