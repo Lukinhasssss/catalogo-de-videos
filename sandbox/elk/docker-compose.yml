@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  elasticsearch-catalogo-de-videos:
+    container_name: elasticsearch-catalogo-de-videos
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.4
+    restart: on-failure
+    volumes:
+      - elasticsearch-catalogo-de-videos:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=codeflix
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - node.name=elasticsearch-catalogo-de-videos
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --silent --fail http://localhost:9200/_cat/health?h=status" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elasticsearch-catalogo-de-videos
+
+#  kibana-catalogo-de-videos:
+#    container_name: kibana-catalogo-de-videos
+#    image: docker.elastic.co/kibana/kibana:8.11.4
+#    restart: on-failure
+#    depends_on:
+#      elasticsearch-catalogo-de-videos:
+#        condition: service_healthy
+#    environment:
+#      ELASTICSEARCH_URL: http://elasticsearch-catalogo-de-videos:9200
+##      ELASTICSEARCH_HOSTS: '["http://elasticsearch-catalogo-de-videos:9200"]'
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --silent --fail http://localhost:5601/api/status" ]
+#      interval: 5s
+#      timeout: 10s
+#      retries: 5
+#    ports:
+#      - "5601:5601"
+#    networks:
+#      - elastic-catalogo-de-videos
+#
+#  logstash:
+#    container_name: elasticsearch-catalogo-de-videos
+#    image: docker.elastic.co/logstash/logstash:8.11.4
+#    restart: on-failure
+#    volumes:
+#      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+#    depends_on:
+#      - elasticsearch-catalogo-de-videos
+#    ports:
+#      - "25826:25826"
+#      - "5044:5044"
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+#    networks:
+#      - elastic-catalogo-de-videos
+
+networks:
+  elasticsearch-catalogo-de-videos:
+
+volumes:
+  elasticsearch-catalogo-de-videos:

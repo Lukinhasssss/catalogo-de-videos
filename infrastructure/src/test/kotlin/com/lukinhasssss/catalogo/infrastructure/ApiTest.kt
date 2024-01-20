@@ -1,4 +1,4 @@
-package com.lukinhasssss.catalogo
+package com.lukinhasssss.catalogo.infrastructure
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors

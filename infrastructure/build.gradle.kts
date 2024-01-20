@@ -15,7 +15,7 @@ plugins {
 
 group = "com.lukinhasssss.catalogo.infrastructure"
 version = "1.0.0"
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 tasks.withType<BootJar> {
     archiveBaseName.set("application")
@@ -45,19 +45,24 @@ dependencies {
         exclude(group = "io.undertow", module = "undertow-websockets-jsr")
     }
 
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")
-    implementation("ch.qos.logback:logback-classic:1.4.7")
+    implementation("ch.qos.logback:logback-classic:1.4.14")
+    implementation("ch.qos.logback:logback-core:1.4.14")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.google.guava:guava:32.0.0-android")
 
     testImplementation(project(path = ":domain", configuration = "testClasses"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.security:spring-security-test")
 
     testImplementation("com.ninja-squad:springmockk:4.0.2")
@@ -65,9 +70,10 @@ dependencies {
     testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
 
     testImplementation("org.testcontainers:testcontainers:${Version.TEST_CONTAINERS}")
+    testImplementation("org.testcontainers:elasticsearch:${Version.TEST_CONTAINERS}")
     testImplementation("org.testcontainers:junit-jupiter:${Version.TEST_CONTAINERS}")
     testImplementation("com.github.dasniko:testcontainers-keycloak:2.5.0")
-    testImplementation("org.keycloak:keycloak-core:21.1.1")
+    testImplementation("org.keycloak:keycloak-core:23.0.4")
     testImplementation("org.jboss.resteasy:resteasy-core:4.7.9.Final")
     testImplementation("org.jboss.resteasy:resteasy-multipart-provider:4.7.9.Final")
 }

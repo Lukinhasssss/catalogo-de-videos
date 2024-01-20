@@ -5,6 +5,11 @@ logging:
   level:
     root: info
 
+elasticsearch:
+  uris: http://localhost:9200
+  username: elastic
+  password: elastic
+
 keycloak:
   realm: test
   host: http://test:8443
