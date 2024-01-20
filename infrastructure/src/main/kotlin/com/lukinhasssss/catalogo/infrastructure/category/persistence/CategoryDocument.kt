@@ -17,7 +17,7 @@ data class CategoryDocument(
 
     @MultiField(
         mainField = Field(type = FieldType.Text, name = "name"),
-        otherFields = [InnerField(type = FieldType.Keyword, suffix = ".keyword")]
+        otherFields = [InnerField(type = FieldType.Keyword, suffix = "keyword")]
     )
     val name: String,
 
