@@ -2,9 +2,13 @@ package com.lukinhasssss.catalogo.infrastructure.category
 
 import com.lukinhasssss.catalogo.AbstractElasticsearchTest
 import com.lukinhasssss.catalogo.domain.Fixture
+import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryDocument
 import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryRepository
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -42,5 +46,29 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(aulas.updatedAt, updatedAt)
             assertEquals(aulas.deletedAt, deletedAt)
         }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        val aulas = Fixture.Categories.aulas
+
+        categoryRepository.save(CategoryDocument.from(aulas))
+
+        val expectedId = aulas.id
+
+        assertTrue(categoryRepository.existsById(expectedId))
+
+        // when
+        categoryGateway.deleteById(expectedId)
+
+        // then
+        assertFalse(categoryRepository.existsById(expectedId))
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
+        // when/then
+        assertDoesNotThrow { categoryRepository.deleteById("any") }
     }
 }
