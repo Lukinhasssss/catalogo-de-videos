@@ -26,7 +26,5 @@ class CategoryElasticsearchGateway(
         throw UnsupportedOperationException()
     }
 
-    override fun deleteById(anID: String?) {
-        throw UnsupportedOperationException()
-    }
+    override fun deleteById(anID: String) = categoryRepository.deleteById(anID)
 }
