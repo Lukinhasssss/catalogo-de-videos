@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,5 +71,43 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
     fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
         // when/then
         assertDoesNotThrow { categoryRepository.deleteById("any") }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsFindById_shouldRetrieveIt() {
+        // given
+        val talks = Fixture.Categories.talks
+
+        categoryRepository.save(CategoryDocument.from(talks))
+
+        val expectedId = talks.id
+
+        assertTrue(categoryRepository.existsById(expectedId))
+
+        // when
+        val actualOutput = categoryGateway.findById(expectedId)
+
+        // then
+        with(actualOutput!!) {
+            assertEquals(talks.id, id)
+            assertEquals(talks.name, name)
+            assertEquals(talks.description, description)
+            assertEquals(talks.isActive, isActive)
+            assertEquals(talks.createdAt, createdAt)
+            assertEquals(talks.updatedAt, updatedAt)
+            assertEquals(talks.deletedAt, deletedAt)
+        }
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsFindById_shouldReturnNull() {
+        // given
+        val expectedId = "any"
+
+        // when
+        val actualOutput = categoryGateway.findById(expectedId)
+
+        // then
+        assertNull(actualOutput)
     }
 }
