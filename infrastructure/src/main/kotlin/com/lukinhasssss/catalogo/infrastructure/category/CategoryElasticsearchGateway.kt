@@ -7,6 +7,7 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryDocument
 import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryRepository
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class CategoryElasticsearchGateway(
@@ -18,9 +19,8 @@ class CategoryElasticsearchGateway(
         return aCategory
     }
 
-    override fun findById(anID: String): Category? {
-        throw UnsupportedOperationException()
-    }
+    override fun findById(anID: String): Category? =
+        categoryRepository.findById(anID).getOrNull()?.run { toCategory() }
 
     override fun findAll(aQuery: CategorySearchQuery): Pagination<Category> = with(aQuery) {
         throw UnsupportedOperationException()
