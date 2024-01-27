@@ -9,7 +9,7 @@ object Fixture {
 
     private val FAKER = Faker()
 
-    fun name() = FAKER.name().fullName()
+    fun name(): String = FAKER.name().fullName()
     fun year() = FAKER.random().nextInt(2010, 2030)
     fun title() = FAKER.oscarMovie().movieName()
     fun description() = FAKER.movie().quote()
@@ -24,6 +24,16 @@ object Fixture {
             isActive = true,
             createdAt = InstantUtils.now(),
             updatedAt = InstantUtils.now()
+        )
+
+        val talks = Category.with(
+            anId = IdUtils.uuid(),
+            aName = "Talks",
+            aDescription = "Conteudo ao vivo",
+            isActive = false,
+            createdAt = InstantUtils.now(),
+            updatedAt = InstantUtils.now(),
+            deletedAt = InstantUtils.now()
         )
 
         val lives = Category.with(

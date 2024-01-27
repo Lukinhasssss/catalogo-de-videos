@@ -3,6 +3,9 @@ elasticsearch:
   username: elastic
   password: elastic
 
+graphql:
+  graphiql: true
+
 keycloak:
   realm: codeflix
   host: http://localhost:18080
@@ -13,3 +16,10 @@ server:
     threads:
       worker: 10
       io: 2
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration

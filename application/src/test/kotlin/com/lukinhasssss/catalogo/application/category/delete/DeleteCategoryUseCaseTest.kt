@@ -39,7 +39,7 @@ class DeleteCategoryUseCaseTest : UseCaseTest() {
     @Test
     fun givenAnInvalidId_whenCallsDelete_shouldBeOk() {
         // given
-        val expectedId: String? = null
+        val expectedId = ""
 
         // when
         assertDoesNotThrow { useCase.execute(expectedId) }

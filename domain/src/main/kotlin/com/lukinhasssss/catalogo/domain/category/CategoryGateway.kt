@@ -10,5 +10,5 @@ interface CategoryGateway {
 
     fun findAll(aQuery: CategorySearchQuery): Pagination<Category>
 
-    fun deleteById(anID: String?)
+    fun deleteById(anID: String)
 }

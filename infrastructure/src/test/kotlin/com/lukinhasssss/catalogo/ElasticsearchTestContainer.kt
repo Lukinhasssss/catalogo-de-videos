@@ -21,12 +21,13 @@ interface ElasticsearchTestContainer {
         DockerImageName.parse(IMAGE).asCompatibleSubstituteFor(COMPATIBLE)
     ) {
 
-        private companion object {
+        companion object {
             const val IMAGE = "elasticsearch:7.17.9"
             const val COMPATIBLE = "docker.elastic.co/elasticsearch/elasticsearch"
             const val CLUSTER_NAME = "codeflix"
             const val CLUSTER_USER = "elastic"
             const val CLUSTER_PWD = "elastic"
+            const val ES_JAVA_OPTS = "-Xms512m -Xmx512m"
         }
 
         init {
@@ -36,8 +37,15 @@ interface ElasticsearchTestContainer {
             withPassword(CLUSTER_PWD)
             setWaitStrategy(httpWaitStrategy())
 
-            envMap["cluster.name"] = CLUSTER_NAME
-            envMap["ES_JAVA_OPTS"] = "-Xms512m -Xmx512m"
+            withEnv(
+                mutableMapOf(
+                    "cluster.name" to CLUSTER_NAME,
+                    "ES_JAVA_OPTS" to ES_JAVA_OPTS,
+                    "http.cors.enabled" to "false",
+                    "http.cors.allow-origin" to "*",
+                    "xpack.security.enabled" to "false"
+                )
+            )
         }
 
         private fun httpWaitStrategy(): HttpWaitStrategy {

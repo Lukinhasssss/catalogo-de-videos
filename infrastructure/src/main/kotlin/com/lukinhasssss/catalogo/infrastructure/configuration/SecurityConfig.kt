@@ -22,7 +22,7 @@ import java.util.stream.Stream
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-@Profile(value = ["!development"])
+@Profile(value = ["!development & !sandbox"])
 class SecurityConfig {
 
     companion object {

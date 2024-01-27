@@ -28,10 +28,6 @@ abstract class AbstractElasticsearchTest {
         @JvmStatic
         @BeforeAll
         fun startElasticsearch(): Unit = ElasticsearchTestContainer.CatalogoElasticsearchContainer().start()
-
-        // @JvmStatic
-        // @AfterAll
-        // fun stopElasticsearchContainer() = ElasticsearchTestContainer.CatalogoElasticsearchContainer().stop()
     }
 
     @Autowired
