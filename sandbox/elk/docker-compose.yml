@@ -1,5 +1,7 @@
 version: '3.9'
 
+name: elasticsearch-catalogo-de-videos
+
 services:
   elasticsearch-codeflix:
     container_name: elasticsearch-catalogo-de-videos
