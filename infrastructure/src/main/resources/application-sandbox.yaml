@@ -8,10 +8,9 @@ graphql:
 
 keycloak:
   realm: codeflix
-  host: http://localhost:18080
+  host: http://localhost:8443
 
 server:
-  port: 8080
   undertow:
     threads:
       worker: 10

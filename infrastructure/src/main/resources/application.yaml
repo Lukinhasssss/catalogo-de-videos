@@ -5,13 +5,25 @@ elasticsearch:
 graphql:
   graphiql: false
 
+kafka:
+  auto-create-topics: false
+  bootstrap-servers: localhost:9092
+  pool-timeout: 1_000
+  consumers:
+    categories:
+      auto-offset-reset: earliest
+      concurrency: 3
+      id: kafka-listener-categories
+      topics: adm_videos_postgresql.public.categories
+      group-id: catalogo-de-videos
+
 logging:
   level:
     root: warn
     com.lukinhasssss: info
 
 server:
-  port: 8080
+  port: 8081
   servlet:
     context-path: /api
   compression:
