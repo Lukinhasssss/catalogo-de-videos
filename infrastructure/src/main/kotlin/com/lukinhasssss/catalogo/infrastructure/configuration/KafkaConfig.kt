@@ -31,8 +31,8 @@ class KafkaConfig(
 
     private fun consumerConfigs(): Map<String, Any> = mapOf(
         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to properties.bootstrapServers,
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class,
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class,
+        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
         ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG to properties.autoCreateTopics
     )
 }
