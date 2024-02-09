@@ -1,6 +1,13 @@
 package com.lukinhasssss.catalogo.infrastructure.kafka
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.lukinhasssss.catalogo.application.category.delete.DeleteCategoryUseCase
+import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
+import com.lukinhasssss.catalogo.infrastructure.category.CategoryGateway
+import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryEvent
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
+import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
+import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Operation
 import com.lukinhasssss.catalogo.infrastructure.utils.Logger
 import org.springframework.kafka.annotation.DltHandler
 import org.springframework.kafka.annotation.KafkaListener
@@ -12,11 +19,16 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.stereotype.Component
 
 @Component
-class CategoryListener {
+class CategoryListener(
+    private val categoryGateway: CategoryGateway,
+    private val saveCategoryUseCase: SaveCategoryUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase
+) {
 
     companion object {
         private const val TOPIC_RETRY_ATTEMPTS = "4"
         private const val KAFKA_LOG_CODE = "KAFKA"
+        private val CATEGORY_MESSAGE = object : TypeReference<MessageValue<CategoryEvent>>() {}
     }
 
     @KafkaListener(
@@ -34,7 +46,17 @@ class CategoryListener {
     )
     fun onMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaMessageReceived(payload, metadata)
-        throw RuntimeException("F!")
+
+        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE).payload
+        val operation = messagePayload.operation
+
+        if (Operation.isDelete(operation)) {
+            deleteCategoryUseCase.execute(messagePayload.before?.id)
+        } else {
+            categoryGateway.categoryOfId(messagePayload.after?.id).let {
+                saveCategoryUseCase.execute(it)
+            }
+        }
     }
 
     @DltHandler

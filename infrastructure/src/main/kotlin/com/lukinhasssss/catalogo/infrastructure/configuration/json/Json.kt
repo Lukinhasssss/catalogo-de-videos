@@ -1,5 +1,6 @@
 package com.lukinhasssss.catalogo.infrastructure.configuration.json
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
@@ -59,6 +60,10 @@ enum class Json {
         }
 
         fun <T> readValue(json: String, clazz: Class<T>): T {
+            return invoke { INSTANCE.mapper.readValue(json, clazz) }
+        }
+
+        fun <T> readValue(json: String, clazz: TypeReference<T>): T {
             return invoke { INSTANCE.mapper.readValue(json, clazz) }
         }
 

@@ -5,11 +5,11 @@ import com.lukinhasssss.catalogo.domain.category.CategoryGateway
 
 class DeleteCategoryUseCase(
     private val categoryGateway: CategoryGateway
-) : UnitUseCase<String>() {
+) : UnitUseCase<String?>() {
 
-    override fun execute(anIn: String) = with(anIn) {
-        if (anIn.isBlank()) return
+    override fun execute(anIn: String?) = with(anIn) {
+        if (anIn.isNullOrBlank()) return
 
-        categoryGateway.deleteById(this)
+        categoryGateway.deleteById(this!!)
     }
 }
