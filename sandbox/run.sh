@@ -15,4 +15,4 @@ docker volume create kafka-connect-catalogo-de-videos
 printf "Inicializando os container...\n"
 docker compose -f elk/docker-compose.yml up -d
 docker compose -f kafka/docker-compose.yml up -d
-docker compose -f catalogo-services/docker-compose.yml up -d
+docker compose -f services/docker-compose.yml up -d
