@@ -6,7 +6,7 @@ object Version {
     const val JACOCO = "0.8.10"
     const val SONARQUBE = "4.0.0.2929"
     const val SPRING_BOOT = "3.2.2"
-    const val SPRING_DEPENDENCY_MANAGEMENT = "1.1.0"
+    const val SPRING_DEPENDENCY_MANAGEMENT = "1.1.4"
     const val TEST_CONTAINERS = "1.19.4"
     const val VAVR = "0.10.2"
     const val OPEN_API = "1.7.0"
