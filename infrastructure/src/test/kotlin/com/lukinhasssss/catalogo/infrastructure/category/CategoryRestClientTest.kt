@@ -1,39 +1,22 @@
 package com.lukinhasssss.catalogo.infrastructure.category
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.lukinhasssss.catalogo.IntegrationTestConfiguration
+import com.lukinhasssss.catalogo.AbstractRestClientTest
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
-import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
-import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-@Tag("integrationTest")
-@ActiveProfiles("test-integration")
-@AutoConfigureWireMock(port = 0)
-@EnableAutoConfiguration(exclude = [ElasticsearchRepositoriesAutoConfiguration::class, KafkaAutoConfiguration::class])
-@SpringBootTest(classes = [WebServerConfig::class, IntegrationTestConfiguration::class])
-class CategoryRestClientTest {
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
+class CategoryRestClientTest : AbstractRestClientTest() {
 
     @Autowired
     lateinit var target: CategoryRestClient
@@ -44,7 +27,7 @@ class CategoryRestClientTest {
         val aulas = Fixture.Categories.aulas
 
         val responseBody = with(aulas) {
-            objectMapper.writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
+            writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
         }
 
         stubFor(
@@ -75,9 +58,9 @@ class CategoryRestClientTest {
     @Test
     fun givenACategory_whenReceive404NotFoundFromServer_shouldReturnNull() {
         // given
-        val expectedId = "any"
+        val expectedId = null
 
-        val responseBody = objectMapper.writeValueAsString(mapOf("message" to "Not found"))
+        val responseBody = writeValueAsString(mapOf("message" to "Not found"))
 
         stubFor(
             get(urlPathEqualTo("/api/categories/$expectedId"))
@@ -90,19 +73,19 @@ class CategoryRestClientTest {
         )
 
         // when
-        val actualException = target.getById(expectedId)
+        val actualCategory = target.getById(expectedId)
 
         // then
-        assertNull(actualException)
+        assertNull(actualCategory)
     }
 
     @Test
     fun givenACategory_whenReceive5xxFromServer_shouldReturnInternalError() {
         // given
         val expectedId = "any"
-        val expectedErrorMessage = "Failed to get Category of id $expectedId"
+        val expectedErrorMessage = "Error observed from categories [resourceId: $expectedId] [status: 500]"
 
-        val responseBody = objectMapper.writeValueAsString(mapOf("message" to "Internal Server Error"))
+        val responseBody = writeValueAsString(mapOf("message" to "Internal Server Error"))
 
         stubFor(
             get(urlPathEqualTo("/api/categories/$expectedId"))
@@ -126,10 +109,10 @@ class CategoryRestClientTest {
         // given
         val aulas = Fixture.Categories.aulas
 
-        val expectedErrorMessage = "Timeout from category of ID ${aulas.id}"
+        val expectedErrorMessage = "Timeout observed from categories [resourceId: ${aulas.id}]"
 
         val responseBody = with(aulas) {
-            objectMapper.writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
+            writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
         }
 
         stubFor(
