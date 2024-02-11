@@ -17,6 +17,10 @@ kafka:
       topics: adm_videos_postgresql.public.categories
       group-id: catalogo-de-videos
 
+rest-client:
+  categories:
+    base-url: ${rest-client.base-url}/api/categories
+
 logging:
   level:
     root: warn
