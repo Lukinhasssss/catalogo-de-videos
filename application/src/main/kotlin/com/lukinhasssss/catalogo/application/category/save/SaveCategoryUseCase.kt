@@ -17,7 +17,7 @@ class SaveCategoryUseCase(
         }
 
         val notification = Notification.create()
-        this.validate(notification)
+        validate(notification)
 
         if (notification.hasError()) {
             throw NotificationException.with(message = "Invalid category", notification = notification)

@@ -50,6 +50,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
+    implementation("org.springframework.kafka:spring-kafka")
+
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")
     implementation("ch.qos.logback:logback-classic:1.4.14")
@@ -64,6 +66,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
 
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
@@ -71,6 +74,7 @@ dependencies {
 
     testImplementation("org.testcontainers:testcontainers:${Version.TEST_CONTAINERS}")
     testImplementation("org.testcontainers:elasticsearch:${Version.TEST_CONTAINERS}")
+    testImplementation("org.testcontainers:kafka:${Version.TEST_CONTAINERS}")
     testImplementation("org.testcontainers:junit-jupiter:${Version.TEST_CONTAINERS}")
     testImplementation("com.github.dasniko:testcontainers-keycloak:2.5.0")
     testImplementation("org.keycloak:keycloak-core:23.0.4")

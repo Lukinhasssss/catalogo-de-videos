@@ -61,10 +61,10 @@ class CategoryElasticsearchGateway(
         )
     }
 
+    override fun deleteById(anID: String) = categoryRepository.deleteById(anID)
+
     private fun buildSort(sort: String) = when (sort) {
         NAME_PROP -> sort.plus(KEYWORD)
         else -> sort
     }
-
-    override fun deleteById(anID: String) = categoryRepository.deleteById(anID)
 }
