@@ -1,6 +1,9 @@
 package com.lukinhasssss.catalogo
 
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
+import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Source
+import org.apache.kafka.clients.admin.AdminClient
+import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.AfterAll
@@ -28,16 +31,25 @@ import org.springframework.test.context.ActiveProfiles
 )
 abstract class AbstractEmbeddedKafkaTest {
 
+    protected lateinit var producer: Producer<String, String>
+
+    protected lateinit var admin: AdminClient
+
     @Autowired
     protected lateinit var kafkaBroker: EmbeddedKafkaBroker
 
-    protected lateinit var producer: Producer<String, String>
-
     @BeforeAll
     fun init() {
+        admin = AdminClient.create(mapOf(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaBroker.brokersAsString))
         producer = DefaultKafkaProducerFactory(KafkaTestUtils.producerProps(kafkaBroker), StringSerializer(), StringSerializer()).createProducer()
     }
 
     @AfterAll
     fun shutdown() = producer.close()
+
+    protected val source = Source(
+        name = "adm_videos_postgresql",
+        database = "adm_videos",
+        table = "categories"
+    )
 }
