@@ -60,8 +60,20 @@ class CategoryListener(
     }
 
     @DltHandler
-    fun onDltMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) =
+    fun onDltMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaDlt(payload, metadata)
+
+        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE).payload
+        val operation = messagePayload.operation
+
+        if (Operation.isDelete(operation)) {
+            deleteCategoryUseCase.execute(messagePayload.before?.id)
+        } else {
+            categoryGateway.categoryOfId(messagePayload.after?.id).let {
+                saveCategoryUseCase.execute(it)
+            }
+        }
+    }
 
     private fun loggingForKafkaMessageReceived(payload: String, metadata: ConsumerRecordMetadata) =
         Logger.info(

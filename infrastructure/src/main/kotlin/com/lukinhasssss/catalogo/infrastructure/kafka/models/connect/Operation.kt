@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.kafka.models.connect
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonValue
 
 enum class Operation(val op: String) {
 
@@ -13,4 +14,7 @@ enum class Operation(val op: String) {
 
         fun isDelete(op: Operation) = op == DELETE
     }
+
+    @JsonValue // Para fazer a serializacao (converter de objeto para json)
+    fun op() = op
 }
