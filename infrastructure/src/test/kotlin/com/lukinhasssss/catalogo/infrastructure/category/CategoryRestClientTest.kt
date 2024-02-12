@@ -8,8 +8,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.lukinhasssss.catalogo.AbstractRestClientTest
 import com.lukinhasssss.catalogo.domain.Fixture
+import com.lukinhasssss.catalogo.domain.Fixture.Categories.aulas
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
+import io.github.resilience4j.bulkhead.BulkheadFullException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -139,5 +141,21 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         assertEquals(expectedErrorMessage, actualException.message)
 
         verify(2, getRequestedFor(urlPathEqualTo("/api/categories/${aulas.id}")))
+    }
+
+    @Test
+    fun givenACategory_whenBulkheadIsFull_shouldReturnError() {
+        // given
+        val expectedErrorMessage = "Bulkhead 'categories' is full and does not permit further calls"
+
+        acquireBulkheadPermission(CATEGORY)
+
+        // when
+        val actualException = assertThrows<BulkheadFullException> { target.getById(aulas.id) }
+
+        // then
+        assertEquals(expectedErrorMessage, actualException.message)
+
+        releaseBulkheadPermission(CATEGORY)
     }
 }

@@ -2,6 +2,7 @@ package com.lukinhasssss.catalogo.infrastructure.category
 
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
+import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
@@ -12,12 +13,13 @@ class CategoryRestClient(
 ) : HttpClient {
 
     companion object {
-        private const val NAMESPACE = "categories"
+        const val NAMESPACE = "categories"
     }
 
     override fun namespace(): String = NAMESPACE
 
     @Retry(name = NAMESPACE)
+    @Bulkhead(name = NAMESPACE)
     fun getById(categoryId: String?): CategoryDTO? = doGet(categoryId) {
         restClient.get()
             .uri("/{id}", categoryId)
