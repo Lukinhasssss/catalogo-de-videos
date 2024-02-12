@@ -12,6 +12,8 @@ import com.lukinhasssss.catalogo.domain.Fixture.Categories.aulas
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
 import io.github.resilience4j.bulkhead.BulkheadFullException
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException
+import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -157,5 +159,54 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         assertEquals(expectedErrorMessage, actualException.message)
 
         releaseBulkheadPermission(CATEGORY)
+    }
+
+    @Test
+    fun givenServerError_whenIsMoreThanThreshold_shouldOpenCircuitBreaker() {
+        // given
+        val expectedId = "any"
+        val expectedErrorMessage = "CircuitBreaker 'categories' is OPEN and does not permit further calls"
+
+        val responseBody = writeValueAsString(mapOf("message" to "Internal Server Error"))
+
+        stubFor(
+            get(urlPathEqualTo("/api/categories/$expectedId"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(500)
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(responseBody)
+                )
+        )
+
+        // when
+        assertThrows<InternalErrorException> { target.getById(expectedId) }
+        val actualException = assertThrows<CallNotPermittedException> { target.getById(expectedId) }
+
+        // then
+        checkCircuitBreakerState(CATEGORY, CircuitBreaker.State.OPEN)
+
+        assertEquals(expectedErrorMessage, actualException.message)
+
+        verify(3, getRequestedFor(urlPathEqualTo("/api/categories/$expectedId")))
+    }
+
+    @Test
+    fun givenCall_whenCircuitBreakerIsOpen_shouldReturnError() {
+        // given
+        transitionToOpenState(CATEGORY)
+
+        val expectedId = "any"
+        val expectedErrorMessage = "CircuitBreaker 'categories' is OPEN and does not permit further calls"
+
+        // when
+        val actualException = assertThrows<CallNotPermittedException> { target.getById(expectedId) }
+
+        // then
+        checkCircuitBreakerState(CATEGORY, CircuitBreaker.State.OPEN)
+
+        assertEquals(expectedErrorMessage, actualException.message)
+
+        verify(0, getRequestedFor(urlPathEqualTo("/api/categories/$expectedId")))
     }
 }
