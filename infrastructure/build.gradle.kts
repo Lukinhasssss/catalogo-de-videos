@@ -46,6 +46,7 @@ dependencies {
     }
 
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -57,6 +58,10 @@ dependencies {
     implementation("io.github.resilience4j:resilience4j-retry")
     implementation("io.github.resilience4j:resilience4j-bulkhead")
     implementation("io.github.resilience4j:resilience4j-circuitbreaker")
+
+    implementation("org.cache2k:cache2k-api:${Version.CACHE2K}")
+    implementation("org.cache2k:cache2k-spring:${Version.CACHE2K}")
+    runtimeOnly("org.cache2k:cache2k-core:${Version.CACHE2K}")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")

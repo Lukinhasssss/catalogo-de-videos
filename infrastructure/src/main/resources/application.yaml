@@ -1,3 +1,6 @@
+cache:
+  type: cache2k
+
 elasticsearch:
   connect-timeout: 250
   socket-timeout: 1_000
@@ -40,6 +43,8 @@ server:
       io: 4 # Number of I/O threads to create for the worker. The default is derived from the number of available processors.
 
 spring:
+  cache:
+    type: ${cache.type}
   elasticsearch:
     uris: ${elasticsearch.uris}
     username: ${elasticsearch.username}
