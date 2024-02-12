@@ -2,8 +2,10 @@ package com.lukinhasssss.catalogo.infrastructure.category
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.lukinhasssss.catalogo.AbstractRestClientTest
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
@@ -58,7 +60,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
     @Test
     fun givenACategory_whenReceive404NotFoundFromServer_shouldReturnNull() {
         // given
-        val expectedId = null
+        val expectedId = "any"
 
         val responseBody = writeValueAsString(mapOf("message" to "Not found"))
 
@@ -77,6 +79,8 @@ class CategoryRestClientTest : AbstractRestClientTest() {
 
         // then
         assertNull(actualCategory)
+
+        verify(1, getRequestedFor(urlPathEqualTo("/api/categories/$expectedId")))
     }
 
     @Test
@@ -102,6 +106,8 @@ class CategoryRestClientTest : AbstractRestClientTest() {
 
         // then
         assertEquals(expectedErrorMessage, actualException.message)
+
+        verify(2, getRequestedFor(urlPathEqualTo("/api/categories/$expectedId")))
     }
 
     @Test
@@ -131,5 +137,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
 
         // then
         assertEquals(expectedErrorMessage, actualException.message)
+
+        verify(2, getRequestedFor(urlPathEqualTo("/api/categories/${aulas.id}")))
     }
 }

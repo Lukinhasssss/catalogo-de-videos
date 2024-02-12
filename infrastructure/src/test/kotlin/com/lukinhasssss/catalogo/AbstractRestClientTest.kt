@@ -1,7 +1,9 @@
 package com.lukinhasssss.catalogo
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -21,5 +23,11 @@ abstract class AbstractRestClientTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    fun writeValueAsString(obj: Any) = objectMapper.writeValueAsString(obj)
+    @BeforeEach
+    fun before() {
+        WireMock.reset()
+        WireMock.resetAllRequests()
+    }
+
+    fun writeValueAsString(obj: Any): String = objectMapper.writeValueAsString(obj)
 }
