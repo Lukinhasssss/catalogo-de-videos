@@ -55,6 +55,7 @@ dependencies {
 
     implementation("io.github.resilience4j:resilience4j-spring-boot3")
     implementation("io.github.resilience4j:resilience4j-retry")
+    implementation("io.github.resilience4j:resilience4j-bulkhead")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")
