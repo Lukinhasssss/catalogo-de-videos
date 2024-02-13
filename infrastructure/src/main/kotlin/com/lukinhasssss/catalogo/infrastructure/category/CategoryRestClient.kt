@@ -5,10 +5,13 @@ import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.github.resilience4j.retry.annotation.Retry
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
 @Component
+@CacheConfig(cacheNames = ["admin-categories"])
 class CategoryRestClient(
     private val restClient: RestClient
 ) : HttpClient {
@@ -23,6 +26,7 @@ class CategoryRestClient(
     @Retry(name = NAMESPACE)
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
+    @Cacheable(key = "#categoryId")
     fun getById(categoryId: String?): CategoryDTO? = doGet(categoryId) {
         restClient.get()
             .uri("/{id}", categoryId)

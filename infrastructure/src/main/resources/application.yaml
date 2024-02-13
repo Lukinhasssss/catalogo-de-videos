@@ -1,5 +1,8 @@
 cache:
   type: cache2k
+  names: admin-categories
+  max-entries: 200
+  ttl: 60 # seconds
 
 elasticsearch:
   connect-timeout: 250
@@ -44,6 +47,7 @@ server:
 
 spring:
   cache:
+    cache-names: ${cache.names}
     type: ${cache.type}
   elasticsearch:
     uris: ${elasticsearch.uris}
