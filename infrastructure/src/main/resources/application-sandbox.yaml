@@ -7,8 +7,10 @@ graphql:
   graphiql: true
 
 keycloak:
-  realm: codeflix
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
   host: http://localhost:8443
+  realm: codeflix
 
 server:
   undertow:

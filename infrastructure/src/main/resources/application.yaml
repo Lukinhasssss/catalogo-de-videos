@@ -23,7 +23,12 @@ kafka:
       topics: adm_videos_postgresql.public.categories
       group-id: catalogo-de-videos
 
+keycloak:
+  token-uri: /protocol/openid-connect/token
+
 rest-client:
+  keycloak:
+    base-url: ${keycloak.host}/realms/${keycloak.realm}
   categories:
     base-url: ${rest-client.base-url}/api/categories
 
