@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cache.CacheManager
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
@@ -38,12 +39,18 @@ abstract class AbstractRestClientTest {
     @Autowired
     private lateinit var circuitBreakerRegistry: CircuitBreakerRegistry
 
+    @Autowired
+    private lateinit var cacheManager: CacheManager
+
     @BeforeEach
     fun before() {
         WireMock.reset()
         WireMock.resetAllRequests()
+        resetAllCaches()
         listOf(CATEGORY).forEach { resetFaultTolerance(it) }
     }
+
+    fun cache(name: String) = cacheManager.getCache(name)
 
     fun acquireBulkheadPermission(name: String) = bulkheadRegistry.bulkhead(name).acquirePermission()
 
@@ -57,6 +64,9 @@ abstract class AbstractRestClientTest {
     fun transitionToClosedState(name: String) = circuitBreakerRegistry.circuitBreaker(name).transitionToClosedState()
 
     fun writeValueAsString(obj: Any): String = objectMapper.writeValueAsString(obj)
+
+    private fun resetAllCaches() =
+        cacheManager.cacheNames.forEach { cacheManager.getCache(it)?.clear() }
 
     private fun resetFaultTolerance(name: String) = circuitBreakerRegistry.circuitBreaker(name).reset()
 }

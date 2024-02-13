@@ -7,7 +7,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.lukinhasssss.catalogo.AbstractRestClientTest
-import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.Fixture.Categories.aulas
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
@@ -30,8 +29,6 @@ class CategoryRestClientTest : AbstractRestClientTest() {
     @Test
     fun givenACategory_whenReceive200FromServer_shouldBeOk() {
         // given
-        val aulas = Fixture.Categories.aulas
-
         val responseBody = with(aulas) {
             writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
         }
@@ -59,6 +56,47 @@ class CategoryRestClientTest : AbstractRestClientTest() {
             assertEquals(aulas.updatedAt, updatedAt)
             assertEquals(aulas.deletedAt, deletedAt)
         }
+
+        verify(1, getRequestedFor(urlPathEqualTo("/api/categories/${aulas.id}")))
+    }
+
+    @Test
+    fun givenACategory_whenReceiveTwoCalls_shouldReturnCachedValue() {
+        // given
+        val responseBody = with(aulas) {
+            writeValueAsString(CategoryDTO(id, name, description, isActive, createdAt, updatedAt, deletedAt))
+        }
+
+        stubFor(
+            get(urlPathEqualTo("/api/categories/${aulas.id}"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(responseBody)
+                )
+        )
+
+        // when
+        target.getById(aulas.id)
+        target.getById(aulas.id)
+        val actualCategory = target.getById(aulas.id)
+
+        // then
+        with(actualCategory!!) {
+            assertEquals(aulas.id, id)
+            assertEquals(aulas.name, name)
+            assertEquals(aulas.description, description)
+            assertEquals(aulas.isActive, active)
+            assertEquals(aulas.createdAt, createdAt)
+            assertEquals(aulas.updatedAt, updatedAt)
+            assertEquals(aulas.deletedAt, deletedAt)
+        }
+
+        val actualCachedValue = cache("admin-categories")?.get(aulas.id)?.get()
+        assertEquals(actualCategory, actualCachedValue)
+
+        verify(1, getRequestedFor(urlPathEqualTo("/api/categories/${aulas.id}")))
     }
 
     @Test
@@ -117,8 +155,6 @@ class CategoryRestClientTest : AbstractRestClientTest() {
     @Test
     fun givenACategory_whenReceiveTimeout_shouldReturnInternalError() {
         // given
-        val aulas = Fixture.Categories.aulas
-
         val expectedErrorMessage = "Timeout observed from categories [resourceId: ${aulas.id}]"
 
         val responseBody = with(aulas) {
