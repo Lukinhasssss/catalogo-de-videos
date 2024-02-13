@@ -21,10 +21,10 @@ import org.springframework.http.MediaType
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class CategoryRestClientTest : AbstractRestClientTest() {
+class CategoryRestGatewayTest : AbstractRestClientTest() {
 
     @Autowired
-    lateinit var target: CategoryRestClient
+    lateinit var target: CategoryRestGateway
 
     @Test
     fun givenACategory_whenReceive200FromServer_shouldBeOk() {
@@ -44,14 +44,14 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        val actualCategory = target.getById(aulas.id)
+        val actualCategory = target.categoryOfId(aulas.id)
 
         // then
         with(actualCategory!!) {
             assertEquals(aulas.id, id)
             assertEquals(aulas.name, name)
             assertEquals(aulas.description, description)
-            assertEquals(aulas.isActive, active)
+            assertEquals(aulas.isActive, isActive)
             assertEquals(aulas.createdAt, createdAt)
             assertEquals(aulas.updatedAt, updatedAt)
             assertEquals(aulas.deletedAt, deletedAt)
@@ -78,16 +78,16 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        target.getById(aulas.id)
-        target.getById(aulas.id)
-        val actualCategory = target.getById(aulas.id)
+        target.categoryOfId(aulas.id)
+        target.categoryOfId(aulas.id)
+        val actualCategory = target.categoryOfId(aulas.id)
 
         // then
         with(actualCategory!!) {
             assertEquals(aulas.id, id)
             assertEquals(aulas.name, name)
             assertEquals(aulas.description, description)
-            assertEquals(aulas.isActive, active)
+            assertEquals(aulas.isActive, isActive)
             assertEquals(aulas.createdAt, createdAt)
             assertEquals(aulas.updatedAt, updatedAt)
             assertEquals(aulas.deletedAt, deletedAt)
@@ -117,7 +117,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        val actualCategory = target.getById(expectedId)
+        val actualCategory = target.categoryOfId(expectedId)
 
         // then
         assertNull(actualCategory)
@@ -144,7 +144,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        val actualException = assertThrows<InternalErrorException> { target.getById(expectedId) }
+        val actualException = assertThrows<InternalErrorException> { target.categoryOfId(expectedId) }
 
         // then
         assertEquals(expectedErrorMessage, actualException.message)
@@ -173,7 +173,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        val actualException = assertThrows<InternalErrorException> { target.getById(aulas.id) }
+        val actualException = assertThrows<InternalErrorException> { target.categoryOfId(aulas.id) }
 
         // then
         assertEquals(expectedErrorMessage, actualException.message)
@@ -189,7 +189,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         acquireBulkheadPermission(CATEGORY)
 
         // when
-        val actualException = assertThrows<BulkheadFullException> { target.getById(aulas.id) }
+        val actualException = assertThrows<BulkheadFullException> { target.categoryOfId(aulas.id) }
 
         // then
         assertEquals(expectedErrorMessage, actualException.message)
@@ -216,8 +216,8 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         )
 
         // when
-        assertThrows<InternalErrorException> { target.getById(expectedId) }
-        val actualException = assertThrows<CallNotPermittedException> { target.getById(expectedId) }
+        assertThrows<InternalErrorException> { target.categoryOfId(expectedId) }
+        val actualException = assertThrows<CallNotPermittedException> { target.categoryOfId(expectedId) }
 
         // then
         checkCircuitBreakerState(CATEGORY, CircuitBreaker.State.OPEN)
@@ -236,7 +236,7 @@ class CategoryRestClientTest : AbstractRestClientTest() {
         val expectedErrorMessage = "CircuitBreaker 'categories' is OPEN and does not permit further calls"
 
         // when
-        val actualException = assertThrows<CallNotPermittedException> { target.getById(expectedId) }
+        val actualException = assertThrows<CallNotPermittedException> { target.categoryOfId(expectedId) }
 
         // then
         checkCircuitBreakerState(CATEGORY, CircuitBreaker.State.OPEN)

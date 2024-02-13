@@ -1,5 +1,6 @@
 package com.lukinhasssss.catalogo.infrastructure.category
 
+import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
@@ -12,9 +13,9 @@ import org.springframework.web.client.RestClient
 
 @Component
 @CacheConfig(cacheNames = ["admin-categories"])
-class CategoryRestClient(
+class CategoryRestGateway(
     private val restClient: RestClient
-) : HttpClient {
+) : CategoryGateway, HttpClient {
 
     companion object {
         const val NAMESPACE = "categories"
@@ -27,12 +28,13 @@ class CategoryRestClient(
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
     @Cacheable(key = "#categoryId")
-    fun getById(categoryId: String?): CategoryDTO? = doGet(categoryId) {
+    override fun categoryOfId(categoryId: String?): Category? = doGet(categoryId) {
         restClient.get()
             .uri("/{id}", categoryId)
             .retrieve()
             .onStatus(isNotFound(), notFoundHandler(categoryId))
             .onStatus(is5xx(), serverErrorHandler(categoryId))
             .body(CategoryDTO::class.java)
+            ?.toCategory()
     }
 }

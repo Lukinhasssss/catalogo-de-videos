@@ -2,7 +2,7 @@ package com.lukinhasssss.catalogo
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.lukinhasssss.catalogo.infrastructure.category.CategoryRestClient
+import com.lukinhasssss.catalogo.infrastructure.category.CategoryRestGateway
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
 import io.github.resilience4j.bulkhead.BulkheadRegistry
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
@@ -27,7 +27,7 @@ import kotlin.test.assertEquals
 abstract class AbstractRestClientTest {
 
     companion object {
-        const val CATEGORY = CategoryRestClient.NAMESPACE
+        const val CATEGORY = CategoryRestGateway.NAMESPACE
     }
 
     @Autowired
