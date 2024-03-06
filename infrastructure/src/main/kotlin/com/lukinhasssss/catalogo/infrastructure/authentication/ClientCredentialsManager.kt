@@ -34,7 +34,7 @@ class ClientCredentialsManager(
         authenticationGateway.login(ClientCredentialsInput(clientId, clientSecret))
 
     private fun KeycloakProperties.refreshToken() = try {
-        authenticationGateway.refresh(RefreshTokenInput(clientId, credentials!!.refreshToken))
+        authenticationGateway.refresh(RefreshTokenInput(clientId, clientSecret, credentials!!.refreshToken))
     } catch (ex: RuntimeException) { login() }
 
     data class ClientCredentials(val clientId: String, val accessToken: String, val refreshToken: String)

@@ -3,6 +3,7 @@ package com.lukinhasssss.catalogo.infrastructure.category
 import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.infrastructure.authentication.GetClientCredentials
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
+import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Categories
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
@@ -16,7 +17,7 @@ import org.springframework.web.client.RestClient
 @Component
 @CacheConfig(cacheNames = ["admin-categories"])
 class CategoryRestGateway(
-    private val restClient: RestClient,
+    @Categories private val restClient: RestClient,
     private val getClientCredentials: GetClientCredentials
 ) : CategoryGateway, HttpClient {
 

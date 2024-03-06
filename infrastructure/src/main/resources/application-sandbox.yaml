@@ -12,6 +12,10 @@ keycloak:
   host: http://localhost:8443
   realm: codeflix
 
+rest-client:
+  keycloak:
+    read-timeout: 1_000
+
 server:
   undertow:
     threads:

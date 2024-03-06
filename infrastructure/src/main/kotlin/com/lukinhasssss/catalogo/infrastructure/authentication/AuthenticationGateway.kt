@@ -10,5 +10,5 @@ interface AuthenticationGateway {
 
     data class ClientCredentialsInput(val clientId: String, val clientSecret: String)
 
-    data class RefreshTokenInput(val clientId: String, val refreshToken: String)
+    data class RefreshTokenInput(val clientId: String, val clientSecret: String, val refreshToken: String)
 }
