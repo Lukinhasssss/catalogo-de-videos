@@ -7,8 +7,17 @@ graphql:
   graphiql: true
 
 keycloak:
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  host: http://keycloak.internal:8443
   realm: codeflix
-  host: http://localhost:8443
+
+rest-client:
+  base-url: http://localhost:8080
+  keycloak:
+    read-timeout: 1_000
+  categories:
+    read-timeout: 1_000
 
 server:
   undertow:

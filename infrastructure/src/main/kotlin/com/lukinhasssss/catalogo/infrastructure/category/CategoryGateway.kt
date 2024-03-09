@@ -4,5 +4,5 @@ import com.lukinhasssss.catalogo.domain.category.Category
 
 interface CategoryGateway {
 
-    fun categoryOfId(anId: String?): Category?
+    fun categoryOfId(categoryId: String?): Category?
 }

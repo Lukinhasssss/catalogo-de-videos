@@ -1,3 +1,9 @@
+cache:
+  type: cache2k
+  names: admin-categories
+  max-entries: 200
+  ttl: 60 # seconds
+
 elasticsearch:
   connect-timeout: 250
   socket-timeout: 1_000
@@ -16,6 +22,17 @@ kafka:
       id: kafka-listener-categories
       topics: adm_videos_postgresql.public.categories
       group-id: catalogo-de-videos
+
+keycloak:
+  token-uri: /protocol/openid-connect/token
+
+rest-client:
+  keycloak:
+    base-url: ${keycloak.host}/realms/${keycloak.realm}
+    read-timeout: 1_000
+  categories:
+    base-url: ${rest-client.base-url}/api/categories
+    read-timeout: 1_000
 
 logging:
   level:
@@ -36,6 +53,9 @@ server:
       io: 4 # Number of I/O threads to create for the worker. The default is derived from the number of available processors.
 
 spring:
+  cache:
+    cache-names: ${cache.names}
+    type: ${cache.type}
   elasticsearch:
     uris: ${elasticsearch.uris}
     username: ${elasticsearch.username}
@@ -55,6 +75,59 @@ spring:
         jwt:
           jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
           issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 250
+      retryExceptions:
+        - com.lukinhasssss.catalogo.domain.exception.InternalErrorException
+        - org.springframework.web.client.ResourceAccessException
+        - org.springframework.web.client.HttpServerErrorException.InternalServerError
+        - org.springframework.web.client.HttpServerErrorException.GatewayTimeout
+        - org.springframework.web.client.HttpServerErrorException.ServiceUnavailable
+        - java.net.SocketTimeoutException
+        - java.net.http.HttpConnectTimeoutException
+        - java.net.http.HttpTimeoutException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+  instances:
+    categories:
+      baseConfig: default
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 25
+      maxWaitDuration: 100
+    instances:
+      categories:
+        baseConfig: default
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowType: COUNT_BASED
+      slidingWindowSize: 100
+      minimumNumberOfCalls: 20
+      permittedNumberOfCallsInHalfOpenState: 10
+      waitDurationInOpenState: 30s
+      failureRateThreshold: 50
+      slowCallRateThreshold: 70
+      slowCallDurationThreshold: 2_000
+      recordExceptions:
+        - com.lukinhasssss.catalogo.domain.exception.InternalErrorException
+        - org.springframework.web.client.ResourceAccessException
+        - org.springframework.web.client.HttpServerErrorException.InternalServerError
+        - org.springframework.web.client.HttpServerErrorException.GatewayTimeout
+        - org.springframework.web.client.HttpServerErrorException.ServiceUnavailable
+        - java.net.SocketTimeoutException
+        - java.net.http.HttpConnectTimeoutException
+        - java.net.http.HttpTimeoutException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
 
 management:
   info:

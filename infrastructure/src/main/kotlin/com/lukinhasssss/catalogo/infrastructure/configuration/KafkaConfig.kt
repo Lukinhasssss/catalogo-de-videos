@@ -11,7 +11,7 @@ import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class KafkaConfig(
     private val properties: KafkaProperties
 ) {

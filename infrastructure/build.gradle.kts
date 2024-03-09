@@ -45,12 +45,23 @@ dependencies {
         exclude(group = "io.undertow", module = "undertow-websockets-jsr")
     }
 
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
-
+    implementation("org.springframework.cloud:spring-cloud-contract-wiremock")
     implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("io.github.resilience4j:resilience4j-spring-boot3")
+    implementation("io.github.resilience4j:resilience4j-retry")
+    implementation("io.github.resilience4j:resilience4j-bulkhead")
+    implementation("io.github.resilience4j:resilience4j-circuitbreaker")
+
+    implementation("org.cache2k:cache2k-api:${Version.CACHE2K}")
+    implementation("org.cache2k:cache2k-spring:${Version.CACHE2K}")
+    runtimeOnly("org.cache2k:cache2k-core:${Version.CACHE2K}")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.5")
@@ -58,7 +69,7 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.4.14")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
-    implementation("com.google.guava:guava:32.0.0-android")
+    implementation("com.google.guava:guava:33.0.0-jre")
 
     testImplementation(project(path = ":domain", configuration = "testClasses"))
 
@@ -80,6 +91,13 @@ dependencies {
     testImplementation("org.keycloak:keycloak-core:23.0.4")
     testImplementation("org.jboss.resteasy:resteasy-core:4.7.9.Final")
     testImplementation("org.jboss.resteasy:resteasy-multipart-provider:4.7.9.Final")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("io.github.resilience4j:resilience4j-bom:2.2.0")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.0")
+    }
 }
 
 tasks.testCodeCoverageReport {
