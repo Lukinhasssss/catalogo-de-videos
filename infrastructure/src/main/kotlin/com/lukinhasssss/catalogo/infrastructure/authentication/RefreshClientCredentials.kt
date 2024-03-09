@@ -1,5 +1,5 @@
 package com.lukinhasssss.catalogo.infrastructure.authentication
 
-interface RefreshClientCredentials {
+fun interface RefreshClientCredentials {
     fun refresh()
 }
