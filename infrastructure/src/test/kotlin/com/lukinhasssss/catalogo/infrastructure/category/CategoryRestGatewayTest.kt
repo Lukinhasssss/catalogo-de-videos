@@ -9,10 +9,14 @@ import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.lukinhasssss.catalogo.AbstractRestClientTest
 import com.lukinhasssss.catalogo.domain.Fixture.Categories.aulas
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
+import com.lukinhasssss.catalogo.infrastructure.authentication.ClientCredentialsManager
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
+import com.ninjasquad.springmockk.SpykBean
 import io.github.resilience4j.bulkhead.BulkheadFullException
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
+import io.mockk.every
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +29,12 @@ class CategoryRestGatewayTest : AbstractRestClientTest() {
 
     @Autowired
     lateinit var target: CategoryRestGateway
+
+    @SpykBean
+    lateinit var credentialsManager: ClientCredentialsManager
+
+    @BeforeEach
+    fun setCredentialsManager() { every { credentialsManager.retrieve() } returns "token" }
 
     @Test
     fun givenACategory_whenReceive200FromServer_shouldBeOk() {
