@@ -29,8 +29,10 @@ keycloak:
 rest-client:
   keycloak:
     base-url: ${keycloak.host}/realms/${keycloak.realm}
+    read-timeout: 1_000
   categories:
     base-url: ${rest-client.base-url}/api/categories
+    read-timeout: 1_000
 
 logging:
   level:
