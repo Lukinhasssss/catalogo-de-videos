@@ -20,7 +20,7 @@ jobs:
           distribution: 'adopt'
           cache: gradle
       - name: Run build with gradle
-        run: ./gradlew build -x test
+        run: ./gradlew clean build -x test
 
   test:
     name: Gradle Test
@@ -34,7 +34,7 @@ jobs:
           distribution: 'adopt'
           cache: gradle
       - name: Run tests with gradle
-        run: ./gradlew test
+        run: ./gradlew clean test
 
   sonarcloud-scan:
     name: SonarCloud Scan
@@ -66,4 +66,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build jacocoTestReport sonar --info
+        run: ./gradlew clean build jacocoTestReport sonar --info
