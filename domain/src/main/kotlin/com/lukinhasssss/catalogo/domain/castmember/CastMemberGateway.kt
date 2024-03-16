@@ -4,11 +4,11 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 
 interface CastMemberGateway {
 
-    fun save(aCategory: CastMember): CastMember
+    fun save(aMember: CastMember): CastMember
 
     fun findById(anId: String): CastMember?
 
     fun findAll(aQuery: CastMemberSearchQuery): Pagination<CastMember>
 
-    fun deleteById(anID: String)
+    fun deleteById(anId: String)
 }
