@@ -1,5 +1,8 @@
 package com.lukinhasssss.catalogo.domain
 
+import com.lukinhasssss.catalogo.domain.castmember.CastMember
+import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
+import com.lukinhasssss.catalogo.domain.castmember.CastMemberType.ACTOR
 import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
@@ -10,11 +13,6 @@ object Fixture {
     private val FAKER = Faker()
 
     fun name(): String = FAKER.name().fullName()
-    fun year() = FAKER.random().nextInt(2010, 2030)
-    fun title() = FAKER.oscarMovie().movieName()
-    fun description() = FAKER.movie().quote()
-    fun bool() = FAKER.bool().bool()
-    fun duration() = FAKER.options().option(listOf(120.0, 15.5, 35.5, 10.0, 2.0))
 
     object Categories {
         val aulas = Category.with(
@@ -44,5 +42,13 @@ object Fixture {
             createdAt = InstantUtils.now(),
             updatedAt = InstantUtils.now()
         )
+    }
+    object CastMembers {
+        private val LUFFY = CastMember.with(IdUtils.uuid(), "Monkey D Luffy", ACTOR, InstantUtils.now(), InstantUtils.now())
+        private val ZORO = CastMember.with(IdUtils.uuid(), "Roronoa Zoro", ACTOR, InstantUtils.now(), InstantUtils.now())
+
+        fun type(): Array<CastMemberType> = FAKER.options().option(CastMemberType.entries.toTypedArray())
+        fun luffy() = LUFFY
+        fun zoro() = ZORO
     }
 }
