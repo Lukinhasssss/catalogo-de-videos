@@ -5,7 +5,7 @@ object Version {
     const val KTLINT = "11.3.1"
     const val JACOCO = "0.8.10"
     const val SONARQUBE = "4.0.0.2929"
-    const val SPRING_BOOT = "3.2.2"
+    const val SPRING_BOOT = "3.2.4"
     const val SPRING_DEPENDENCY_MANAGEMENT = "1.1.4"
     const val CACHE2K = "2.6.1.Final"
     const val TEST_CONTAINERS = "1.19.4"
