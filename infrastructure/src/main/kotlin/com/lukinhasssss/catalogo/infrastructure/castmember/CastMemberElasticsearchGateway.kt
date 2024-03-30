@@ -7,6 +7,7 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.infrastructure.castmember.persistence.CastMemberDocument
 import com.lukinhasssss.catalogo.infrastructure.castmember.persistence.CastMemberRepository
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class CastMemberElasticsearchGateway(
@@ -17,9 +18,8 @@ class CastMemberElasticsearchGateway(
         return aMember
     }
 
-    override fun findById(anId: String): CastMember? {
-        TODO("Not yet implemented")
-    }
+    override fun findById(anId: String): CastMember? =
+        castMemberRepository.findById(anId).getOrNull()?.run { toCastMember() }
 
     override fun findAll(aQuery: CastMemberSearchQuery): Pagination<CastMember> {
         TODO("Not yet implemented")

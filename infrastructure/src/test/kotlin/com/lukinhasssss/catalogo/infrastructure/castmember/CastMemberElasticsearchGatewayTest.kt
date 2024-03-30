@@ -7,6 +7,7 @@ import com.lukinhasssss.catalogo.infrastructure.castmember.persistence.CastMembe
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -68,5 +69,41 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
     fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
         // when/then
         assertDoesNotThrow { castMemberRepository.deleteById("any") }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsFindById_shouldRetrieveIt() {
+        // given
+        val luffy = Fixture.CastMembers.luffy()
+
+        castMemberRepository.save(CastMemberDocument.from(luffy))
+
+        val expectedId = luffy.id
+
+        assertTrue(castMemberRepository.existsById(expectedId))
+
+        // when
+        val actualOutput = castMemberGateway.findById(expectedId)
+
+        // then
+        with(actualOutput!!) {
+            assertEquals(luffy.id, id)
+            assertEquals(luffy.name, name)
+            assertEquals(luffy.type, type)
+            assertEquals(luffy.createdAt, createdAt)
+            assertEquals(luffy.updatedAt, updatedAt)
+        }
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsFindById_shouldReturnNull() {
+        // given
+        val expectedId = "any"
+
+        // when
+        val actualOutput = castMemberGateway.findById(expectedId)
+
+        // then
+        assertNull(actualOutput)
     }
 }
