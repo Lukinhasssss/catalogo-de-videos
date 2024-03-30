@@ -2,8 +2,12 @@ package com.lukinhasssss.catalogo.infrastructure.castmember
 
 import com.lukinhasssss.catalogo.AbstractElasticsearchTest
 import com.lukinhasssss.catalogo.domain.Fixture
+import com.lukinhasssss.catalogo.infrastructure.castmember.persistence.CastMemberDocument
 import com.lukinhasssss.catalogo.infrastructure.castmember.persistence.CastMemberRepository
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import kotlin.test.assertNotNull
@@ -40,5 +44,29 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(luffy.createdAt, createdAt)
             assertEquals(luffy.updatedAt, updatedAt)
         }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        val luffy = Fixture.CastMembers.luffy()
+
+        castMemberRepository.save(CastMemberDocument.from(luffy))
+
+        val expectedId = luffy.id
+
+        assertTrue(castMemberRepository.existsById(expectedId))
+
+        // when
+        castMemberGateway.deleteById(expectedId)
+
+        // then
+        assertFalse(castMemberRepository.existsById(expectedId))
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
+        // when/then
+        assertDoesNotThrow { castMemberRepository.deleteById("any") }
     }
 }

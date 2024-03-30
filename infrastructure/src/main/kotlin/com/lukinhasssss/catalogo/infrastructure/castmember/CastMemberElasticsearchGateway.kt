@@ -25,7 +25,5 @@ class CastMemberElasticsearchGateway(
         TODO("Not yet implemented")
     }
 
-    override fun deleteById(anId: String) {
-        TODO("Not yet implemented")
-    }
+    override fun deleteById(anId: String) = castMemberRepository.deleteById(anId)
 }
