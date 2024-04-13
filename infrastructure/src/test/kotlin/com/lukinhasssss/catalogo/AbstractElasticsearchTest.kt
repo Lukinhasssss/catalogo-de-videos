@@ -27,7 +27,7 @@ abstract class AbstractElasticsearchTest {
     companion object {
         @JvmStatic
         @BeforeAll
-        fun startElasticsearch(): Unit = ElasticsearchTestContainer.CatalogoElasticsearchContainer().start()
+        fun startElasticsearch(): Unit = ElasticsearchTestContainer.ELASTIC.start()
     }
 
     @Autowired
