@@ -16,43 +16,16 @@ object Fixture {
     fun name(): String = FAKER.name().fullName()
 
     object Categories {
-        val aulas = Category.with(
-            anId = IdUtils.uuid(),
-            aName = "Aulas",
-            aDescription = "Conteudo gravado",
-            isActive = true,
-            createdAt = InstantUtils.now(),
-            updatedAt = InstantUtils.now()
-        )
-
-        val talks = Category.with(
-            anId = IdUtils.uuid(),
-            aName = "Talks",
-            aDescription = "Conteudo ao vivo",
-            isActive = false,
-            createdAt = InstantUtils.now(),
-            updatedAt = InstantUtils.now(),
-            deletedAt = InstantUtils.now()
-        )
-
-        val lives = Category.with(
-            anId = IdUtils.uuid(),
-            aName = "Lives",
-            aDescription = "Conteudo ao vivo",
-            isActive = true,
-            createdAt = InstantUtils.now(),
-            updatedAt = InstantUtils.now()
-        )
+        val aulas = Category.with(IdUtils.uuid(), "Aulas", "Conteudo gravado", true, InstantUtils.now(), InstantUtils.now())
+        val talks = Category.with(IdUtils.uuid(), "Talks", "Conteudo ao vivo", false, InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
+        val lives = Category.with(IdUtils.uuid(), "Lives", "Conteudo ao vivo", true, InstantUtils.now(), InstantUtils.now())
     }
-    object CastMembers {
-        private val LUFFY = CastMember.with(IdUtils.uuid(), "Monkey D Luffy", ACTOR, InstantUtils.now(), InstantUtils.now())
-        private val ZORO = CastMember.with(IdUtils.uuid(), "Roronoa Zoro", ACTOR, InstantUtils.now(), InstantUtils.now())
-        private val NAMI = CastMember.with(IdUtils.uuid(), "Nami", DIRECTOR, InstantUtils.now(), InstantUtils.now())
 
+    object CastMembers {
         fun type(): Array<CastMemberType> = FAKER.options().option(CastMemberType.entries.toTypedArray())
 
-        fun luffy() = LUFFY
-        fun zoro() = ZORO
-        fun nami() = NAMI
+        fun luffy() = CastMember.with(IdUtils.uuid(), "Monkey D Luffy", ACTOR, InstantUtils.now(), InstantUtils.now())
+        fun zoro() = CastMember.with(IdUtils.uuid(), "Roronoa Zoro", ACTOR, InstantUtils.now(), InstantUtils.now())
+        fun nami() = CastMember.with(IdUtils.uuid(), "Nami", DIRECTOR, InstantUtils.now(), InstantUtils.now())
     }
 }
