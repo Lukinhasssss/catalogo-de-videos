@@ -3,6 +3,7 @@ package com.lukinhasssss.catalogo.domain
 import com.lukinhasssss.catalogo.domain.castmember.CastMember
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType.ACTOR
+import com.lukinhasssss.catalogo.domain.castmember.CastMemberType.DIRECTOR
 import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
@@ -46,9 +47,12 @@ object Fixture {
     object CastMembers {
         private val LUFFY = CastMember.with(IdUtils.uuid(), "Monkey D Luffy", ACTOR, InstantUtils.now(), InstantUtils.now())
         private val ZORO = CastMember.with(IdUtils.uuid(), "Roronoa Zoro", ACTOR, InstantUtils.now(), InstantUtils.now())
+        private val NAMI = CastMember.with(IdUtils.uuid(), "Nami", DIRECTOR, InstantUtils.now(), InstantUtils.now())
 
         fun type(): Array<CastMemberType> = FAKER.options().option(CastMemberType.entries.toTypedArray())
+
         fun luffy() = LUFFY
         fun zoro() = ZORO
+        fun nami() = NAMI
     }
 }
