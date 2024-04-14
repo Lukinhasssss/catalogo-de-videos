@@ -1,7 +1,7 @@
 object Version {
     const val PROJECT = "1.0.0"
-    const val KOTLIN = "1.9.21"
-    const val DETEKT = "1.23.4"
+    const val KOTLIN = "1.9.23"
+    const val DETEKT = "1.23.6"
     const val KTLINT = "11.3.1"
     const val JACOCO = "0.8.10"
     const val SONARQUBE = "4.0.0.2929"

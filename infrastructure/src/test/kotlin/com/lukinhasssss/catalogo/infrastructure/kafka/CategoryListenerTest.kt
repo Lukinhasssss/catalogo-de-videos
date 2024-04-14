@@ -98,11 +98,11 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         verify(exactly = expectedMaxDLTAttempts) { categoryListener.onDltMessage(message, withArg { allMetas.add(it) }) }
 
         with(allMetas) {
-            assertEquals(expectedMainTopic, first.topic())
+            assertEquals(expectedMainTopic, first().topic())
             assertEquals(expectedRetry0Topic, get(1).topic())
             assertEquals(expectedRetry1Topic, get(2).topic())
             assertEquals(expectedRetry2Topic, get(3).topic())
-            assertEquals(expectedDLTTopic, last.topic())
+            assertEquals(expectedDLTTopic, last().topic())
         }
     }
 
