@@ -5,6 +5,7 @@ import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType.ACTOR
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType.DIRECTOR
 import com.lukinhasssss.catalogo.domain.category.Category
+import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import net.datafaker.Faker
@@ -27,5 +28,10 @@ object Fixture {
         fun luffy() = CastMember.with(IdUtils.uuid(), "Monkey D Luffy", ACTOR, InstantUtils.now(), InstantUtils.now())
         fun zoro() = CastMember.with(IdUtils.uuid(), "Roronoa Zoro", ACTOR, InstantUtils.now(), InstantUtils.now())
         fun nami() = CastMember.with(IdUtils.uuid(), "Nami", DIRECTOR, InstantUtils.now(), InstantUtils.now())
+    }
+
+    object Genres {
+        fun tech() = Genre.with(IdUtils.uuid(), "Technology", true, setOf(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
+        fun business() = Genre.with(IdUtils.uuid(), "Business", true, setOf(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
     }
 }
