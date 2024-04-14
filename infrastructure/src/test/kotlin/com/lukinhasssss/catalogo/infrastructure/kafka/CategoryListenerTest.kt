@@ -63,7 +63,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
     }
 
     @Test
-    fun givenInvalidResponsesFromHandler_shouldRetryUntilGpesToDLT() {
+    fun givenInvalidResponsesFromHandler_shouldRetryUntilGoesToDLT() {
         // given
         val expectedMaxAttempts = 4
         val expectedMaxDLTAttempts = 1

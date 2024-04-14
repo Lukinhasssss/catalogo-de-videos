@@ -17,4 +17,6 @@ enum class Operation(val op: String) {
 
     @JsonValue // Para fazer a serializacao (converter de objeto para json)
     fun op() = op
+
+    fun isDelete() = isDelete(this)
 }
