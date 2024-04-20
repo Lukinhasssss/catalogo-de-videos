@@ -26,7 +26,5 @@ class GenreElasticsearchGateway(
         TODO("Not yet implemented")
     }
 
-    override fun deleteById(id: String) {
-        TODO("Not yet implemented")
-    }
+    override fun deleteById(id: String) = genreRepository.deleteById(id)
 }
