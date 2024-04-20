@@ -1,10 +1,15 @@
 package com.lukinhasssss.catalogo.infrastructure.genre
 
 import com.lukinhasssss.catalogo.AbstractElasticsearchTest
+import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
+import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreDocument
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreRepository
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import kotlin.test.assertEquals
@@ -67,5 +72,29 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(tech.updatedAt, updatedAt)
             assertNull(deletedAt)
         }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        val business = Fixture.Genres.business()
+
+        genreRepository.save(GenreDocument.from(business))
+
+        val expectedId = business.id
+
+        assertTrue(genreRepository.existsById(expectedId))
+
+        // when
+        genreGateway.deleteById(expectedId)
+
+        // then
+        assertFalse(genreRepository.existsById(expectedId))
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
+        // when/then
+        assertDoesNotThrow { genreRepository.deleteById("any") }
     }
 }
