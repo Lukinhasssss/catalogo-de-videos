@@ -5,5 +5,6 @@ data class GenreSearchQuery(
     val perPage: Int,
     val terms: String,
     val sort: String,
-    val direction: String
+    val direction: String,
+    val categories: Set<String>
 )
