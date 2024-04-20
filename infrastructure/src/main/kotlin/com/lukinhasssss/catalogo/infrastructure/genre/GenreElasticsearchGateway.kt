@@ -7,6 +7,7 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreDocument
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreRepository
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class GenreElasticsearchGateway(
@@ -18,9 +19,8 @@ class GenreElasticsearchGateway(
         return genre
     }
 
-    override fun findById(id: String): Genre? {
-        TODO("Not yet implemented")
-    }
+    override fun findById(id: String): Genre? =
+        genreRepository.findById(id).getOrNull()?.run { toGenre() }
 
     override fun findAll(aQuery: GenreSearchQuery): Pagination<Genre> {
         TODO("Not yet implemented")
