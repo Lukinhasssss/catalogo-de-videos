@@ -2,14 +2,18 @@ package com.lukinhasssss.catalogo.infrastructure.graphql
 
 import com.lukinhasssss.catalogo.GraphQLControllerTest
 import com.lukinhasssss.catalogo.application.genre.list.ListGenreUseCase
+import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
+import com.lukinhasssss.catalogo.domain.utils.IdUtils
+import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.graphql.test.tester.GraphQlTester
+import java.time.Instant
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -18,6 +22,9 @@ class GenreGraphQLControllerTest {
 
     @MockkBean
     private lateinit var listGenreUseCase: ListGenreUseCase
+
+    @MockkBean
+    private lateinit var saveGenreUseCase: SaveGenreUseCase
 
     @Autowired
     private lateinit var graphql: GraphQlTester
@@ -134,6 +141,111 @@ class GenreGraphQLControllerTest {
                     assertEquals(expectedDirection, it.direction)
                     assertEquals(expectedSearch, it.terms)
                     assertEquals(expectedCategories, it.categories)
+                }
+            )
+        }
+    }
+
+    @Test
+    fun givenInactiveGenreInput_whenCallsSaveGenreMutation_shouldPersistAndReturn() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedName = "Business"
+        val expectedIsActive = false
+        val expectedCategories = setOf("c1", "c2")
+        val expectedCreatedAt = InstantUtils.now()
+        val expectedUpdatedAt = InstantUtils.now()
+        val expectedDeletedAt = InstantUtils.now()
+
+        val input = mapOf(
+            "id" to expectedId,
+            "name" to expectedName,
+            "active" to expectedIsActive.toString(),
+            "categories" to expectedCategories,
+            "createdAt" to expectedCreatedAt.toString(),
+            "updatedAt" to expectedUpdatedAt.toString(),
+            "deletedAt" to expectedDeletedAt.toString()
+        )
+
+        val query = """
+            mutation SaveGenre(${'$'}input: GenreInput!) {
+                genre: saveGenre(input: ${'$'}input) {
+                    id
+                }
+            }
+        """.trimIndent()
+
+        every { saveGenreUseCase.execute(any()) } answers { SaveGenreUseCase.Output(expectedId) }
+
+        // when
+        graphql.document(query)
+            .variable("input", input)
+            .execute()
+            .path("genre.id").entity(String::class.java).isEqualTo(expectedId)
+
+        // then
+        verify {
+            saveGenreUseCase.execute(
+                withArg {
+                    assertEquals(expectedId, it.id)
+                    assertEquals(expectedName, it.name)
+                    assertEquals(expectedIsActive, it.isActive)
+                    assertEquals(expectedCategories, it.categories)
+                    assertEquals(expectedCreatedAt, it.createdAt)
+                    assertEquals(expectedUpdatedAt, it.updatedAt)
+                    assertEquals(expectedDeletedAt, it.deletedAt)
+                }
+            )
+        }
+    }
+
+    @Test
+    fun givenActiveGenreInputWithoutDeletedAt_whenCallsSaveGenreMutation_shouldPersistAndReturn() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedName = "Business"
+        val expectedIsActive = true
+        val expectedCategories = setOf("c1", "c2")
+        val expectedCreatedAt = InstantUtils.now()
+        val expectedUpdatedAt = InstantUtils.now()
+        val expectedDeletedAt: Instant? = null
+
+        val input = mapOf(
+            "id" to expectedId,
+            "name" to expectedName,
+            "active" to expectedIsActive.toString(),
+            "categories" to expectedCategories,
+            "createdAt" to expectedCreatedAt.toString(),
+            "updatedAt" to expectedUpdatedAt.toString()
+        )
+
+        val query = """
+            mutation SaveGenre(${'$'}input: GenreInput!) {
+                genre: saveGenre(input: ${'$'}input) {
+                    id
+                }
+            }
+        """.trimIndent()
+
+        every { saveGenreUseCase.execute(any()) } answers { SaveGenreUseCase.Output(expectedId) }
+
+        // when
+        graphql.document(query)
+            .variable("input", input)
+            .execute()
+            .path("genre.id").entity(String::class.java).isEqualTo(expectedId)
+
+        // then
+        verify {
+            saveGenreUseCase.execute(
+                withArg {
+                    assertEquals(expectedId, it.id)
+                    assertEquals(expectedName, it.name)
+                    assertEquals(expectedIsActive, it.isActive)
+                    assertEquals(expectedCategories, it.categories)
+                    assertEquals(expectedCreatedAt, it.createdAt)
+                    assertEquals(expectedUpdatedAt, it.updatedAt)
+                    assertEquals(expectedDeletedAt, it.deletedAt)
                 }
             )
         }
