@@ -6,5 +6,5 @@ data class GenreSearchQuery(
     val terms: String,
     val sort: String,
     val direction: String,
-    val categories: Set<String>
+    val categories: Set<String> = setOf()
 )

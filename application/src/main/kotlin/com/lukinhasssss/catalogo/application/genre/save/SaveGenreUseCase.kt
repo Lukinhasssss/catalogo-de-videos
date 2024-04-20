@@ -27,7 +27,7 @@ class SaveGenreUseCase(
         val id: String,
         val name: String,
         val isActive: Boolean,
-        val categories: Set<String>,
+        val categories: Set<String> = setOf(),
         val createdAt: Instant,
         val updatedAt: Instant,
         val deletedAt: Instant? = null

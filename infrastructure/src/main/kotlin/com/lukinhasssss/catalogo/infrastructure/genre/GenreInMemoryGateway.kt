@@ -25,7 +25,7 @@ class GenreInMemoryGateway(
             currentPage = page,
             perPage = perPage,
             total = db.size.toLong(),
-            items = db.values.toList().subList((page - 1) * perPage, page * perPage)
+            items = db.values.toList()
         )
     }
 

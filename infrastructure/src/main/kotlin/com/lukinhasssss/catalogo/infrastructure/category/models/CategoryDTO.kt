@@ -5,7 +5,6 @@ import com.lukinhasssss.catalogo.domain.category.Category
 import java.time.Instant
 
 data class CategoryDTO(
-
     @JsonProperty(value = "id") val id: String,
     @JsonProperty(value = "name") val name: String,
     @JsonProperty(value = "description") val description: String? = null,

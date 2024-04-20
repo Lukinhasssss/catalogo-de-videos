@@ -9,7 +9,7 @@ data class Genre(
     val id: String,
     val name: String,
     val isActive: Boolean,
-    val categories: Set<String>,
+    val categories: Set<String> = setOf(),
     val createdAt: Instant,
     val updatedAt: Instant,
     val deletedAt: Instant? = null
@@ -23,7 +23,7 @@ data class Genre(
             id: String,
             name: String,
             isActive: Boolean,
-            categories: Set<String>,
+            categories: Set<String> = setOf(),
             createdAt: Instant,
             updatedAt: Instant,
             deletedAt: Instant? = null

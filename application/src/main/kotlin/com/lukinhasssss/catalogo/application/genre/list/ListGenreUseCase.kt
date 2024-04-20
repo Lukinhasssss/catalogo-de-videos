@@ -30,14 +30,14 @@ class ListGenreUseCase(
         val terms: String,
         val sort: String,
         val direction: String,
-        val categories: Set<String>
+        val categories: Set<String> = setOf()
     )
 
     data class Output(
         val id: String,
         val name: String,
         val active: Boolean,
-        val categories: Set<String>,
+        val categories: Set<String> = setOf(),
         val createdAt: Instant,
         val updatedAt: Instant,
         val deletedAt: Instant? = null
