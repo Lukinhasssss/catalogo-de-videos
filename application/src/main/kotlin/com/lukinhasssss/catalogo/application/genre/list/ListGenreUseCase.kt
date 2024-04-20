@@ -5,6 +5,7 @@ import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.genre.GenreGateway
 import com.lukinhasssss.catalogo.domain.genre.GenreSearchQuery
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
+import java.time.Instant
 
 class ListGenreUseCase(
     private val genreGateway: GenreGateway
@@ -34,12 +35,22 @@ class ListGenreUseCase(
 
     data class Output(
         val id: String,
-        val name: String
+        val name: String,
+        val active: Boolean,
+        val categories: Set<String>,
+        val createdAt: Instant,
+        val updatedAt: Instant,
+        val deletedAt: Instant? = null
     ) {
         companion object {
             fun from(genre: Genre) = Output(
                 id = genre.id,
-                name = genre.name
+                name = genre.name,
+                active = genre.isActive,
+                categories = genre.categories,
+                createdAt = genre.createdAt,
+                updatedAt = genre.updatedAt,
+                deletedAt = genre.deletedAt
             )
         }
     }

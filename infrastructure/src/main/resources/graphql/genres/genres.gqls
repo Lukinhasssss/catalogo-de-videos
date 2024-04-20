@@ -5,7 +5,7 @@ extend type Query {
         perPage: Int = 10,
         sort: String = "name",
         direction: String = "asc",
-        category: [String] = []
+        categories: [String] = []
     ): [Genre]!
 }
 
