@@ -5,11 +5,15 @@ import com.lukinhasssss.catalogo.domain.genre.GenreGateway
 
 class DeleteGenreUseCase(
     private val genreGateway: GenreGateway
-) : UnitUseCase<String?>() {
+) : UnitUseCase<DeleteGenreUseCase.Input>() {
 
-    override fun execute(anIn: String?) = with(anIn) {
-        if (anIn.isNullOrBlank()) return
+    override fun execute(anIn: Input) = with(anIn) {
+        if (anIn.genreId.isBlank()) return
 
-        genreGateway.deleteById(this!!)
+        genreGateway.deleteById(this.genreId)
     }
+
+    data class Input(
+        val genreId: String
+    )
 }

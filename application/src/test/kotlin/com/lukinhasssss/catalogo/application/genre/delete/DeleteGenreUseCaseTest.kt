@@ -30,7 +30,7 @@ class DeleteGenreUseCaseTest : UseCaseTest() {
         every { genreGateway.deleteById(any()) } just Runs
 
         // when
-        assertDoesNotThrow { useCase.execute(expectedId) }
+        assertDoesNotThrow { useCase.execute(DeleteGenreUseCase.Input(expectedId)) }
 
         // then
         verify { genreGateway.deleteById(expectedId) }
@@ -42,7 +42,7 @@ class DeleteGenreUseCaseTest : UseCaseTest() {
         val expectedId = ""
 
         // when
-        assertDoesNotThrow { useCase.execute(expectedId) }
+        assertDoesNotThrow { useCase.execute(DeleteGenreUseCase.Input(expectedId)) }
 
         // then
         verify(exactly = 0) { genreGateway.deleteById(expectedId) }
