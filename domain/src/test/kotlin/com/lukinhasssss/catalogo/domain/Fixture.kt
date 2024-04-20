@@ -31,7 +31,7 @@ object Fixture {
     }
 
     object Genres {
-        fun tech() = Genre.with(IdUtils.uuid(), "Technology", true, setOf(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
-        fun business() = Genre.with(IdUtils.uuid(), "Business", true, setOf(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
+        fun tech() = Genre.with(IdUtils.uuid(), "Technology", true, setOf(), InstantUtils.now(), InstantUtils.now())
+        fun business() = Genre.with(IdUtils.uuid(), "Business", false, setOf(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
     }
 }
