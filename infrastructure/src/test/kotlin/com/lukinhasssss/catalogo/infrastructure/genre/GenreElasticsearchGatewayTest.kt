@@ -3,16 +3,19 @@ package com.lukinhasssss.catalogo.infrastructure.genre
 import com.lukinhasssss.catalogo.AbstractElasticsearchTest
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.genre.Genre
+import com.lukinhasssss.catalogo.domain.genre.GenreSearchQuery
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreDocument
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreRepository
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
@@ -141,5 +144,219 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
 
         // then
         assertNull(actualOutput)
+    }
+
+    @Test
+    fun givenEmptyGenres_whenCallsFindAll_shouldReturnEmptyList() {
+        // given
+        val expectedPage = 0
+        val expectedPerPage = 10
+        val expectedTerms = ""
+        val expectedSort = "name"
+        val expectedDirection = "asc"
+        val expectedTotal = 0
+
+        val aQuery = GenreSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = genreGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal.toLong(), meta.total)
+            assertEquals(expectedTotal, data.size)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "mar, 0, 10, 1, 1, Marketing",
+            "tec, 0, 10, 1, 1, Technology"
+        ]
+    )
+    fun givenValidTerm_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedTerms: String,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockGenres()
+
+        val expectedSort = "name"
+        val expectedDirection = "asc"
+
+        val aQuery = GenreSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = genreGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].name)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "c123, 0, 10, 1, 1, Marketing",
+            "c456, 0, 10, 1, 1, Technology",
+            ", 0, 10, 3, 3, Business"
+        ]
+    )
+    fun givenValidCategory_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedCategories: String?,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockGenres()
+
+        val expectedTerms = ""
+        val expectedSort = "name"
+        val expectedDirection = "asc"
+
+        val aQuery = GenreSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection,
+            categories = if (expectedCategories != null) setOf(expectedCategories) else setOf()
+        )
+
+        // when
+        val actualOutput = genreGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].name)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "name, asc, 0, 10, 3, 3, Business",
+            "name, desc, 0, 10, 3, 3, Technology",
+            "created_at, asc, 0, 10, 3, 3, Business",
+            "created_at, desc, 0, 10, 3, 3, Marketing"
+        ]
+    )
+    fun givenValidSortAndDirection_whenCallsFindAll_shouldReturnElementsSorted(
+        expectedSort: String,
+        expectedDirection: String,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockGenres()
+
+        val expectedTerms = ""
+
+        val aQuery = GenreSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = genreGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].name)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "0, 1, 1, 3, Business",
+            "1, 1, 1, 3, Marketing",
+            "2, 1, 1, 3, Technology",
+            "3, 1, 0, 3,"
+        ]
+    )
+    fun givenValidPage_whenCallsFindAll_shouldReturnElementsPaged(
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String?
+    ) {
+        // given
+        mockGenres()
+
+        val expectedTerms = ""
+        val expectedSort = "name"
+        val expectedDirection = "asc"
+
+        val aQuery = GenreSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = genreGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+
+            if (expectedName != null) {
+                assertEquals(expectedName, data[0].name)
+            }
+        }
+    }
+
+    private fun mockGenres() {
+        genreRepository.save(GenreDocument.from(Fixture.Genres.business()))
+        genreRepository.save(GenreDocument.from(Fixture.Genres.tech()))
+        genreRepository.save(GenreDocument.from(Fixture.Genres.marketing()))
     }
 }
