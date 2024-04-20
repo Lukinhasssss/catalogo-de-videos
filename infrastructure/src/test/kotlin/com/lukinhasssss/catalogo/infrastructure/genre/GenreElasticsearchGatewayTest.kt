@@ -97,4 +97,49 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
         // when/then
         assertDoesNotThrow { genreRepository.deleteById("any") }
     }
+
+    @Test
+    fun givenActiveGenreGenreWithCategories_whenCallsFindById_shouldRetrieveIt() {
+        // given
+        val business = Genre.with(IdUtils.uuid(), "Business", false, setOf("c1", "c2"), InstantUtils.now(), InstantUtils.now(), InstantUtils.now())
+
+        genreRepository.save(GenreDocument.from(business))
+
+        val expectedId = business.id
+
+        assertTrue(genreRepository.existsById(expectedId))
+
+        // when
+        val actualOutput = genreGateway.findById(expectedId)
+
+        // then
+        assertEquals(business, actualOutput)
+    }
+
+    @Test
+    fun givenInactiveGenreWithoutCategories_whenCallsFindById_shouldRetrieveIt() {
+        // given
+        val tech = Genre.with(IdUtils.uuid(), "Technology", true, setOf(), InstantUtils.now(), InstantUtils.now())
+
+        genreRepository.save(GenreDocument.from(tech))
+
+        val expectedId = tech.id
+
+        assertTrue(genreRepository.existsById(expectedId))
+
+        // when
+        val actualOutput = genreGateway.findById(expectedId)
+
+        // then
+        assertEquals(tech, actualOutput)
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsFindById_shouldReturnNull() {
+        // when
+        val actualOutput = genreGateway.findById("any")
+
+        // then
+        assertNull(actualOutput)
+    }
 }
