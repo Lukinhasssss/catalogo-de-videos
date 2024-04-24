@@ -1,6 +1,6 @@
 cache:
   type: cache2k
-  names: admin-categories
+  names: admin-categories, admin-genres
   max-entries: 200
   ttl: 60 # seconds
 
@@ -40,6 +40,9 @@ rest-client:
     read-timeout: 1_000
   categories:
     base-url: ${rest-client.base-url}/api/categories
+    read-timeout: 1_000
+  genres:
+    base-url: ${rest-client.base-url}/api/genres
     read-timeout: 1_000
 
 logging:
@@ -86,6 +89,17 @@ spring:
           jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
           issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
 
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 25
+      maxWaitDuration: 100
+  instances:
+    categories:
+      baseConfig: default
+    genres:
+      baseConfig: default
+
 resilience4j.retry:
   configs:
     default:
@@ -105,15 +119,8 @@ resilience4j.retry:
   instances:
     categories:
       baseConfig: default
-
-resilience4j.bulkhead:
-  configs:
-    default:
-      maxConcurrentCalls: 25
-      maxWaitDuration: 100
-    instances:
-      categories:
-        baseConfig: default
+    genres:
+      baseConfig: default
 
 resilience4j.circuitbreaker:
   configs:
@@ -138,6 +145,11 @@ resilience4j.circuitbreaker:
         - java.net.http.HttpTimeoutException
         - java.util.concurrent.TimeoutException
         - java.io.IOException
+  instances:
+    categories:
+      baseConfig: default
+    genres:
+      baseConfig: default
 
 management:
   info:
@@ -171,4 +183,4 @@ info:
     description: Microsserviço de catálogo de vídeos
     version: 1.0
     java:
-      version: ${java.version}
+      version: 21
