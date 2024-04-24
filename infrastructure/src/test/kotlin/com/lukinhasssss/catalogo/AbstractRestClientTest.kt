@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.lukinhasssss.catalogo.infrastructure.category.CategoryRestGateway
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
+import com.lukinhasssss.catalogo.infrastructure.genre.GenreRestGateway
 import io.github.resilience4j.bulkhead.BulkheadRegistry
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
@@ -28,6 +29,7 @@ abstract class AbstractRestClientTest {
 
     companion object {
         const val CATEGORY = CategoryRestGateway.NAMESPACE
+        const val GENRE = GenreRestGateway.NAMESPACE
     }
 
     @Autowired
@@ -48,6 +50,7 @@ abstract class AbstractRestClientTest {
         WireMock.resetAllRequests()
         resetAllCaches()
         listOf(CATEGORY).forEach { resetFaultTolerance(it) }
+        listOf(GENRE).forEach { resetFaultTolerance(it) }
     }
 
     fun cache(name: String) = cacheManager.getCache(name)
