@@ -8,12 +8,11 @@ class DeleteGenreUseCase(
 ) : UnitUseCase<DeleteGenreUseCase.Input>() {
 
     override fun execute(anIn: Input) = with(anIn) {
-        if (anIn.genreId.isBlank()) return
-
+        if (this.genreId.isNullOrBlank()) return
         genreGateway.deleteById(this.genreId)
     }
 
     data class Input(
-        val genreId: String
+        val genreId: String?
     )
 }

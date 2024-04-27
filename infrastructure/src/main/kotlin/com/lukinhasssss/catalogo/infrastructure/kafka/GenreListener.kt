@@ -1,11 +1,11 @@
 package com.lukinhasssss.catalogo.infrastructure.kafka
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.lukinhasssss.catalogo.application.category.delete.DeleteCategoryUseCase
-import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
-import com.lukinhasssss.catalogo.infrastructure.category.CategoryGateway
-import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryEvent
+import com.lukinhasssss.catalogo.application.genre.delete.DeleteGenreUseCase
+import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
+import com.lukinhasssss.catalogo.infrastructure.genre.GenreGateway
+import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreEvent
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Operation
 import com.lukinhasssss.catalogo.infrastructure.utils.loggingForKafkaDlt
@@ -20,40 +20,41 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.stereotype.Component
 
 @Component
-class CategoryListener(
-    private val categoryGateway: CategoryGateway,
-    private val saveCategoryUseCase: SaveCategoryUseCase,
-    private val deleteCategoryUseCase: DeleteCategoryUseCase
+class GenreListener(
+    private val genreGateway: GenreGateway,
+    private val saveGenreUseCase: SaveGenreUseCase,
+    private val deleteGenreUseCase: DeleteGenreUseCase
 ) {
 
     companion object {
-        private val CATEGORY_MESSAGE_TYPE = object : TypeReference<MessageValue<CategoryEvent>>() {}
+        private val GENRE_MESSAGE_TYPE = object : TypeReference<MessageValue<GenreEvent>>() {}
     }
 
     @KafkaListener(
-        concurrency = "\${kafka.consumers.categories.concurrency}",
+        concurrency = "\${kafka.consumers.genres.concurrency}",
         containerFactory = "kafkaListenerFactory", // Nome do bean utilizado na classe KafkaConfig
-        topics = ["\${kafka.consumers.categories.topics}"],
-        groupId = "\${kafka.consumers.categories.group-id}",
-        id = "\${kafka.consumers.categories.id}",
-        properties = ["auto.offset.reset=\${kafka.consumers.categories.auto-offset-reset}"]
+        topics = ["\${kafka.consumers.genres.topics}"],
+        groupId = "\${kafka.consumers.genres.group-id}",
+        id = "\${kafka.consumers.genres.id}",
+        properties = ["auto.offset.reset=\${kafka.consumers.genres.auto-offset-reset}"]
     )
     @RetryableTopic(
         backoff = Backoff(delay = 1000L, multiplier = 2.0),
-        attempts = "\${kafka.consumers.categories.max-attempts}",
+        attempts = "\${kafka.consumers.genres.max-attempts}",
         topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE
     )
     fun onMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaMessageReceived(payload, metadata)
 
-        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE_TYPE).payload
+        val messagePayload = Json.readValue(payload, GENRE_MESSAGE_TYPE).payload
         val operation = messagePayload.operation
 
         if (Operation.isDelete(operation)) {
-            deleteCategoryUseCase.execute(messagePayload.before?.id)
+            deleteGenreUseCase.execute(DeleteGenreUseCase.Input(messagePayload.before?.id))
         } else {
-            categoryGateway.categoryOfId(messagePayload.after?.id).let {
-                saveCategoryUseCase.execute(it)
+            genreGateway.genreOfId(messagePayload.after?.id)?.run {
+                val input = SaveGenreUseCase.Input(id, name, active, categories, createdAt, updatedAt, deletedAt)
+                saveGenreUseCase.execute(input)
             }
         }
     }
@@ -61,16 +62,5 @@ class CategoryListener(
     @DltHandler
     fun onDltMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaDlt(payload, metadata)
-
-        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE_TYPE).payload
-        val operation = messagePayload.operation
-
-        if (Operation.isDelete(operation)) {
-            deleteCategoryUseCase.execute(messagePayload.before?.id)
-        } else {
-            categoryGateway.categoryOfId(messagePayload.after?.id).let {
-                saveCategoryUseCase.execute(it)
-            }
-        }
     }
 }

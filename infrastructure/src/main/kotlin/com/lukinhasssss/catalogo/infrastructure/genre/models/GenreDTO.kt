@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.genre.models
 
 import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
+import com.lukinhasssss.catalogo.domain.genre.Genre
 import java.time.Instant
 
 data class GenreDTO(
@@ -22,4 +23,18 @@ data class GenreDTO(
         updatedAt = updatedAt,
         deletedAt = deletedAt
     )
+
+    companion object {
+        fun from(aGenre: Genre): GenreDTO = with(aGenre) {
+            GenreDTO(
+                id = id,
+                name = name,
+                active = isActive,
+                categories = categories,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
+                deletedAt = deletedAt
+            )
+        }
+    }
 }

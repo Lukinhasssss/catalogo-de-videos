@@ -29,7 +29,7 @@ class GenreRestGateway(
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
     @Cacheable(key = "#genreId")
-    override fun genreOfId(genreId: String): GenreDTO? = doGet(genreId) {
+    override fun genreOfId(genreId: String?): GenreDTO? = doGet(genreId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
                 .uri("/{id}", genreId)
