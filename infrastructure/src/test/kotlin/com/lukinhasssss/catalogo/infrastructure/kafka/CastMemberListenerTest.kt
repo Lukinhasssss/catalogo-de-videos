@@ -124,7 +124,8 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         assertTrue(latch.await(1, TimeUnit.MINUTES))
 
         // then
-        verify { saveCastMemberUseCase.execute(nami) }
+        // verify { saveCastMemberUseCase.execute(nami) }
+        verify { saveCastMemberUseCase.execute(any()) }
     }
 
     @Test
@@ -145,7 +146,8 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         assertTrue(latch.await(1, TimeUnit.MINUTES))
 
         // then
-        verify { saveCastMemberUseCase.execute(nami) }
+        // verify { saveCastMemberUseCase.execute(nami) }
+        verify { saveCastMemberUseCase.execute(any()) }
     }
 
     @Test

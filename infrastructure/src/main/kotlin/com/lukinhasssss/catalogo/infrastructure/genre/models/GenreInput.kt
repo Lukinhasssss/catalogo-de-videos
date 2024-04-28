@@ -4,11 +4,11 @@ import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.domain.genre.Genre
 import java.time.Instant
 
-data class GenreDTO(
+data class GenreInput(
     val id: String,
     val name: String,
-    val isActive: Boolean,
-    val categoriesId: Set<String> = setOf(),
+    val active: Boolean,
+    val categories: Set<String> = setOf(),
     val createdAt: Instant,
     val updatedAt: Instant,
     val deletedAt: Instant? = null
@@ -17,20 +17,20 @@ data class GenreDTO(
     fun toSaveGenreInput() = SaveGenreUseCase.Input(
         id = id,
         name = name,
-        isActive = isActive,
-        categories = categoriesId,
+        isActive = active,
+        categories = categories,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt
     )
 
     companion object {
-        fun from(aGenre: Genre): GenreDTO = with(aGenre) {
-            GenreDTO(
+        fun from(aGenre: Genre): GenreInput = with(aGenre) {
+            GenreInput(
                 id = id,
                 name = name,
-                isActive = isActive,
-                categoriesId = categories,
+                active = isActive,
+                categories = categories,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt

@@ -53,7 +53,7 @@ class GenreListener(
             deleteGenreUseCase.execute(DeleteGenreUseCase.Input(messagePayload.before?.id))
         } else {
             genreGateway.genreOfId(messagePayload.after?.id)?.run {
-                val input = SaveGenreUseCase.Input(id, name, active, categories, createdAt, updatedAt, deletedAt)
+                val input = SaveGenreUseCase.Input(id, name, isActive, categoriesId, createdAt, updatedAt, deletedAt)
                 saveGenreUseCase.execute(input)
             }
         }

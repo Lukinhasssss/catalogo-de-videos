@@ -62,8 +62,8 @@ class GenreRestGatewayTest : AbstractRestClientTest() {
         with(actualGenre!!) {
             assertEquals(business.id, id)
             assertEquals(business.name, name)
-            assertEquals(business.isActive, active)
-            assertEquals(business.categories, categories)
+            assertEquals(business.isActive, isActive)
+            assertEquals(business.categories, categoriesId)
             assertEquals(business.createdAt, createdAt)
             assertEquals(business.updatedAt, updatedAt)
             assertEquals(business.deletedAt, deletedAt)
@@ -100,8 +100,8 @@ class GenreRestGatewayTest : AbstractRestClientTest() {
         with(actualGenre!!) {
             assertEquals(business.id, id)
             assertEquals(business.name, name)
-            assertEquals(business.isActive, active)
-            assertEquals(business.categories, categories)
+            assertEquals(business.isActive, isActive)
+            assertEquals(business.categories, categoriesId)
             assertEquals(business.createdAt, createdAt)
             assertEquals(business.updatedAt, updatedAt)
             assertEquals(business.deletedAt, deletedAt)
