@@ -1,0 +1,43 @@
+version: '3.9'
+
+name: elasticsearch-catalogo-de-videos
+
+services:
+  elasticsearch-codeflix:
+    container_name: elasticsearch-catalogo-de-videos
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    restart: on-failure
+    volumes:
+      - elasticsearch-codeflix:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=codeflix
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - node.name=elasticsearch-catalogo-de-videos
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      - xpack.security.enabled=false
+      - xpack.license.self_generated.type=basic
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --silent --fail http://localhost:9200/_cat/health?h=status" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elasticsearch-codeflix
+
+networks:
+  elasticsearch-codeflix:
+    external: true
+
+volumes:
+  elasticsearch-codeflix:
+    external: true
