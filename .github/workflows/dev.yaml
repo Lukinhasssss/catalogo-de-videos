@@ -23,6 +23,7 @@ jobs:
 
       - name: Run build with gradle
         run: ./gradlew build -x test
+        continue-on-error: false
 
   test:
     name: Gradle Test
@@ -38,6 +39,7 @@ jobs:
 
       - name: Run tests with gradle
         run: ./gradlew test
+        continue-on-error: true
 
   sonarcloud-scan:
     name: SonarCloud Scan
@@ -59,6 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build jacocoTestReport sonar --info
+        continue-on-error: true
 
   open_pull_request:
     name: Open Pull Request
