@@ -5,6 +5,7 @@ import com.lukinhasssss.catalogo.domain.castmember.CastMember
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import org.junit.jupiter.api.Test
+import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
 
 class CastMemberEventTest : UnitTest() {
@@ -15,15 +16,15 @@ class CastMemberEventTest : UnitTest() {
         val expectedId = "1"
         val expectedName = "Any Name"
         val expectedType = "DIRECTOR"
-        val expectedCreatedAt = 1630000000000
-        val expectedUpdatedAt = 1630000000000
+        val unixTimestamp = 1714313893842354
+        val expectedDates = InstantUtils.fromTimestamp(unixTimestamp)
 
         val castMemberEvent = CastMemberEvent(
             id = expectedId,
             name = expectedName,
             type = expectedType,
-            createdAt = expectedCreatedAt,
-            updatedAt = expectedUpdatedAt
+            createdAt = unixTimestamp,
+            updatedAt = unixTimestamp
         )
 
         // when
@@ -33,8 +34,8 @@ class CastMemberEventTest : UnitTest() {
         assertEquals(expectedId, castMember.id)
         assertEquals(expectedName, castMember.name)
         assertEquals(expectedType, castMember.type.name)
-        assertEquals(expectedCreatedAt, castMember.createdAt.toEpochMilli())
-        assertEquals(expectedUpdatedAt, castMember.updatedAt.toEpochMilli())
+        assertEquals(expectedDates, castMember.createdAt.truncatedTo(ChronoUnit.MILLIS))
+        assertEquals(expectedDates, castMember.updatedAt.truncatedTo(ChronoUnit.MILLIS))
     }
 
     @Test
@@ -43,15 +44,15 @@ class CastMemberEventTest : UnitTest() {
         val expectedId = "1"
         val expectedName = "Any Name"
         val expectedType = CastMemberType.DIRECTOR
-        val expectedCreatedAt = InstantUtils.now().toEpochMilli()
-        val expectedUpdatedAt = InstantUtils.now().toEpochMilli()
+        val expectedCreatedAt = InstantUtils.now()
+        val expectedUpdatedAt = InstantUtils.now()
 
         val castMember = CastMember(
             id = expectedId,
             name = expectedName,
             type = expectedType,
-            createdAt = InstantUtils.now(),
-            updatedAt = InstantUtils.now()
+            createdAt = expectedCreatedAt,
+            updatedAt = expectedUpdatedAt
         )
 
         // when
@@ -61,7 +62,7 @@ class CastMemberEventTest : UnitTest() {
         assertEquals(expectedId, castMemberEvent.id)
         assertEquals(expectedName, castMemberEvent.name)
         assertEquals(expectedType.name, castMemberEvent.type)
-        assertEquals(expectedCreatedAt, castMemberEvent.createdAt)
-        assertEquals(expectedUpdatedAt, castMemberEvent.updatedAt)
+        assertEquals(expectedCreatedAt.toEpochMilli(), castMemberEvent.createdAt)
+        assertEquals(expectedUpdatedAt.toEpochMilli(), castMemberEvent.updatedAt)
     }
 }

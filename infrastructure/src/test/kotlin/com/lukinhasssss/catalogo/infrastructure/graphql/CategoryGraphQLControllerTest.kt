@@ -137,7 +137,7 @@ class CategoryGraphQLControllerTest {
         val expectedId = IdUtils.uuid()
         val expectedName = "Animes"
         val expectedDescription = "A melhor categoria"
-        val expectedActive = false
+        val expectedIsActive = false
         val expectedCreatedAt = InstantUtils.now()
         val expectedUpdatedAt = InstantUtils.now()
         val expectedDeletedAt = InstantUtils.now()
@@ -146,7 +146,7 @@ class CategoryGraphQLControllerTest {
             "id" to expectedId,
             "name" to expectedName,
             "description" to expectedDescription,
-            "active" to expectedActive,
+            "active" to expectedIsActive,
             "createdAt" to expectedCreatedAt,
             "updatedAt" to expectedUpdatedAt,
             "deletedAt" to expectedDeletedAt
@@ -179,7 +179,7 @@ class CategoryGraphQLControllerTest {
                     assertEquals(expectedId, it.id)
                     assertEquals(expectedName, it.name)
                     assertEquals(expectedDescription, it.description)
-                    assertEquals(expectedActive, it.isActive)
+                    assertEquals(expectedIsActive, it.isActive)
                     assertEquals(expectedCreatedAt, it.createdAt)
                     assertEquals(expectedUpdatedAt, it.updatedAt)
                     assertEquals(expectedDeletedAt, it.deletedAt)

@@ -2,6 +2,7 @@ package com.lukinhasssss.catalogo.infrastructure.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Categories
+import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Genres
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Keycloak
 import com.lukinhasssss.catalogo.infrastructure.configuration.properties.RestClientProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -40,14 +41,26 @@ class RestClientConfig {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "rest-client.keycloak")
+    @Keycloak
+    fun keycloakRestClientProperties() = RestClientProperties()
+
+    @Bean
     @ConfigurationProperties(prefix = "rest-client.categories")
     @Categories
     fun categoryRestClientProperties() = RestClientProperties()
 
     @Bean
-    @ConfigurationProperties(prefix = "rest-client.keycloak")
+    @ConfigurationProperties(prefix = "rest-client.genres")
+    @Genres
+    fun genreRestClientProperties() = RestClientProperties()
+
+    @Bean
     @Keycloak
-    fun keycloakRestClientProperties() = RestClientProperties()
+    fun keycloakHttpClient(
+        @Keycloak properties: RestClientProperties,
+        objectMapper: ObjectMapper
+    ) = restClient(properties, objectMapper)
 
     @Bean
     @Categories
@@ -57,9 +70,9 @@ class RestClientConfig {
     ) = restClient(properties, objectMapper)
 
     @Bean
-    @Keycloak
-    fun keycloakHttpClient(
-        @Keycloak properties: RestClientProperties,
+    @Genres
+    fun genreHttpClient(
+        @Genres properties: RestClientProperties,
         objectMapper: ObjectMapper
     ) = restClient(properties, objectMapper)
 }
