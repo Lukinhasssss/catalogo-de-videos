@@ -1,5 +1,8 @@
 package com.lukinhasssss.catalogo.domain.video
 
+import com.lukinhasssss.catalogo.domain.validation.Error
+import com.lukinhasssss.catalogo.domain.validation.ValidationHandler
+import com.lukinhasssss.catalogo.domain.validation.handler.ThrowsValidationHandler
 import java.time.Instant
 import java.time.Year
 
@@ -12,7 +15,7 @@ data class Video(
     val rating: Rating,
 
     val opened: Boolean,
-    val published: Boolean,
+    var published: Boolean,
 
     val createdAt: Instant,
     var updatedAt: Instant,
@@ -28,6 +31,30 @@ data class Video(
     val genres: Set<String> = emptySet(),
     val castMembers: Set<String> = emptySet()
 ) {
+
+    init {
+        validate(ThrowsValidationHandler())
+
+        if (banner.isNullOrBlank()) {
+            published = false
+        }
+
+        if (thumbnail.isNullOrBlank()) {
+            published = false
+        }
+
+        if (thumbnailHalf.isNullOrBlank()) {
+            published = false
+        }
+
+        if (trailer.isNullOrBlank()) {
+            published = false
+        }
+
+        if (video.isNullOrBlank()) {
+            published = false
+        }
+    }
 
     companion object {
         fun with(
@@ -90,5 +117,19 @@ data class Video(
             genres = video.genres,
             castMembers = video.castMembers
         )
+    }
+
+    fun validate(handler: ValidationHandler) {
+        if (id.isBlank()) {
+            handler.append(Error("'id' should not be empty"))
+        }
+
+        if (title.isBlank()) {
+            handler.append(Error("'title' should not be empty"))
+        }
+
+        if (description.isBlank()) {
+            handler.append(Error("'description' should not be empty"))
+        }
     }
 }
