@@ -9,7 +9,7 @@ class ListCategoryUseCase(
     private val categoryGateway: CategoryGateway
 ) : UseCase<CategorySearchQuery, Pagination<ListCategoryOutput>>() {
 
-    override fun execute(anIn: CategorySearchQuery): Pagination<ListCategoryOutput> = with(anIn) {
+    override fun execute(input: CategorySearchQuery): Pagination<ListCategoryOutput> = with(input) {
         categoryGateway.findAll(this).map { ListCategoryOutput.from(it) }
     }
 }

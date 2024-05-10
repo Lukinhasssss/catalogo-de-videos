@@ -11,7 +11,7 @@ class ListGenreUseCase(
     private val genreGateway: GenreGateway
 ) : UseCase<ListGenreUseCase.Input, Pagination<ListGenreUseCase.Output>>() {
 
-    override fun execute(anIn: Input): Pagination<Output> = anIn.run {
+    override fun execute(input: Input): Pagination<Output> = input.run {
         GenreSearchQuery(
             page = page,
             perPage = perPage,

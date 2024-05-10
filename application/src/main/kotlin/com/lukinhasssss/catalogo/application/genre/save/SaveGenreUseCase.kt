@@ -9,7 +9,7 @@ class SaveGenreUseCase(
     private val genreGateway: GenreGateway
 ) : UseCase<SaveGenreUseCase.Input, SaveGenreUseCase.Output>() {
 
-    override fun execute(anIn: Input): Output = anIn.run {
+    override fun execute(input: Input): Output = input.run {
         genreGateway.save(
             Genre.with(
                 id = id,
