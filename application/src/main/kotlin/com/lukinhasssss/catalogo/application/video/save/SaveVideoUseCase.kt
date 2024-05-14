@@ -3,11 +3,8 @@ package com.lukinhasssss.catalogo.application.video.save
 import com.lukinhasssss.catalogo.application.UseCase
 import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase.Input
 import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase.Output
-import com.lukinhasssss.catalogo.domain.video.Rating
 import com.lukinhasssss.catalogo.domain.video.Video
 import com.lukinhasssss.catalogo.domain.video.VideoGateway
-import java.time.Instant
-import java.time.Year
 
 class SaveVideoUseCase(
     private val videoGateway: VideoGateway
@@ -42,15 +39,15 @@ class SaveVideoUseCase(
         val id: String,
         val title: String,
         val description: String,
-        val launchedAt: Year,
+        val launchedAt: Int,
         val duration: Double,
-        val rating: Rating,
+        val rating: String,
 
         val opened: Boolean,
         var published: Boolean,
 
-        val createdAt: Instant,
-        var updatedAt: Instant,
+        val createdAt: String,
+        var updatedAt: String,
 
         var banner: String? = null,
         var thumbnail: String? = null,
