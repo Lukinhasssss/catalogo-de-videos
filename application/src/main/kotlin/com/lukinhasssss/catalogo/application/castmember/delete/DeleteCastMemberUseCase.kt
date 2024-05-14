@@ -7,8 +7,8 @@ class DeleteCastMemberUseCase(
     private val castMemberGateway: CastMemberGateway
 ) : UnitUseCase<String?>() {
 
-    override fun execute(anIn: String?) = with(anIn) {
-        if (anIn.isNullOrBlank()) return
+    override fun execute(input: String?) = with(input) {
+        if (input.isNullOrBlank()) return
 
         castMemberGateway.deleteById(this!!)
     }
