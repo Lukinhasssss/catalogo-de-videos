@@ -14,8 +14,8 @@ enum class Rating(val description: String) {
     }
 
     companion object {
-        fun of(label: String): Rating? = entries.firstOrNull {
+        fun of(label: String): Rating = entries.firstOrNull {
             it.name.equals(label, ignoreCase = true) || it.description.equals(label, ignoreCase = true)
-        }
+        } ?: throw IllegalArgumentException("Invalid rating")
     }
 }

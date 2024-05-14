@@ -22,9 +22,9 @@ class ListGenreUseCaseTest : UseCaseTest() {
     @Test
     fun givenAValidQuery_whenCallsListGenres_shouldReturnIt() {
         // given
-        val categories = listOf(Fixture.Genres.business(), Fixture.Genres.tech())
+        val genres = listOf(Fixture.Genres.business(), Fixture.Genres.tech())
 
-        val expectedItems = categories.map { ListGenreUseCase.Output.from(it) }
+        val expectedItems = genres.map { ListGenreUseCase.Output.from(it) }
 
         val expectedPage = 0
         val expectedPerPage = 10
@@ -45,8 +45,8 @@ class ListGenreUseCaseTest : UseCaseTest() {
         val pagination = Pagination(
             currentPage = expectedPage,
             perPage = expectedPerPage,
-            total = categories.size.toLong(),
-            items = categories
+            total = genres.size.toLong(),
+            items = genres
         )
 
         every { genreGateway.findAll(any()) } returns pagination
