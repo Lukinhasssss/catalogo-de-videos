@@ -27,7 +27,7 @@ class CategoryListener(
 ) {
 
     companion object {
-        private val CATEGORY_MESSAGE = object : TypeReference<MessageValue<CategoryEvent>>() {}
+        private val CATEGORY_MESSAGE_TYPE = object : TypeReference<MessageValue<CategoryEvent>>() {}
     }
 
     @KafkaListener(
@@ -46,7 +46,7 @@ class CategoryListener(
     fun onMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaMessageReceived(payload, metadata)
 
-        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE).payload
+        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE_TYPE).payload
         val operation = messagePayload.operation
 
         if (Operation.isDelete(operation)) {
@@ -62,7 +62,7 @@ class CategoryListener(
     fun onDltMessage(@Payload payload: String, metadata: ConsumerRecordMetadata) {
         loggingForKafkaDlt(payload, metadata)
 
-        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE).payload
+        val messagePayload = Json.readValue(payload, CATEGORY_MESSAGE_TYPE).payload
         val operation = messagePayload.operation
 
         if (Operation.isDelete(operation)) {

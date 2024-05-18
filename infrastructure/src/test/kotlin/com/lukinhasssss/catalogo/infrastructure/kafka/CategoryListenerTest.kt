@@ -112,7 +112,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         val aulas = Fixture.Categories.aulas
         val aulasEvent = CategoryEvent(aulas.id)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(aulasEvent, aulasEvent, source, Operation.CREATE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(null, aulasEvent, source, Operation.CREATE)))
 
         val latch = CountDownLatch(1)
 
@@ -158,7 +158,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         val aulas = Fixture.Categories.aulas
         val aulasEvent = CategoryEvent(aulas.id)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(aulasEvent, aulasEvent, source, Operation.DELETE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(aulasEvent, null, source, Operation.DELETE)))
 
         val latch = CountDownLatch(1)
 

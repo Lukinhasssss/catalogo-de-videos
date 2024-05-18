@@ -5,7 +5,7 @@ import com.lukinhasssss.catalogo.application.category.list.ListCategoryUseCase
 import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
 import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.domain.category.CategorySearchQuery
-import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
+import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryInput
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -37,6 +37,6 @@ class CategoryGraphQLController(
     }
 
     @MutationMapping
-    fun saveCategory(@Argument input: CategoryDTO): Category =
+    fun saveCategory(@Argument input: CategoryInput): Category =
         saveCategoryUseCase.execute(input.toCategory())
 }

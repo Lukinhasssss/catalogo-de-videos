@@ -17,6 +17,32 @@ import java.util.concurrent.Callable
 enum class Json {
     INSTANCE;
 
+    companion object {
+        private const val REFLECTION_CACHE_SIZE = 512
+
+        fun mapper(): ObjectMapper = INSTANCE.mapper.copy()
+
+        fun writeValueAsString(obj: Any): String {
+            return invoke { INSTANCE.mapper.writeValueAsString(obj) }
+        }
+
+        fun <T> readValue(json: String, clazz: Class<T>): T {
+            return invoke { INSTANCE.mapper.readValue(json, clazz) }
+        }
+
+        fun <T> readValue(json: String, clazz: TypeReference<T>): T {
+            return invoke { INSTANCE.mapper.readValue(json, clazz) }
+        }
+
+        private operator fun <T> invoke(callable: Callable<T>): T {
+            return try {
+                callable.call()
+            } catch (e: Exception) {
+                throw RuntimeException(e)
+            }
+        }
+    }
+
     private val mapper: ObjectMapper = Jackson2ObjectMapperBuilder()
         .dateFormat(StdDateFormat())
         .featuresToDisable(
@@ -48,32 +74,6 @@ enum class Json {
         // without this, Java 9+ complains of "Illegal reflective access"
         module.setUseValueClassLoader(false)
         return module
-    }
-
-    companion object {
-        const val REFLECTION_CACHE_SIZE = 512
-
-        fun mapper(): ObjectMapper = INSTANCE.mapper.copy()
-
-        fun writeValueAsString(obj: Any): String {
-            return invoke { INSTANCE.mapper.writeValueAsString(obj) }
-        }
-
-        fun <T> readValue(json: String, clazz: Class<T>): T {
-            return invoke { INSTANCE.mapper.readValue(json, clazz) }
-        }
-
-        fun <T> readValue(json: String, clazz: TypeReference<T>): T {
-            return invoke { INSTANCE.mapper.readValue(json, clazz) }
-        }
-
-        private operator fun <T> invoke(callable: Callable<T>): T {
-            return try {
-                callable.call()
-            } catch (e: Exception) {
-                throw RuntimeException(e)
-            }
-        }
     }
 }
 

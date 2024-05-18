@@ -3,7 +3,7 @@ package com.lukinhasssss.catalogo.infrastructure.castmember.models
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lukinhasssss.catalogo.domain.castmember.CastMember
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
-import java.time.Instant
+import com.lukinhasssss.catalogo.domain.utils.InstantUtils.fromTimestamp
 
 data class CastMemberEvent(
     @JsonProperty("id") val id: String,
@@ -24,14 +24,12 @@ data class CastMemberEvent(
     }
 
     fun toCastMember(): CastMember {
-        // Timestamp(createdAt / 1_000).toInstant() --> This is the same as Instant.ofEpochMilli(createdAt)
-
         return CastMember(
             id = id,
             name = name,
             type = CastMemberType.valueOf(type),
-            createdAt = Instant.ofEpochMilli(createdAt),
-            updatedAt = Instant.ofEpochMilli(updatedAt)
+            createdAt = fromTimestamp(createdAt),
+            updatedAt = fromTimestamp(updatedAt)
         )
     }
 }
