@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.configuration.usecases
 
 import com.lukinhasssss.catalogo.application.genre.delete.DeleteGenreUseCase
+import com.lukinhasssss.catalogo.application.genre.get.GetAllGenresByIdUseCase
 import com.lukinhasssss.catalogo.application.genre.list.ListGenreUseCase
 import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.domain.genre.GenreGateway
@@ -20,4 +21,7 @@ class GenreUseCasesConfig(
 
     @Bean
     fun saveGenreUseCase() = SaveGenreUseCase(genreGateway)
+
+    @Bean
+    fun getAllGenresByIdUseCase() = GetAllGenresByIdUseCase(genreGateway)
 }

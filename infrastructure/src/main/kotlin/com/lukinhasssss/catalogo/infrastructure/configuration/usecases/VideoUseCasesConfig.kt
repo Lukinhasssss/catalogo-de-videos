@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.configuration.usecases
 
 import com.lukinhasssss.catalogo.application.video.delete.DeleteVideoUseCase
+import com.lukinhasssss.catalogo.application.video.get.GetVideoUseCase
 import com.lukinhasssss.catalogo.application.video.list.ListVideoUseCase
 import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase
 import com.lukinhasssss.catalogo.domain.video.VideoGateway
@@ -20,4 +21,7 @@ class VideoUseCasesConfig(
 
     @Bean
     fun saveVideoUseCase() = SaveVideoUseCase(videoGateway)
+
+    @Bean
+    fun getVideoUseCase() = GetVideoUseCase(videoGateway)
 }
