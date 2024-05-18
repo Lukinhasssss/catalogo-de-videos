@@ -369,7 +369,7 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
             GenreDocument.from(Fixture.Genres.business()).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(tech.id, business.id)
+        val expectedIds = setOf(tech.id, business.id)
         val expectedSize = expectedIds.size
 
         // when
@@ -396,7 +396,7 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
             GenreDocument.from(Fixture.Genres.business()).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(tech.id, "any", business.id)
+        val expectedIds = setOf(tech.id, "any", business.id)
         val expectedSize = 2
 
         // when
@@ -411,7 +411,7 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
     @Test
     fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
         // given
-        val expectedIds = emptyList<String>()
+        val expectedIds = emptySet<String>()
 
         // when
         val actualOutput = genreGateway.findAllById(expectedIds)

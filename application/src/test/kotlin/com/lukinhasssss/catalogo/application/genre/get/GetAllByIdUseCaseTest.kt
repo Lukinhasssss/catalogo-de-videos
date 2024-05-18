@@ -25,7 +25,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
 
         val expectedItems = genres.map { GetAllByIdUseCase.Output(it) }
 
-        val expectedIds = genres.map { it.id }
+        val expectedIds = genres.map { it.id }.toSet()
 
         every { genreGateway.findAllById(any()) } returns genres
 
@@ -41,7 +41,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
     @Test
     fun givenInvalidIds_whenCallsGetAllById_shouldReturnEmpty() {
         // given
-        val ids = listOf("1", "2", "3")
+        val ids = setOf("1", "2", "3")
 
         every { genreGateway.findAllById(any()) } returns emptyList()
 
@@ -57,7 +57,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
     @Test
     fun givenEmptyIds_whenCallsGetAllById_shouldReturnEmpty() {
         // given
-        val ids = emptyList<String>()
+        val ids = emptySet<String>()
 
         // when
         val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))

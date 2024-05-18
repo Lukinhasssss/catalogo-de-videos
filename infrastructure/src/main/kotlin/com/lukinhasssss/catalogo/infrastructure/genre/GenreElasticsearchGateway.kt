@@ -55,7 +55,7 @@ class GenreElasticsearchGateway(
         Pagination(page, perPage, total, castMembers)
     }
 
-    override fun findAllById(ids: List<String>): List<Genre> =
+    override fun findAllById(ids: Set<String>): List<Genre> =
         if (ids.isEmpty()) {
             emptyList()
         } else {

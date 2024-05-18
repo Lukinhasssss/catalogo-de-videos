@@ -25,7 +25,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
 
         val expectedItems = members.map { GetAllByIdUseCase.Output(it) }
 
-        val expectedIds = members.map { it.id }
+        val expectedIds = members.map { it.id }.toSet()
 
         every { castMemberGateway.findAllById(any()) } returns members
 
@@ -41,7 +41,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
     @Test
     fun givenInvalidIds_whenCallsGetAllById_shouldReturnEmpty() {
         // given
-        val ids = listOf("1", "2", "3")
+        val ids = setOf("1", "2", "3")
 
         every { castMemberGateway.findAllById(any()) } returns emptyList()
 
@@ -57,7 +57,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
     @Test
     fun givenEmptyIds_whenCallsGetAllById_shouldReturnEmpty() {
         // given
-        val ids = emptyList<String>()
+        val ids = emptySet<String>()
 
         // when
         val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))

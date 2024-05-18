@@ -61,7 +61,7 @@ class CategoryElasticsearchGateway(
         )
     }
 
-    override fun findAllById(ids: List<String>): List<Category> =
+    override fun findAllById(ids: Set<String>): List<Category> =
         if (ids.isEmpty()) {
             emptyList()
         } else {

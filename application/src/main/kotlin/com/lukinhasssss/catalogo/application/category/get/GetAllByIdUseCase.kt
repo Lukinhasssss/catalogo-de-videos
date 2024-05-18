@@ -16,7 +16,7 @@ class GetAllByIdUseCase(
         }
 
     data class Input(
-        val ids: List<String> = emptyList()
+        val ids: Set<String> = emptySet()
     )
 
     data class Output(

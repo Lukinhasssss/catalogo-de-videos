@@ -293,7 +293,7 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
             CategoryDocument.from(Fixture.Categories.lives).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(aulas.id, lives.id)
+        val expectedIds = setOf(aulas.id, lives.id)
         val expectedSize = expectedIds.size
 
         // when
@@ -320,7 +320,7 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
             CategoryDocument.from(Fixture.Categories.lives).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(aulas.id, "any", lives.id)
+        val expectedIds = setOf(aulas.id, "any", lives.id)
         val expectedSize = 2
 
         // when
@@ -335,7 +335,7 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
     @Test
     fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
         // given
-        val expectedIds = emptyList<String>()
+        val expectedIds = emptySet<String>()
 
         // when
         val actualOutput = categoryGateway.findAllById(expectedIds)

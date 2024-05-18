@@ -289,7 +289,7 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
             CastMemberDocument.from(Fixture.CastMembers.nami()).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(luffy.id, nami.id)
+        val expectedIds = setOf(luffy.id, nami.id)
         val expectedSize = expectedIds.size
 
         // when
@@ -316,7 +316,7 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
             CastMemberDocument.from(Fixture.CastMembers.nami()).copy(createdAt = InstantUtils.now())
         )
 
-        val expectedIds = listOf(luffy.id, "any", nami.id)
+        val expectedIds = setOf(luffy.id, "any", nami.id)
         val expectedSize = 2
 
         // when
@@ -331,7 +331,7 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
     @Test
     fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
         // given
-        val expectedIds = emptyList<String>()
+        val expectedIds = emptySet<String>()
 
         // when
         val actualOutput = castMemberGateway.findAllById(expectedIds)
