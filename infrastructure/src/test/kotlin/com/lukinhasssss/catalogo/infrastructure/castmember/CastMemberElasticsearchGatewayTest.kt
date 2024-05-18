@@ -274,6 +274,72 @@ class CastMemberElasticsearchGatewayTest : AbstractElasticsearchTest() {
         }
     }
 
+    @Test
+    fun givenValidIds_whenCallsFindAllByIds_shouldReturnElements() {
+        // given
+        val luffy = castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.luffy()).copy(createdAt = InstantUtils.now())
+        )
+
+        castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.zoro()).copy(createdAt = InstantUtils.now())
+        )
+
+        val nami = castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.nami()).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = setOf(luffy.id, nami.id)
+        val expectedSize = expectedIds.size
+
+        // when
+        val actualOutput = castMemberGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == luffy.id })
+        assertTrue(actualOutput.any { it.id == nami.id })
+    }
+
+    @Test
+    fun givenInvalidIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val luffy = castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.luffy()).copy(createdAt = InstantUtils.now())
+        )
+
+        castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.zoro()).copy(createdAt = InstantUtils.now())
+        )
+
+        val nami = castMemberRepository.save(
+            CastMemberDocument.from(Fixture.CastMembers.nami()).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = setOf(luffy.id, "any", nami.id)
+        val expectedSize = 2
+
+        // when
+        val actualOutput = castMemberGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == luffy.id })
+        assertTrue(actualOutput.any { it.id == nami.id })
+    }
+
+    @Test
+    fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val expectedIds = emptySet<String>()
+
+        // when
+        val actualOutput = castMemberGateway.findAllById(expectedIds)
+
+        // then
+        assertTrue(actualOutput.isEmpty())
+    }
+
     private fun mockCastMembers() {
         castMemberRepository.save(
             CastMemberDocument.from(Fixture.CastMembers.luffy()).copy(createdAt = InstantUtils.now())

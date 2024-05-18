@@ -278,6 +278,72 @@ class CategoryElasticsearchGatewayTest : AbstractElasticsearchTest() {
         }
     }
 
+    @Test
+    fun givenValidIds_whenCallsFindAllByIds_shouldReturnElements() {
+        // given
+        val aulas = categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.aulas).copy(createdAt = InstantUtils.now())
+        )
+
+        categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.talks).copy(createdAt = InstantUtils.now())
+        )
+
+        val lives = categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.lives).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = setOf(aulas.id, lives.id)
+        val expectedSize = expectedIds.size
+
+        // when
+        val actualOutput = categoryGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == aulas.id })
+        assertTrue(actualOutput.any { it.id == lives.id })
+    }
+
+    @Test
+    fun givenInvalidIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val aulas = categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.aulas).copy(createdAt = InstantUtils.now())
+        )
+
+        categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.talks).copy(createdAt = InstantUtils.now())
+        )
+
+        val lives = categoryRepository.save(
+            CategoryDocument.from(Fixture.Categories.lives).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = setOf(aulas.id, "any", lives.id)
+        val expectedSize = 2
+
+        // when
+        val actualOutput = categoryGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == aulas.id })
+        assertTrue(actualOutput.any { it.id == lives.id })
+    }
+
+    @Test
+    fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val expectedIds = emptySet<String>()
+
+        // when
+        val actualOutput = categoryGateway.findAllById(expectedIds)
+
+        // then
+        assertTrue(actualOutput.isEmpty())
+    }
+
     private fun mockCategories() {
         categoryRepository.save(
             CategoryDocument.from(Fixture.Categories.aulas).copy(createdAt = InstantUtils.now())

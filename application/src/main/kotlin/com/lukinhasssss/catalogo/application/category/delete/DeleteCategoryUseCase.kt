@@ -7,8 +7,8 @@ class DeleteCategoryUseCase(
     private val categoryGateway: CategoryGateway
 ) : UnitUseCase<String?>() {
 
-    override fun execute(anIn: String?) = with(anIn) {
-        if (anIn.isNullOrBlank()) return
+    override fun execute(input: String?) = with(input) {
+        if (input.isNullOrBlank()) return
 
         categoryGateway.deleteById(this!!)
     }

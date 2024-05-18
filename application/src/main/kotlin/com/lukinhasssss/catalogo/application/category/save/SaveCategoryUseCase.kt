@@ -11,7 +11,7 @@ class SaveCategoryUseCase(
     private val categoryGateway: CategoryGateway
 ) : UseCase<Category?, Category>() {
 
-    override fun execute(anIn: Category?): Category = with(anIn) {
+    override fun execute(input: Category?): Category = with(input) {
         if (this == null) {
             throw NotificationException.with(anError = Error("A category cannot be null"))
         }

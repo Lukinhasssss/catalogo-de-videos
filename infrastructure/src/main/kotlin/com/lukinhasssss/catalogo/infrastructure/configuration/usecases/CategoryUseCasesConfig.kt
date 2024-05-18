@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.configuration.usecases
 
 import com.lukinhasssss.catalogo.application.category.delete.DeleteCategoryUseCase
+import com.lukinhasssss.catalogo.application.category.get.GetAllCategoriesByIdUseCase
 import com.lukinhasssss.catalogo.application.category.list.ListCategoryUseCase
 import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
 import com.lukinhasssss.catalogo.domain.category.CategoryGateway
@@ -20,4 +21,7 @@ class CategoryUseCasesConfig(
 
     @Bean
     fun saveCategoryUseCase() = SaveCategoryUseCase(categoryGateway)
+
+    @Bean
+    fun getAllCategoriesByIdUseCase() = GetAllCategoriesByIdUseCase(categoryGateway)
 }

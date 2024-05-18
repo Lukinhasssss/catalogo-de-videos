@@ -10,5 +10,7 @@ interface GenreGateway {
 
     fun findAll(aQuery: GenreSearchQuery): Pagination<Genre>
 
+    fun findAllById(ids: Set<String>): List<Genre>
+
     fun deleteById(id: String)
 }

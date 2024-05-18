@@ -9,7 +9,7 @@ class ListCastMemberUseCase(
     private val castMemberGateway: CastMemberGateway
 ) : UseCase<CastMemberSearchQuery, Pagination<ListCastMemberOutput>>() {
 
-    override fun execute(anIn: CastMemberSearchQuery): Pagination<ListCastMemberOutput> = with(anIn) {
+    override fun execute(input: CastMemberSearchQuery): Pagination<ListCastMemberOutput> = with(input) {
         castMemberGateway.findAll(this).map { ListCastMemberOutput.from(it) }
     }
 }

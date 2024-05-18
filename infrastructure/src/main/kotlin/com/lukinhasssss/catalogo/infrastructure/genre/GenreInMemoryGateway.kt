@@ -28,6 +28,9 @@ class GenreInMemoryGateway(
         )
     }
 
+    override fun findAllById(ids: Set<String>): List<Genre> =
+        db.filterKeys { it in ids }.values.toList()
+
     override fun deleteById(id: String) {
         if (db.containsKey(id)) db.remove(id)
     }
