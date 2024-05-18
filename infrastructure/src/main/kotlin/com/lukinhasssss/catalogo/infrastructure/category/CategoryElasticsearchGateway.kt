@@ -61,6 +61,13 @@ class CategoryElasticsearchGateway(
         )
     }
 
+    override fun findAllById(ids: List<String>): List<Category> =
+        if (ids.isEmpty()) {
+            emptyList()
+        } else {
+            categoryRepository.findAllById(ids).map { it.toCategory() }
+        }
+
     override fun deleteById(anID: String) = categoryRepository.deleteById(anID)
 
     private fun buildSort(sort: String) = when (sort) {
