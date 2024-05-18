@@ -354,6 +354,72 @@ class GenreElasticsearchGatewayTest : AbstractElasticsearchTest() {
         }
     }
 
+    @Test
+    fun givenValidIds_whenCallsFindAllByIds_shouldReturnElements() {
+        // given
+        val tech = genreRepository.save(
+            GenreDocument.from(Fixture.Genres.tech()).copy(createdAt = InstantUtils.now())
+        )
+
+        genreRepository.save(
+            GenreDocument.from(Fixture.Genres.marketing()).copy(createdAt = InstantUtils.now())
+        )
+
+        val business = genreRepository.save(
+            GenreDocument.from(Fixture.Genres.business()).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = listOf(tech.id, business.id)
+        val expectedSize = expectedIds.size
+
+        // when
+        val actualOutput = genreGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == tech.id })
+        assertTrue(actualOutput.any { it.id == business.id })
+    }
+
+    @Test
+    fun givenInvalidIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val tech = genreRepository.save(
+            GenreDocument.from(Fixture.Genres.tech()).copy(createdAt = InstantUtils.now())
+        )
+
+        genreRepository.save(
+            GenreDocument.from(Fixture.Genres.marketing()).copy(createdAt = InstantUtils.now())
+        )
+
+        val business = genreRepository.save(
+            GenreDocument.from(Fixture.Genres.business()).copy(createdAt = InstantUtils.now())
+        )
+
+        val expectedIds = listOf(tech.id, "any", business.id)
+        val expectedSize = 2
+
+        // when
+        val actualOutput = genreGateway.findAllById(expectedIds)
+
+        // then
+        assertEquals(expectedSize, actualOutput.size)
+        assertTrue(actualOutput.any { it.id == tech.id })
+        assertTrue(actualOutput.any { it.id == business.id })
+    }
+
+    @Test
+    fun givenEmptyIds_whenCallsFindAllByIds_shouldReturnEmptyList() {
+        // given
+        val expectedIds = emptyList<String>()
+
+        // when
+        val actualOutput = genreGateway.findAllById(expectedIds)
+
+        // then
+        assertTrue(actualOutput.isEmpty())
+    }
+
     private fun mockGenres() {
         genreRepository.save(GenreDocument.from(Fixture.Genres.business()))
         genreRepository.save(GenreDocument.from(Fixture.Genres.tech()))
