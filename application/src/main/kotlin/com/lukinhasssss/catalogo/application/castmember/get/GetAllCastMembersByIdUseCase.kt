@@ -5,9 +5,9 @@ import com.lukinhasssss.catalogo.domain.castmember.CastMember
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberGateway
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
 
-class GetAllByIdUseCase(
+class GetAllCastMembersByIdUseCase(
     private val castMemberGateway: CastMemberGateway
-) : UseCase<GetAllByIdUseCase.Input, List<GetAllByIdUseCase.Output>>() {
+) : UseCase<GetAllCastMembersByIdUseCase.Input, List<GetAllCastMembersByIdUseCase.Output>>() {
 
     override fun execute(input: Input): List<Output> =
         if (input.ids.isEmpty()) {

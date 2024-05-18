@@ -5,9 +5,9 @@ import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.genre.GenreGateway
 import java.time.Instant
 
-class GetAllByIdUseCase(
+class GetAllGenresByIdUseCase(
     private val genreGateway: GenreGateway
-) : UseCase<GetAllByIdUseCase.Input, List<GetAllByIdUseCase.Output>>() {
+) : UseCase<GetAllGenresByIdUseCase.Input, List<GetAllGenresByIdUseCase.Output>>() {
 
     override fun execute(input: Input): List<Output> =
         if (input.ids.isEmpty()) {

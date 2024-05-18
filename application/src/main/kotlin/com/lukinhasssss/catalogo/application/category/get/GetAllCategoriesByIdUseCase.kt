@@ -4,9 +4,9 @@ import com.lukinhasssss.catalogo.application.UseCase
 import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.domain.category.CategoryGateway
 
-class GetAllByIdUseCase(
+class GetAllCategoriesByIdUseCase(
     private val categoryGateway: CategoryGateway
-) : UseCase<GetAllByIdUseCase.Input, List<GetAllByIdUseCase.Output>>() {
+) : UseCase<GetAllCategoriesByIdUseCase.Input, List<GetAllCategoriesByIdUseCase.Output>>() {
 
     override fun execute(input: Input): List<Output> =
         if (input.ids.isEmpty()) {

@@ -10,10 +10,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
-class GetAllByIdUseCaseTest : UseCaseTest() {
+class GetAllGenresByIdUseCaseTest : UseCaseTest() {
 
     @InjectMockKs
-    private lateinit var useCase: GetAllByIdUseCase
+    private lateinit var useCase: GetAllCastMembersByIdUseCase
 
     @MockK
     private lateinit var castMemberGateway: CastMemberGateway
@@ -23,14 +23,14 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         // given
         val members = listOf(Fixture.CastMembers.luffy(), Fixture.CastMembers.zoro())
 
-        val expectedItems = members.map { GetAllByIdUseCase.Output(it) }
+        val expectedItems = members.map { GetAllCastMembersByIdUseCase.Output(it) }
 
         val expectedIds = members.map { it.id }.toSet()
 
         every { castMemberGateway.findAllById(any()) } returns members
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(expectedIds))
+        val actualOutput = useCase.execute(GetAllCastMembersByIdUseCase.Input(expectedIds))
 
         // then
         assertTrue { expectedItems.size == actualOutput.size && expectedItems.containsAll(actualOutput) }
@@ -46,7 +46,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         every { castMemberGateway.findAllById(any()) } returns emptyList()
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))
+        val actualOutput = useCase.execute(GetAllCastMembersByIdUseCase.Input(ids))
 
         // then
         assertTrue { actualOutput.isEmpty() }
@@ -60,7 +60,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         val ids = emptySet<String>()
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))
+        val actualOutput = useCase.execute(GetAllCastMembersByIdUseCase.Input(ids))
 
         // then
         assertTrue { actualOutput.isEmpty() }

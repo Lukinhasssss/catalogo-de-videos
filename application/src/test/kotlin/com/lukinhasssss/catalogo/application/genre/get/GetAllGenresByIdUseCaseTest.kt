@@ -10,10 +10,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
-class GetAllByIdUseCaseTest : UseCaseTest() {
+class GetAllGenresByIdUseCaseTest : UseCaseTest() {
 
     @InjectMockKs
-    private lateinit var useCase: GetAllByIdUseCase
+    private lateinit var useCase: GetAllGenresByIdUseCase
 
     @MockK
     private lateinit var genreGateway: GenreGateway
@@ -23,14 +23,14 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         // given
         val genres = listOf(Fixture.Genres.tech(), Fixture.Genres.business())
 
-        val expectedItems = genres.map { GetAllByIdUseCase.Output(it) }
+        val expectedItems = genres.map { GetAllGenresByIdUseCase.Output(it) }
 
         val expectedIds = genres.map { it.id }.toSet()
 
         every { genreGateway.findAllById(any()) } returns genres
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(expectedIds))
+        val actualOutput = useCase.execute(GetAllGenresByIdUseCase.Input(expectedIds))
 
         // then
         assertTrue { expectedItems.size == actualOutput.size && expectedItems.containsAll(actualOutput) }
@@ -46,7 +46,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         every { genreGateway.findAllById(any()) } returns emptyList()
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))
+        val actualOutput = useCase.execute(GetAllGenresByIdUseCase.Input(ids))
 
         // then
         assertTrue { actualOutput.isEmpty() }
@@ -60,7 +60,7 @@ class GetAllByIdUseCaseTest : UseCaseTest() {
         val ids = emptySet<String>()
 
         // when
-        val actualOutput = useCase.execute(GetAllByIdUseCase.Input(ids))
+        val actualOutput = useCase.execute(GetAllGenresByIdUseCase.Input(ids))
 
         // then
         assertTrue { actualOutput.isEmpty() }
