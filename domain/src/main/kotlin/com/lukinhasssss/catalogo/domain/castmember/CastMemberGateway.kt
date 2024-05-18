@@ -10,5 +10,7 @@ interface CastMemberGateway {
 
     fun findAll(aQuery: CastMemberSearchQuery): Pagination<CastMember>
 
+    fun findAllById(ids: List<String>): List<CastMember>
+
     fun deleteById(anId: String)
 }
