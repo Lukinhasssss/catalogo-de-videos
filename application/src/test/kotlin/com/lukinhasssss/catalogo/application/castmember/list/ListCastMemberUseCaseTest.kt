@@ -21,7 +21,7 @@ class ListCastMemberUseCaseTest : UseCaseTest() {
     private lateinit var castMemberGateway: CastMemberGateway
 
     @Test
-    fun givenAValidQuery_whenCallsListCastMembers_shouldReturnCategories() {
+    fun givenAValidQuery_whenCallsListCastMembers_shouldReturnCastMembers() {
         // given
         val members = listOf(Fixture.CastMembers.luffy(), Fixture.CastMembers.zoro())
 
