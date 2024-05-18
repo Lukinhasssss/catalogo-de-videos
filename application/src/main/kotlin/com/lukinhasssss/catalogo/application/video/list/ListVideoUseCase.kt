@@ -43,9 +43,15 @@ class ListVideoUseCase(
     data class Output(
         val id: String,
         val title: String,
+        val description: String,
         val published: Boolean,
         val launchYear: Int,
         val rating: String,
+        val banner: String? = null,
+        val thumbnail: String? = null,
+        val thumbnailHalf: String? = null,
+        val trailer: String? = null,
+        val video: String? = null,
         val categories: Set<String>,
         val castMembers: Set<String>,
         val genres: Set<String>
@@ -55,9 +61,15 @@ class ListVideoUseCase(
                 Output(
                     id = id,
                     title = title,
+                    description = description,
                     published = published,
                     launchYear = launchedAt.value,
                     rating = rating.name,
+                    banner = banner,
+                    thumbnail = thumbnail,
+                    thumbnailHalf = thumbnailHalf,
+                    trailer = trailer,
+                    video = this.video,
                     categories = categories,
                     castMembers = castMembers,
                     genres = genres
