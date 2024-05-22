@@ -6,6 +6,7 @@ import com.lukinhasssss.catalogo.domain.category.CategorySearchQuery
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryDocument
 import com.lukinhasssss.catalogo.infrastructure.category.persistence.CategoryRepository
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.elasticsearch.core.SearchOperations
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
 @Component
+@Profile("!development")
 class CategoryElasticsearchGateway(
     private val categoryRepository: CategoryRepository,
     private val searchOperations: SearchOperations

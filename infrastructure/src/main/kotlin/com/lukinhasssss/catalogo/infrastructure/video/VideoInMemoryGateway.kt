@@ -6,6 +6,7 @@ import com.lukinhasssss.catalogo.domain.video.VideoGateway
 import com.lukinhasssss.catalogo.domain.video.VideoSearchQuery
 import org.springframework.stereotype.Component
 
+// @Profile("development")
 @Component
 class VideoInMemoryGateway(
     private val db: MutableMap<String, Video> = mutableMapOf()
