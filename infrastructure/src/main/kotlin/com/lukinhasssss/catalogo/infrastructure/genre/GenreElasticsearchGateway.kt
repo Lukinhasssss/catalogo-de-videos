@@ -55,6 +55,13 @@ class GenreElasticsearchGateway(
         Pagination(page, perPage, total, castMembers)
     }
 
+    override fun findAllById(ids: Set<String>): List<Genre> =
+        if (ids.isEmpty()) {
+            emptyList()
+        } else {
+            genreRepository.findAllById(ids).map { it.toGenre() }
+        }
+
     override fun deleteById(id: String) = genreRepository.deleteById(id)
 
     private fun buildSort(sort: String) = when (sort) {

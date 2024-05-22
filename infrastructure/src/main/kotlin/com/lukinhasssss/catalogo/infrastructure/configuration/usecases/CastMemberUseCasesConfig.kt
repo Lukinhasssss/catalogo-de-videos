@@ -1,6 +1,7 @@
 package com.lukinhasssss.catalogo.infrastructure.configuration.usecases
 
 import com.lukinhasssss.catalogo.application.castmember.delete.DeleteCastMemberUseCase
+import com.lukinhasssss.catalogo.application.castmember.get.GetAllCastMembersByIdUseCase
 import com.lukinhasssss.catalogo.application.castmember.list.ListCastMemberUseCase
 import com.lukinhasssss.catalogo.application.castmember.save.SaveCastMemberUseCase
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberGateway
@@ -20,4 +21,7 @@ class CastMemberUseCasesConfig(
 
     @Bean
     fun deleteCastMemberUseCase() = DeleteCastMemberUseCase(castMemberGateway)
+
+    @Bean
+    fun getAllCastMembersByIdUseCase() = GetAllCastMembersByIdUseCase(castMemberGateway)
 }

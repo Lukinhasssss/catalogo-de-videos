@@ -54,6 +54,13 @@ class CastMemberElasticsearchGateway(
         Pagination(page, perPage, total, castMembers)
     }
 
+    override fun findAllById(ids: Set<String>): List<CastMember> =
+        if (ids.isEmpty()) {
+            emptyList()
+        } else {
+            castMemberRepository.findAllById(ids).map { it.toCastMember() }
+        }
+
     override fun deleteById(anId: String) = castMemberRepository.deleteById(anId)
 
     private fun buildSort(sort: String) = when (sort) {

@@ -11,7 +11,7 @@ class SaveCastMemberUseCase(
     private val castMemberGateway: CastMemberGateway
 ) : UseCase<CastMember?, CastMember>() {
 
-    override fun execute(anIn: CastMember?): CastMember = with(anIn) {
+    override fun execute(input: CastMember?): CastMember = with(input) {
         if (this == null) {
             throw NotificationException.with(anError = Error("A member cannot be null"))
         }
