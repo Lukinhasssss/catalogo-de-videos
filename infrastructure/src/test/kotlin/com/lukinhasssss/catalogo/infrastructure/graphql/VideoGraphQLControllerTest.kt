@@ -5,8 +5,12 @@ import com.lukinhasssss.catalogo.application.castmember.get.GetAllCastMembersByI
 import com.lukinhasssss.catalogo.application.category.get.GetAllCategoriesByIdUseCase
 import com.lukinhasssss.catalogo.application.genre.get.GetAllGenresByIdUseCase
 import com.lukinhasssss.catalogo.application.video.list.ListVideoUseCase
+import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase
 import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
+import com.lukinhasssss.catalogo.domain.utils.IdUtils
+import com.lukinhasssss.catalogo.domain.utils.InstantUtils.now
+import com.lukinhasssss.catalogo.domain.video.Rating
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -15,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.graphql.test.tester.GraphQlTester
 import java.time.Instant
+import java.time.Year
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -23,6 +28,9 @@ class VideoGraphQLControllerTest {
 
     @MockkBean
     private lateinit var listVideoUseCase: ListVideoUseCase
+
+    @MockkBean
+    private lateinit var saveVideoUseCase: SaveVideoUseCase
 
     @MockkBean
     private lateinit var getAllCategoriesByIdUseCase: GetAllCategoriesByIdUseCase
@@ -225,6 +233,176 @@ class VideoGraphQLControllerTest {
                     assertEquals(expectedCategories, it.categories)
                     assertEquals(expectedCastMembers, it.castMembers)
                     assertEquals(expectedGenres, it.genres)
+                }
+            )
+        }
+    }
+
+    @Test
+    fun givenVideoInput_whenCallsSaveVideoMutation_shouldPersistAndReturnId() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedTitle = "Clean Code"
+        val expectedDescription = "Clean Code description"
+        val expectedYearLaunched = Year.now().value
+        val expectedRating = Rating.L.name
+        val expectedDuration = 60.0
+        val expectedOpened = false
+        val expectedPublished = true
+        val expectedBanner = "https://banner.com"
+        val expectedThumbnail = "https://thumbnail.com"
+        val expectedThumbnailHalf = "https://thumbnail-half.com"
+        val expectedTrailer = "https://trailer.com"
+        val expectedVideo = "https://video.com"
+        val expectedCategories = setOf(IdUtils.uuid())
+        val expectedCastMembers = setOf(IdUtils.uuid())
+        val expectedGenres = setOf(IdUtils.uuid())
+        val expectedDates = now()
+
+        val input = mapOf(
+            "id" to expectedId,
+            "title" to expectedTitle,
+            "description" to expectedDescription,
+            "yearLaunched" to expectedYearLaunched,
+            "duration" to expectedDuration,
+            "opened" to expectedOpened,
+            "rating" to expectedRating,
+            "published" to expectedPublished,
+            "banner" to expectedBanner,
+            "thumbnail" to expectedThumbnail,
+            "thumbnailHalf" to expectedThumbnailHalf,
+            "trailer" to expectedTrailer,
+            "video" to expectedVideo,
+            "categoriesId" to expectedCategories,
+            "castMembersId" to expectedCastMembers,
+            "genresId" to expectedGenres,
+            "createdAt" to expectedDates.toString(),
+            "updatedAt" to expectedDates.toString()
+        )
+
+        val query = """
+            mutation SaveVideo(${'$'}input: VideoInput!) {
+                video: saveVideo(input: ${'$'}input) {
+                    id
+                }
+            }
+        """.trimIndent()
+
+        every { saveVideoUseCase.execute(any()) } answers { SaveVideoUseCase.Output(expectedId) }
+
+        // when
+        graphql.document(query)
+            .variable("input", input)
+            .execute()
+            .path("video.id").entity(String::class.java).isEqualTo(expectedId)
+
+        // then
+        verify {
+            saveVideoUseCase.execute(
+                withArg {
+                    assertEquals(expectedId, it.id)
+                    assertEquals(expectedTitle, it.title)
+                    assertEquals(expectedDescription, it.description)
+                    assertEquals(expectedYearLaunched, it.launchedAt)
+                    assertEquals(expectedRating, it.rating)
+                    assertEquals(expectedDuration, it.duration)
+                    assertEquals(expectedOpened, it.opened)
+                    assertEquals(expectedPublished, it.published)
+                    assertEquals(expectedBanner, it.banner)
+                    assertEquals(expectedThumbnail, it.thumbnail)
+                    assertEquals(expectedThumbnailHalf, it.thumbnailHalf)
+                    assertEquals(expectedTrailer, it.trailer)
+                    assertEquals(expectedVideo, it.video)
+                    assertEquals(expectedCategories, it.categories)
+                    assertEquals(expectedCastMembers, it.castMembers)
+                    assertEquals(expectedGenres, it.genres)
+                    assertEquals(expectedDates.toString(), it.createdAt)
+                    assertEquals(expectedDates.toString(), it.updatedAt)
+                }
+            )
+        }
+    }
+
+    @Test
+    fun givenVideoInputWithOnlyRequiredProps_whenCallsSaveVideoMutation_shouldPersistAndReturnId() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedTitle = "Clean Code"
+        val expectedDescription = "Clean Code description"
+        val expectedYearLaunched = Year.now().value
+        val expectedRating = Rating.L.name
+        val expectedDuration = 60.0
+        val expectedOpened = false
+        val expectedPublished = true
+        val expectedBanner: String? = null
+        val expectedThumbnail: String? = null
+        val expectedThumbnailHalf: String? = null
+        val expectedTrailer: String? = null
+        val expectedVideo: String? = null
+        val expectedCategories: Set<String> = emptySet()
+        val expectedCastMembers: Set<String> = emptySet()
+        val expectedGenres: Set<String> = emptySet()
+        val expectedDates = now()
+
+        val input = mapOf(
+            "id" to expectedId,
+            "title" to expectedTitle,
+            "description" to expectedDescription,
+            "yearLaunched" to expectedYearLaunched,
+            "duration" to expectedDuration,
+            "opened" to expectedOpened,
+            "rating" to expectedRating,
+            "published" to expectedPublished,
+            "banner" to expectedBanner,
+            "thumbnail" to expectedThumbnail,
+            "thumbnailHalf" to expectedThumbnailHalf,
+            "trailer" to expectedTrailer,
+            "video" to expectedVideo,
+            "categoriesId" to expectedCategories,
+            "castMembersId" to expectedCastMembers,
+            "genresId" to expectedGenres,
+            "createdAt" to expectedDates.toString(),
+            "updatedAt" to expectedDates.toString()
+        )
+
+        val query = """
+            mutation SaveVideo(${'$'}input: VideoInput!) {
+                video: saveVideo(input: ${'$'}input) {
+                    id
+                }
+            }
+        """.trimIndent()
+
+        every { saveVideoUseCase.execute(any()) } answers { SaveVideoUseCase.Output(expectedId) }
+
+        // when
+        graphql.document(query)
+            .variable("input", input)
+            .execute()
+            .path("video.id").entity(String::class.java).isEqualTo(expectedId)
+
+        // then
+        verify {
+            saveVideoUseCase.execute(
+                withArg {
+                    assertEquals(expectedId, it.id)
+                    assertEquals(expectedTitle, it.title)
+                    assertEquals(expectedDescription, it.description)
+                    assertEquals(expectedYearLaunched, it.launchedAt)
+                    assertEquals(expectedRating, it.rating)
+                    assertEquals(expectedDuration, it.duration)
+                    assertEquals(expectedOpened, it.opened)
+                    assertEquals(expectedPublished, it.published)
+                    assertEquals(expectedBanner, it.banner)
+                    assertEquals(expectedThumbnail, it.thumbnail)
+                    assertEquals(expectedThumbnailHalf, it.thumbnailHalf)
+                    assertEquals(expectedTrailer, it.trailer)
+                    assertEquals(expectedVideo, it.video)
+                    assertEquals(expectedCategories, it.categories)
+                    assertEquals(expectedCastMembers, it.castMembers)
+                    assertEquals(expectedGenres, it.genres)
+                    assertEquals(expectedDates.toString(), it.createdAt)
+                    assertEquals(expectedDates.toString(), it.updatedAt)
                 }
             )
         }
