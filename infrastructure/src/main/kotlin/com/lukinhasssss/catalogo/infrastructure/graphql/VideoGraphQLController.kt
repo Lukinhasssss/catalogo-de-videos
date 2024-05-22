@@ -4,6 +4,7 @@ import com.lukinhasssss.catalogo.application.castmember.get.GetAllCastMembersByI
 import com.lukinhasssss.catalogo.application.category.get.GetAllCategoriesByIdUseCase
 import com.lukinhasssss.catalogo.application.genre.get.GetAllGenresByIdUseCase
 import com.lukinhasssss.catalogo.application.video.list.ListVideoUseCase
+import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase
 import com.lukinhasssss.catalogo.infrastructure.castmember.GqlCastMemberPresenter
 import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMember
 import com.lukinhasssss.catalogo.infrastructure.category.GqlCategoryPresenter
@@ -12,7 +13,9 @@ import com.lukinhasssss.catalogo.infrastructure.genre.GqlGenrePresenter
 import com.lukinhasssss.catalogo.infrastructure.genre.models.GqlGenre
 import com.lukinhasssss.catalogo.infrastructure.video.GqlVideoPresenter
 import com.lukinhasssss.catalogo.infrastructure.video.models.GqlVideo
+import com.lukinhasssss.catalogo.infrastructure.video.models.GqlVideoInput
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Controller
 @Controller
 class VideoGraphQLController(
     private val listVideoUseCase: ListVideoUseCase,
+    private val saveVideoUseCase: SaveVideoUseCase,
     private val getAllCategoriesByIdUseCase: GetAllCategoriesByIdUseCase,
     private val getAllCastMembersByIdUseCase: GetAllCastMembersByIdUseCase,
     private val getAllGenresByIdUseCase: GetAllGenresByIdUseCase
@@ -70,4 +74,30 @@ class VideoGraphQLController(
     fun genres(video: GqlVideo): List<GqlGenre> =
         getAllGenresByIdUseCase.execute(GetAllGenresByIdUseCase.Input(video.genresId))
             .map(GqlGenrePresenter::present)
+
+    @MutationMapping
+    fun saveVideo(@Argument input: GqlVideoInput): SaveVideoUseCase.Output = with(input) {
+        val saveVideoInput = SaveVideoUseCase.Input(
+            id = id,
+            title = title,
+            description = description,
+            launchedAt = yearLaunched,
+            duration = duration,
+            rating = rating,
+            opened = opened,
+            published = published,
+            banner = banner,
+            thumbnail = thumbnail,
+            thumbnailHalf = thumbnailHalf,
+            trailer = trailer,
+            video = video,
+            categories = categoriesId,
+            castMembers = castMembersId,
+            genres = genresId,
+            createdAt = createdAt,
+            updatedAt = updatedAt
+        )
+
+        saveVideoUseCase.execute(saveVideoInput)
+    }
 }
