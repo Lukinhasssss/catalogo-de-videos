@@ -3,7 +3,6 @@ package com.lukinhasssss.catalogo.application.genre.get
 import com.lukinhasssss.catalogo.application.UseCase
 import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.genre.GenreGateway
-import java.time.Instant
 
 class GetAllGenresByIdUseCase(
     private val genreGateway: GenreGateway
@@ -25,18 +24,18 @@ class GetAllGenresByIdUseCase(
         val name: String,
         val active: Boolean,
         val categories: Set<String> = setOf(),
-        val createdAt: Instant,
-        val updatedAt: Instant,
-        val deletedAt: Instant? = null
+        val createdAt: String,
+        val updatedAt: String,
+        val deletedAt: String? = null
     ) {
         constructor(genre: Genre) : this(
             id = genre.id,
             name = genre.name,
             active = genre.isActive,
             categories = genre.categories,
-            createdAt = genre.createdAt,
-            updatedAt = genre.updatedAt,
-            deletedAt = genre.deletedAt
+            createdAt = genre.createdAt.toString(),
+            updatedAt = genre.updatedAt.toString(),
+            deletedAt = genre.deletedAt.toString()
         )
     }
 }

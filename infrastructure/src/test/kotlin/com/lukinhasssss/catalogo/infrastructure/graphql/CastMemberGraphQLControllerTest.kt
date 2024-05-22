@@ -9,6 +9,8 @@ import com.lukinhasssss.catalogo.domain.castmember.CastMemberType
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
+import com.lukinhasssss.catalogo.infrastructure.castmember.GqlCastMemberPresenter
+import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMember
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -34,10 +36,12 @@ class CastMemberGraphQLControllerTest {
     @Test
     fun givenDefaultArguments_whenCallsListCastMembers_shouldReturn() {
         // given
-        val expectedMembers = listOf(
+        val castMembers = listOf(
             ListCastMemberOutput.from(Fixture.CastMembers.luffy()),
             ListCastMemberOutput.from(Fixture.CastMembers.zoro())
         )
+
+        val expectedMembers = castMembers.map { GqlCastMemberPresenter.present(it) }
 
         val expectedPage = 0
         val expectedPerPage = 10
@@ -47,7 +51,7 @@ class CastMemberGraphQLControllerTest {
 
         every {
             listCastMemberUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedMembers.size.toLong(), expectedMembers)
+        } returns Pagination(expectedPage, expectedPerPage, castMembers.size.toLong(), castMembers)
 
         val query = """
             {
@@ -64,7 +68,7 @@ class CastMemberGraphQLControllerTest {
         // when
         val res = graphql.document(query).execute()
 
-        val actualMembers = res.path("castMembers").entityList(ListCastMemberOutput::class.java).get()
+        val actualMembers = res.path("castMembers").entityList(GqlCastMember::class.java).get()
 
         // then
         assertTrue(actualMembers.size == expectedMembers.size && actualMembers.containsAll(expectedMembers))
@@ -85,10 +89,12 @@ class CastMemberGraphQLControllerTest {
     @Test
     fun givenCustomArguments_whenCallsListCastMembers_shouldReturn() {
         // given
-        val expectedMembers = listOf(
+        val castMembers = listOf(
             ListCastMemberOutput.from(Fixture.CastMembers.luffy()),
             ListCastMemberOutput.from(Fixture.CastMembers.zoro())
         )
+
+        val expectedMembers = castMembers.map { GqlCastMemberPresenter.present(it) }
 
         val expectedPage = 2
         val expectedPerPage = 15
@@ -98,7 +104,7 @@ class CastMemberGraphQLControllerTest {
 
         every {
             listCastMemberUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedMembers.size.toLong(), expectedMembers)
+        } returns Pagination(expectedPage, expectedPerPage, castMembers.size.toLong(), castMembers)
 
         val query = """
             query AllCastMembers(${'$'}search: String, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}sort: String, ${'$'}direction: String) {
@@ -121,7 +127,7 @@ class CastMemberGraphQLControllerTest {
             .variable("direction", expectedDirection)
             .execute()
 
-        val actualMembers = res.path("castMembers").entityList(ListCastMemberOutput::class.java).get()
+        val actualMembers = res.path("castMembers").entityList(GqlCastMember::class.java).get()
 
         // then
         assertTrue(actualMembers.size == expectedMembers.size && actualMembers.containsAll(expectedMembers))

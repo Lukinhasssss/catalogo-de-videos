@@ -265,23 +265,10 @@ class VideoGraphQLControllerTest {
             .usingRecursiveComparison().ignoringFields("categories", "castMembers", "genres")
             .isEqualTo(expectedVideo)
 
-        assertTrue(
-            actualVideo.castMembers.size == expectedCastMembers.size &&
-                actualVideo.castMembers.containsAll(expectedCastMembers)
-        )
+        assertTrue(actualVideo.categories.size == expectedCategories.size && actualVideo.categories.containsAll(expectedCategories))
 
-        assertTrue(
-            (
-                actualVideo.categories.size == expectedCategories.size &&
-                    actualVideo.categories.containsAll(expectedCategories)
-                )
-        )
+        assertTrue(actualVideo.castMembers.size == expectedCastMembers.size && actualVideo.castMembers.containsAll(expectedCastMembers))
 
-        assertTrue(
-            (
-                actualVideo.genres.size == expectedGenres.size &&
-                    actualVideo.genres.containsAll(expectedGenres)
-                )
-        )
+        assertTrue(actualVideo.genres.size == expectedGenres.size && actualVideo.genres.containsAll(expectedGenres))
     }
 }

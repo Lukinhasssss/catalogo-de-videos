@@ -7,6 +7,8 @@ import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
+import com.lukinhasssss.catalogo.infrastructure.genre.GqlGenrePresenter
+import com.lukinhasssss.catalogo.infrastructure.genre.models.GqlGenre
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -32,10 +34,12 @@ class GenreGraphQLControllerTest {
     @Test
     fun givenDefaultArguments_whenCallsListGenres_shouldReturn() {
         // given
-        val expectedGenres = listOf(
+        val genres = listOf(
             ListGenreUseCase.Output.from(Fixture.Genres.business()),
             ListGenreUseCase.Output.from(Fixture.Genres.tech())
         )
+
+        val expectedGenres = genres.map { GqlGenrePresenter.present(it) }
 
         val expectedPage = 0
         val expectedPerPage = 10
@@ -46,7 +50,7 @@ class GenreGraphQLControllerTest {
 
         every {
             listGenreUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedGenres.size.toLong(), expectedGenres)
+        } returns Pagination(expectedPage, expectedPerPage, genres.size.toLong(), genres)
 
         val query = """
             {
@@ -65,7 +69,7 @@ class GenreGraphQLControllerTest {
         // when
         val res = graphql.document(query).execute()
 
-        val actualGenres = res.path("genres").entityList(ListGenreUseCase.Output::class.java).get()
+        val actualGenres = res.path("genres").entityList(GqlGenre::class.java).get()
 
         // then
         assertTrue(actualGenres.size == expectedGenres.size && actualGenres.containsAll(expectedGenres))
@@ -87,10 +91,12 @@ class GenreGraphQLControllerTest {
     @Test
     fun givenCustomArguments_whenCallsListGenres_shouldReturn() {
         // given
-        val expectedGenres = listOf(
+        val genres = listOf(
             ListGenreUseCase.Output.from(Fixture.Genres.business()),
             ListGenreUseCase.Output.from(Fixture.Genres.tech())
         )
+
+        val expectedGenres = genres.map { GqlGenrePresenter.present(it) }
 
         val expectedPage = 2
         val expectedPerPage = 15
@@ -101,7 +107,7 @@ class GenreGraphQLControllerTest {
 
         every {
             listGenreUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedGenres.size.toLong(), expectedGenres)
+        } returns Pagination(expectedPage, expectedPerPage, genres.size.toLong(), genres)
 
         val query = """
             query AllGenres(${'$'}search: String, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}sort: String, ${'$'}direction: String, ${'$'}categories: [String]) {
@@ -127,7 +133,7 @@ class GenreGraphQLControllerTest {
             .variable("categories", expectedCategories)
             .execute()
 
-        val actualGenres = res.path("genres").entityList(ListGenreUseCase.Output::class.java).get()
+        val actualGenres = res.path("genres").entityList(GqlGenre::class.java).get()
 
         // then
         assertTrue(actualGenres.size == expectedGenres.size && actualGenres.containsAll(expectedGenres))
