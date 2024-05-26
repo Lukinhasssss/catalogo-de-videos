@@ -22,14 +22,12 @@ class GetAllCategoriesByIdUseCase(
     data class Output(
         val id: String,
         val name: String,
-        val createdAt: String,
-        val updatedAt: String
+        val description: String? = null
     ) {
         constructor(category: Category) : this(
             id = category.id,
             name = category.name,
-            createdAt = category.createdAt.toString(),
-            updatedAt = category.updatedAt.toString()
+            description = category.description
         )
     }
 }

@@ -1,11 +1,11 @@
 package com.lukinhasssss.catalogo.infrastructure.graphql
 
-import com.lukinhasssss.catalogo.application.castmember.list.ListCastMemberOutput
 import com.lukinhasssss.catalogo.application.castmember.list.ListCastMemberUseCase
 import com.lukinhasssss.catalogo.application.castmember.save.SaveCastMemberUseCase
-import com.lukinhasssss.catalogo.domain.castmember.CastMember
 import com.lukinhasssss.catalogo.domain.castmember.CastMemberSearchQuery
-import com.lukinhasssss.catalogo.infrastructure.castmember.models.CastMemberDTO
+import com.lukinhasssss.catalogo.infrastructure.castmember.GqlCastMemberPresenter
+import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMember
+import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMemberInput
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -24,7 +24,7 @@ class CastMemberGraphQLController(
         @Argument perPage: Int,
         @Argument sort: String,
         @Argument direction: String
-    ): List<ListCastMemberOutput> {
+    ): List<GqlCastMember> {
         val aQuery = CastMemberSearchQuery(
             page = page,
             perPage = perPage,
@@ -33,10 +33,10 @@ class CastMemberGraphQLController(
             direction = direction
         )
 
-        return listCastMemberUseCase.execute(aQuery).data
+        return listCastMemberUseCase.execute(aQuery).map(GqlCastMemberPresenter::present).data
     }
 
     @MutationMapping
-    fun saveCastMember(@Argument input: CastMemberDTO): CastMember =
-        saveCastMemberUseCase.execute(input.toCastMember())
+    fun saveCastMember(@Argument input: GqlCastMemberInput): GqlCastMember =
+        GqlCastMemberPresenter.present(saveCastMemberUseCase.execute(input.toCastMember()))
 }

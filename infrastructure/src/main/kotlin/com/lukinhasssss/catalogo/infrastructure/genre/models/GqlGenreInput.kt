@@ -4,7 +4,7 @@ import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.domain.genre.Genre
 import java.time.Instant
 
-data class GenreInput(
+data class GqlGenreInput(
     val id: String,
     val name: String,
     val active: Boolean,
@@ -25,8 +25,8 @@ data class GenreInput(
     )
 
     companion object {
-        fun from(aGenre: Genre): GenreInput = with(aGenre) {
-            GenreInput(
+        fun from(aGenre: Genre): GqlGenreInput = with(aGenre) {
+            GqlGenreInput(
                 id = id,
                 name = name,
                 active = isActive,

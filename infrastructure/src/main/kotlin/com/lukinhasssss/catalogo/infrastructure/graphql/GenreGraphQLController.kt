@@ -2,7 +2,9 @@ package com.lukinhasssss.catalogo.infrastructure.graphql
 
 import com.lukinhasssss.catalogo.application.genre.list.ListGenreUseCase
 import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
-import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreInput
+import com.lukinhasssss.catalogo.infrastructure.genre.GqlGenrePresenter
+import com.lukinhasssss.catalogo.infrastructure.genre.models.GqlGenre
+import com.lukinhasssss.catalogo.infrastructure.genre.models.GqlGenreInput
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -22,7 +24,7 @@ class GenreGraphQLController(
         @Argument sort: String,
         @Argument direction: String,
         @Argument categories: Set<String> = setOf()
-    ): List<ListGenreUseCase.Output> {
+    ): List<GqlGenre> {
         val input = ListGenreUseCase.Input(
             page = page,
             perPage = perPage,
@@ -32,10 +34,10 @@ class GenreGraphQLController(
             categories = categories
         )
 
-        return listGenreUseCase.execute(input).data
+        return listGenreUseCase.execute(input).map(GqlGenrePresenter::present).data
     }
 
     @MutationMapping
-    fun saveGenre(@Argument(name = "input") input: GenreInput): SaveGenreUseCase.Output =
+    fun saveGenre(@Argument(name = "input") input: GqlGenreInput): SaveGenreUseCase.Output =
         saveGenreUseCase.execute(input.toSaveGenreInput())
 }

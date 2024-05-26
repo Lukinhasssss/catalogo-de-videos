@@ -8,6 +8,8 @@ import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
+import com.lukinhasssss.catalogo.infrastructure.category.GqlCategoryPresenter
+import com.lukinhasssss.catalogo.infrastructure.category.models.GqlCategory
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -32,10 +34,12 @@ class CategoryGraphQLControllerTest {
     @Test
     fun givenDefaultArguments_whenCallsListCategories_shouldReturn() {
         // given
-        val expectedCategories = listOf(
+        val categories = listOf(
             ListCategoryOutput.from(Fixture.Categories.lives),
             ListCategoryOutput.from(Fixture.Categories.aulas)
         )
+
+        val expectedCategories = categories.map { GqlCategoryPresenter.present(it) }
 
         val expectedPage = 0
         val expectedPerPage = 10
@@ -45,13 +49,14 @@ class CategoryGraphQLControllerTest {
 
         every {
             listCategoryUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedCategories.size.toLong(), expectedCategories)
+        } returns Pagination(expectedPage, expectedPerPage, categories.size.toLong(), categories)
 
         val query = """
             {
               categories {
                 id
                 name
+                description
               }
             }
         """.trimIndent()
@@ -59,7 +64,7 @@ class CategoryGraphQLControllerTest {
         // when
         val res = graphql.document(query).execute()
 
-        val actualCategories = res.path("categories").entityList(ListCategoryOutput::class.java).get()
+        val actualCategories = res.path("categories").entityList(GqlCategory::class.java).get()
 
         // then
         assertTrue(actualCategories.size == expectedCategories.size && actualCategories.containsAll(expectedCategories))
@@ -80,10 +85,12 @@ class CategoryGraphQLControllerTest {
     @Test
     fun givenCustomArguments_whenCallsListCategories_shouldReturn() {
         // given
-        val expectedCategories = listOf(
+        val categories = listOf(
             ListCategoryOutput.from(Fixture.Categories.lives),
             ListCategoryOutput.from(Fixture.Categories.aulas)
         )
+
+        val expectedCategories = categories.map { GqlCategoryPresenter.present(it) }
 
         val expectedPage = 2
         val expectedPerPage = 15
@@ -93,13 +100,14 @@ class CategoryGraphQLControllerTest {
 
         every {
             listCategoryUseCase.execute(any())
-        } returns Pagination(expectedPage, expectedPerPage, expectedCategories.size.toLong(), expectedCategories)
+        } returns Pagination(expectedPage, expectedPerPage, categories.size.toLong(), categories)
 
         val query = """
             query AllCategories(${'$'}search: String, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}sort: String, ${'$'}direction: String) {
                 categories(search: ${'$'}search, page: ${'$'}page, perPage: ${'$'}perPage, sort: ${'$'}sort, direction: ${'$'}direction) {
                     id
                     name
+                    description
                 }
             }
         """.trimIndent()
@@ -113,7 +121,7 @@ class CategoryGraphQLControllerTest {
             .variable("direction", expectedDirection)
             .execute()
 
-        val actualCategories = res.path("categories").entityList(ListCategoryOutput::class.java).get()
+        val actualCategories = res.path("categories").entityList(GqlCategory::class.java).get()
 
         // then
         assertTrue(actualCategories.size == expectedCategories.size && actualCategories.containsAll(expectedCategories))

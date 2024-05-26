@@ -6,6 +6,7 @@ import com.lukinhasssss.catalogo.domain.genre.GenreSearchQuery
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreDocument
 import com.lukinhasssss.catalogo.infrastructure.genre.persistence.GenreRepository
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.elasticsearch.core.SearchOperations
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
 @Component
+@Profile("!development")
 class GenreElasticsearchGateway(
     private val genreRepository: GenreRepository,
     private val searchOperations: SearchOperations

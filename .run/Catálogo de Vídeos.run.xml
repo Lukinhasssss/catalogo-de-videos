@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Catálogo de Vídeos" type="JetRunConfigurationType">
+    <option name="ALTERNATIVE_JRE_PATH" value="JAVA_21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="KEYCLOAK_CLIENT_ID" value="admin-do-catalogo" />
+      <env name="KEYCLOAK_CLIENT_SECRET" value="Td5scdSINqzhib0ket0UFUnvEPP6KAal" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.lukinhasssss.catalogo.infrastructure.CatalogoDeVideosKt" />
+    <module name="catalogo-de-videos.infrastructure.main" />
+    <shortenClasspath name="NONE" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=development" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
