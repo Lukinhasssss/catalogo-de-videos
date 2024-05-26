@@ -178,6 +178,105 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
     @Test
     fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
         // when/then
-        assertDoesNotThrow { videoRepository.deleteById("any") }
+        assertDoesNotThrow { videoGateway.deleteById("any") }
+    }
+
+    @Test
+    fun givenAnEmptyId_whenCallsDeleteById_shouldBeOk() {
+        // when/then
+        assertDoesNotThrow { videoGateway.deleteById("") }
+    }
+
+    @Test
+    fun givenVideoPersisted_whenCallsFindById_shouldRetrieveIt() {
+        // given
+        val expectedId = IdUtils.uuid()
+        val expectedTitle = "Video Title"
+        val expectedDescription = "Video Description"
+        val expectedLaunchedAt = Year.of(2022)
+        val expectedDuration = 120.10
+        val expectedOpened = false
+        val expectedPublished = false
+        val expectedRating = Rating.L
+        val expectedCreatedAt = InstantUtils.now()
+        val expectedUpdatedAt = InstantUtils.now()
+        val expectedVideo = "http://video.com"
+        val expectedTrailer = "http://trailer.com"
+        val expectedBanner = "http://banner.com"
+        val expectedThumbnail = "http://thumbnail.com"
+        val expectedThumbnailHalf = "http://thumbnailHalf.com"
+        val expectedCategories = setOf(IdUtils.uuid())
+        val expectedGenres = setOf(IdUtils.uuid())
+        val expectedCastMembers = setOf(IdUtils.uuid())
+
+        videoRepository.save(
+            VideoDocument(
+                id = expectedId,
+                title = expectedTitle,
+                description = expectedDescription,
+                launchedAt = expectedLaunchedAt.value,
+                duration = expectedDuration,
+                rating = expectedRating.name,
+                opened = expectedOpened,
+                published = expectedPublished,
+                banner = expectedBanner,
+                thumbnail = expectedThumbnail,
+                thumbnailHalf = expectedThumbnailHalf,
+                trailer = expectedTrailer,
+                video = expectedVideo,
+                categories = expectedCategories,
+                castMembers = expectedCastMembers,
+                genres = expectedGenres,
+                createdAt = expectedCreatedAt.toString(),
+                updatedAt = expectedUpdatedAt.toString()
+            )
+        )
+
+        assertEquals(1, videoRepository.count())
+
+        // when
+        val actualOutput = videoGateway.findById(expectedId)
+
+        // then
+        assertEquals(1, videoRepository.count())
+
+        with(actualOutput!!) {
+            assertEquals(expectedId, id)
+            assertEquals(expectedTitle, title)
+            assertEquals(expectedDescription, description)
+            assertEquals(expectedLaunchedAt, launchedAt)
+            assertEquals(expectedDuration, duration)
+            assertEquals(expectedRating, rating)
+            assertEquals(expectedOpened, opened)
+            assertEquals(expectedPublished, published)
+            assertEquals(expectedBanner, banner)
+            assertEquals(expectedThumbnail, thumbnail)
+            assertEquals(expectedThumbnailHalf, thumbnailHalf)
+            assertEquals(expectedTrailer, trailer)
+            assertEquals(expectedVideo, video)
+            assertEquals(expectedCategories, categories)
+            assertEquals(expectedCastMembers, castMembers)
+            assertEquals(expectedGenres, genres)
+            assertEquals(expectedCreatedAt, createdAt)
+            assertEquals(expectedUpdatedAt, updatedAt)
+        }
+    }
+
+    @Test
+    fun givenInvalidEmptyId_whenCallsFindById_shouldReturnNull() {
+        // when
+        val actualOutput = videoGateway.findById("")
+
+        // then
+        assertEquals(null, actualOutput)
+    }
+
+    @Test
+    fun givenInvalidId_whenCallsFindById_shouldReturnNull() {
+        // when
+        val actualOutput = videoGateway.findById("any")
+
+        // then
+        assertEquals(null, actualOutput)
     }
 }
