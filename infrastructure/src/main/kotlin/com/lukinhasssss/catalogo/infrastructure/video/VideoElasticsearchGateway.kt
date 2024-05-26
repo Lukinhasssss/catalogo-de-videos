@@ -8,30 +8,22 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("development")
-class VideoInMemoryGateway(
-    private val db: MutableMap<String, Video> = mutableMapOf()
-) : VideoGateway {
+@Profile("!development")
+class VideoElasticsearchGateway : VideoGateway {
 
     override fun save(video: Video): Video {
-        db[video.id] = video
-        return video
+        TODO("Not yet implemented")
     }
 
     override fun findById(id: String): Video? {
-        return db[id]
+        TODO("Not yet implemented")
     }
 
-    override fun findAll(aQuery: VideoSearchQuery): Pagination<Video> = with(aQuery) {
-        Pagination(
-            currentPage = page,
-            perPage = perPage,
-            total = db.size.toLong(),
-            items = db.values.toList()
-        )
+    override fun findAll(aQuery: VideoSearchQuery): Pagination<Video> {
+        TODO("Not yet implemented")
     }
 
     override fun deleteById(id: String) {
-        db.remove(id)
+        TODO("Not yet implemented")
     }
 }
