@@ -1,11 +1,16 @@
 package com.lukinhasssss.catalogo.infrastructure.video
 
 import com.lukinhasssss.catalogo.AbstractElasticsearchTest
+import com.lukinhasssss.catalogo.domain.Fixture
 import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import com.lukinhasssss.catalogo.domain.video.Rating
 import com.lukinhasssss.catalogo.domain.video.Video
+import com.lukinhasssss.catalogo.infrastructure.video.persistence.VideoDocument
 import com.lukinhasssss.catalogo.infrastructure.video.persistence.VideoRepository
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Year
@@ -150,5 +155,29 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(expectedCreatedAt.toString(), createdAt)
             assertEquals(expectedUpdatedAt.toString(), updatedAt)
         }
+    }
+
+    @Test
+    fun givenAValidId_whenCallsDeleteById_shouldDeleteIt() {
+        // given
+        val cleanCode = Fixture.Videos.cleanCode()
+
+        videoRepository.save(VideoDocument.from(cleanCode))
+
+        val expectedId = cleanCode.id
+
+        assertTrue(videoRepository.existsById(expectedId))
+
+        // when
+        videoGateway.deleteById(expectedId)
+
+        // then
+        assertFalse(videoRepository.existsById(expectedId))
+    }
+
+    @Test
+    fun givenAnInvalidId_whenCallsDeleteById_shouldBeOk() {
+        // when/then
+        assertDoesNotThrow { videoRepository.deleteById("any") }
     }
 }
