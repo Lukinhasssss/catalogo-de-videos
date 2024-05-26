@@ -6,15 +6,18 @@ import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.domain.utils.InstantUtils
 import com.lukinhasssss.catalogo.domain.video.Rating
 import com.lukinhasssss.catalogo.domain.video.Video
+import com.lukinhasssss.catalogo.domain.video.VideoSearchQuery
 import com.lukinhasssss.catalogo.infrastructure.video.persistence.VideoDocument
 import com.lukinhasssss.catalogo.infrastructure.video.persistence.VideoRepository
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Year
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
@@ -278,5 +281,316 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
 
         // then
         assertEquals(null, actualOutput)
+    }
+
+    @Test
+    fun givenEmptyVideos_whenCallsFindAll_shouldReturnEmptyList() {
+        // given
+        val expectedPage = 0
+        val expectedPerPage = 10
+        val expectedTerms = ""
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+        val expectedTotal = 0
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal.toLong(), meta.total)
+            assertEquals(expectedTotal, data.size)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "code, 0, 10, 1, 1, Clean Code",
+            "gol, 0, 10, 1, 1, Golang",
+            "design, 0, 10, 1, 1, System Design",
+            "assistido, 0, 10, 1, 1, System Design",
+            "limpo, 0, 10, 1, 1, Clean Code",
+            "linguagem, 0, 10, 1, 1, Golang"
+        ]
+    )
+    fun givenValidTerm_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedTerms: String,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedTitle: String
+    ) {
+        // given
+        mockVideos()
+
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedTitle, data[0].title)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "meeting, 0, 10, 1, 1, Golang",
+            "aulas, 0, 10, 1, 1, System Design",
+            "lives, 0, 10, 1, 1, Clean Code",
+            ", 0, 10, 3, 3, Clean Code"
+        ]
+    )
+    fun givenValidCategory_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedCategories: String?,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockVideos()
+
+        val expectedTerms = ""
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection,
+            categories = if (expectedCategories != null) setOf(expectedCategories) else setOf()
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].title)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "luffy, 0, 10, 1, 1, Golang",
+            "nami, 0, 10, 1, 1, System Design",
+            "zoro, 0, 10, 1, 1, Clean Code",
+            ", 0, 10, 3, 3, Clean Code"
+        ]
+    )
+    fun givenValidCastMember_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedCastMember: String?,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockVideos()
+
+        val expectedTerms = ""
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection,
+            castMembers = if (expectedCastMember != null) setOf(expectedCastMember) else setOf()
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].title)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "golang, 0, 10, 1, 1, Golang",
+            "systemdesign, 0, 10, 1, 1, System Design",
+            "cleancode, 0, 10, 1, 1, Clean Code",
+            ", 0, 10, 3, 3, Clean Code"
+        ]
+    )
+    fun givenValidGenre_whenCallsFindAll_shouldReturnElementsFiltered(
+        expectedGenre: String?,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockVideos()
+
+        val expectedTerms = ""
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection,
+            genres = if (expectedGenre != null) setOf(expectedGenre) else setOf()
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].title)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "title, asc, 0, 10, 3, 3, Clean Code",
+            "title, desc, 0, 10, 3, 3, System Design",
+            "created_at, asc, 0, 10, 3, 3, System Design",
+            "created_at, desc, 0, 10, 3, 3, Golang"
+        ]
+    )
+    fun givenValidSortAndDirection_whenCallsFindAll_shouldReturnElementsSorted(
+        expectedSort: String,
+        expectedDirection: String,
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String
+    ) {
+        // given
+        mockVideos()
+
+        val expectedTerms = ""
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+            assertEquals(expectedName, data[0].title)
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "0, 1, 1, 3, Clean Code",
+            "1, 1, 1, 3, Golang",
+            "2, 1, 1, 3, System Design",
+            "3, 1, 0, 3,"
+        ]
+    )
+    fun givenValidPage_whenCallsFindAll_shouldReturnElementsPaged(
+        expectedPage: Int,
+        expectedPerPage: Int,
+        expectedItemsCount: Int,
+        expectedTotal: Long,
+        expectedName: String?
+    ) {
+        // given
+        mockVideos()
+
+        val expectedTerms = ""
+        val expectedSort = "title"
+        val expectedDirection = "asc"
+
+        val aQuery = VideoSearchQuery(
+            page = expectedPage,
+            perPage = expectedPerPage,
+            terms = expectedTerms,
+            sort = expectedSort,
+            direction = expectedDirection
+        )
+
+        // when
+        val actualOutput = videoGateway.findAll(aQuery)
+
+        // then
+        with(actualOutput) {
+            assertEquals(expectedPage, meta.currentPage)
+            assertEquals(expectedPerPage, meta.perPage)
+            assertEquals(expectedTotal, meta.total)
+            assertEquals(expectedItemsCount, data.size)
+
+            if (expectedName != null) {
+                assertEquals(expectedName, data[0].title)
+            }
+        }
+    }
+
+    private fun mockVideos() {
+        videoRepository.save(VideoDocument.from(Fixture.Videos.systemDesign()))
+        videoRepository.save(VideoDocument.from(Fixture.Videos.cleanCode()))
+        videoRepository.save(VideoDocument.from(Fixture.Videos.golang()))
     }
 }
