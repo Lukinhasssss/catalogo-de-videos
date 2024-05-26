@@ -28,7 +28,5 @@ class VideoElasticsearchGateway(
         TODO("Not yet implemented")
     }
 
-    override fun deleteById(id: String) {
-        TODO("Not yet implemented")
-    }
+    override fun deleteById(id: String) = videoRepository.deleteById(id)
 }
