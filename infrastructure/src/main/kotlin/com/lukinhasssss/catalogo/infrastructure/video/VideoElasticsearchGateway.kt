@@ -20,13 +20,12 @@ class VideoElasticsearchGateway(
         return video
     }
 
-    override fun findById(id: String): Video? {
-        TODO("Not yet implemented")
-    }
+    override fun findById(id: String): Video? =
+        if (id.isBlank()) null else videoRepository.findById(id).map { it.toVideo() }.orElse(null)
 
     override fun findAll(aQuery: VideoSearchQuery): Pagination<Video> {
         TODO("Not yet implemented")
     }
 
-    override fun deleteById(id: String) = videoRepository.deleteById(id)
+    override fun deleteById(id: String) = if (id.isBlank()) Unit else videoRepository.deleteById(id)
 }
