@@ -4,10 +4,11 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.video.Video
 import com.lukinhasssss.catalogo.domain.video.VideoGateway
 import com.lukinhasssss.catalogo.domain.video.VideoSearchQuery
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-// @Profile("development")
 @Component
+@Profile("development")
 class VideoInMemoryGateway(
     private val db: MutableMap<String, Video> = mutableMapOf()
 ) : VideoGateway {
