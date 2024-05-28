@@ -9,8 +9,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.lukinhasssss.catalogo.AbstractRestClientTest
 import com.lukinhasssss.catalogo.domain.Fixture.Videos.cleanCode
 import com.lukinhasssss.catalogo.domain.exception.InternalErrorException
+import com.lukinhasssss.catalogo.domain.utils.IdUtils
 import com.lukinhasssss.catalogo.infrastructure.authentication.ClientCredentialsManager
+import com.lukinhasssss.catalogo.infrastructure.video.models.ImageResourceDTO
 import com.lukinhasssss.catalogo.infrastructure.video.models.VideoDTO
+import com.lukinhasssss.catalogo.infrastructure.video.models.VideoResourceDTO
 import com.ninjasquad.springmockk.SpykBean
 import io.github.resilience4j.bulkhead.BulkheadFullException
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException
@@ -52,11 +55,11 @@ class VideoRestClientTest : AbstractRestClientTest() {
                     duration = duration,
                     opened = opened,
                     published = published,
-                    banner = banner,
-                    thumbnail = thumbnail,
-                    thumbnailHalf = thumbnailHalf,
-                    trailer = trailer,
-                    video = this.video,
+                    banner = imageResourceDTO(banner!!),
+                    thumbnail = imageResourceDTO(thumbnail!!),
+                    thumbnailHalf = imageResourceDTO(thumbnailHalf!!),
+                    trailer = videoResourceDTO(trailer!!),
+                    video = videoResourceDTO(this.video!!),
                     categoriesId = categories,
                     castMembersId = castMembers,
                     genresId = genres,
@@ -89,11 +92,11 @@ class VideoRestClientTest : AbstractRestClientTest() {
             assertEquals(cleanCode.duration, duration)
             assertEquals(cleanCode.opened, opened)
             assertEquals(cleanCode.published, published)
-            assertEquals(cleanCode.banner, banner)
-            assertEquals(cleanCode.thumbnail, thumbnail)
-            assertEquals(cleanCode.thumbnailHalf, thumbnailHalf)
-            assertEquals(cleanCode.trailer, trailer)
-            assertEquals(cleanCode.video, video)
+            assertEquals(cleanCode.banner, banner?.location)
+            assertEquals(cleanCode.thumbnail, thumbnail?.location)
+            assertEquals(cleanCode.thumbnailHalf, thumbnailHalf?.location)
+            assertEquals(cleanCode.trailer, trailer?.encodedLocation)
+            assertEquals(cleanCode.video, video?.encodedLocation)
             assertEquals(cleanCode.categories, categoriesId)
             assertEquals(cleanCode.castMembers, castMembersId)
             assertEquals(cleanCode.genres, genresId)
@@ -120,11 +123,11 @@ class VideoRestClientTest : AbstractRestClientTest() {
                     duration = duration,
                     opened = opened,
                     published = published,
-                    banner = banner,
-                    thumbnail = thumbnail,
-                    thumbnailHalf = thumbnailHalf,
-                    trailer = trailer,
-                    video = this.video,
+                    banner = imageResourceDTO(banner!!),
+                    thumbnail = imageResourceDTO(thumbnail!!),
+                    thumbnailHalf = imageResourceDTO(thumbnailHalf!!),
+                    trailer = videoResourceDTO(trailer!!),
+                    video = videoResourceDTO(this.video!!),
                     categoriesId = categories,
                     castMembersId = castMembers,
                     genresId = genres,
@@ -159,11 +162,11 @@ class VideoRestClientTest : AbstractRestClientTest() {
             assertEquals(cleanCode.duration, duration)
             assertEquals(cleanCode.opened, opened)
             assertEquals(cleanCode.published, published)
-            assertEquals(cleanCode.banner, banner)
-            assertEquals(cleanCode.thumbnail, thumbnail)
-            assertEquals(cleanCode.thumbnailHalf, thumbnailHalf)
-            assertEquals(cleanCode.trailer, trailer)
-            assertEquals(cleanCode.video, video)
+            assertEquals(cleanCode.banner, banner?.location)
+            assertEquals(cleanCode.thumbnail, thumbnail?.location)
+            assertEquals(cleanCode.thumbnailHalf, thumbnailHalf?.location)
+            assertEquals(cleanCode.trailer, trailer?.encodedLocation)
+            assertEquals(cleanCode.video, video?.encodedLocation)
             assertEquals(cleanCode.categories, categoriesId)
             assertEquals(cleanCode.castMembers, castMembersId)
             assertEquals(cleanCode.genres, genresId)
@@ -251,11 +254,11 @@ class VideoRestClientTest : AbstractRestClientTest() {
                     duration = duration,
                     opened = opened,
                     published = published,
-                    banner = banner,
-                    thumbnail = thumbnail,
-                    thumbnailHalf = thumbnailHalf,
-                    trailer = trailer,
-                    video = this.video,
+                    banner = imageResourceDTO(banner!!),
+                    thumbnail = imageResourceDTO(thumbnail!!),
+                    thumbnailHalf = imageResourceDTO(thumbnailHalf!!),
+                    trailer = videoResourceDTO(trailer!!),
+                    video = videoResourceDTO(this.video!!),
                     categoriesId = categories,
                     castMembersId = castMembers,
                     genresId = genres,
@@ -351,4 +354,20 @@ class VideoRestClientTest : AbstractRestClientTest() {
 
         verify(0, getRequestedFor(urlPathEqualTo("/api/videos/$expectedId")))
     }
+
+    private fun videoResourceDTO(data: String) = VideoResourceDTO(
+        id = IdUtils.uuid(),
+        name = data,
+        checksum = IdUtils.uuid(),
+        location = data,
+        encodedLocation = data,
+        status = "processed"
+    )
+
+    private fun imageResourceDTO(data: String) = ImageResourceDTO(
+        id = IdUtils.uuid(),
+        name = data,
+        checksum = IdUtils.uuid(),
+        location = data
+    )
 }

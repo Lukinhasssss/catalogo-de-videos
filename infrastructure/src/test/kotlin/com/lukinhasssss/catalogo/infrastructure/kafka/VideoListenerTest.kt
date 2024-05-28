@@ -4,13 +4,17 @@ import com.lukinhasssss.catalogo.AbstractEmbeddedKafkaTest
 import com.lukinhasssss.catalogo.application.video.delete.DeleteVideoUseCase
 import com.lukinhasssss.catalogo.application.video.save.SaveVideoUseCase
 import com.lukinhasssss.catalogo.domain.Fixture.Videos.cleanCode
+import com.lukinhasssss.catalogo.domain.utils.IdUtils
+import com.lukinhasssss.catalogo.domain.video.Video
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Operation
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.ValuePayload
 import com.lukinhasssss.catalogo.infrastructure.video.VideoClient
+import com.lukinhasssss.catalogo.infrastructure.video.models.ImageResourceDTO
 import com.lukinhasssss.catalogo.infrastructure.video.models.VideoDTO
 import com.lukinhasssss.catalogo.infrastructure.video.models.VideoEvent
+import com.lukinhasssss.catalogo.infrastructure.video.models.VideoResourceDTO
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.mockk.every
@@ -122,7 +126,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { saveVideoUseCase.execute(any()) } answers { latch.countDown(); SaveVideoUseCase.Output(id) }
-            every { videoClient.videoOfId(any()) } returns VideoDTO.from(this)
+            every { videoClient.videoOfId(any()) } returns this.toVideoDTO()
 
             // when
             producer.send(ProducerRecord(videoTopics, message)).get(10, TimeUnit.SECONDS)
@@ -169,7 +173,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { saveVideoUseCase.execute(any()) } answers { latch.countDown(); SaveVideoUseCase.Output(id) }
-            every { videoClient.videoOfId(any()) } returns VideoDTO.from(this)
+            every { videoClient.videoOfId(any()) } returns this.toVideoDTO()
 
             // when
             producer.send(ProducerRecord(videoTopics, message)).get(10, TimeUnit.SECONDS)
@@ -216,7 +220,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { deleteVideoUseCase.execute(any()) } answers { latch.countDown() }
-            every { videoClient.videoOfId(any()) } returns VideoDTO.from(this)
+            every { videoClient.videoOfId(any()) } returns this.toVideoDTO()
 
             // when
             producer.send(ProducerRecord(videoTopics, message)).get(10, TimeUnit.SECONDS)
@@ -227,4 +231,41 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             verify { deleteVideoUseCase.execute(DeleteVideoUseCase.Input(id)) }
         }
     }
+
+    private fun Video.toVideoDTO() = VideoDTO(
+        id = id,
+        title = title,
+        description = description,
+        yearLaunched = launchedAt.value,
+        rating = rating.name,
+        duration = duration,
+        opened = opened,
+        published = published,
+        banner = imageResourceDTO(banner!!),
+        thumbnail = imageResourceDTO(thumbnail!!),
+        thumbnailHalf = imageResourceDTO(thumbnailHalf!!),
+        trailer = videoResourceDTO(trailer!!),
+        video = videoResourceDTO(this.video!!),
+        categoriesId = categories,
+        castMembersId = castMembers,
+        genresId = genres,
+        createdAt = createdAt.toString(),
+        updatedAt = updatedAt.toString()
+    )
+
+    private fun videoResourceDTO(data: String) = VideoResourceDTO(
+        id = IdUtils.uuid(),
+        name = data,
+        checksum = IdUtils.uuid(),
+        location = data,
+        encodedLocation = data,
+        status = "processed"
+    )
+
+    private fun imageResourceDTO(data: String) = ImageResourceDTO(
+        id = IdUtils.uuid(),
+        name = data,
+        checksum = IdUtils.uuid(),
+        location = data
+    )
 }
