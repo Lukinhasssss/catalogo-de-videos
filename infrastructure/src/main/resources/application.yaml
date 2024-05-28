@@ -13,7 +13,7 @@ graphql:
 
 kafka:
   auto-create-topics: false
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   pool-timeout: 1_000
   consumers:
     categories:
@@ -95,6 +95,8 @@ spring:
   graphql:
     graphiql:
       enabled: ${graphql.graphiql}
+  kafka:
+    bootstrap-servers: ${kafka.bootstrap-servers}
   servlet:
     multipart:
       max-file-size: 10GB
