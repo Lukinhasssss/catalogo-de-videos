@@ -25,10 +25,10 @@ import org.springframework.http.MediaType
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class GenreRestGatewayTest : AbstractRestClientTest() {
+class GenreRestClientTest : AbstractRestClientTest() {
 
     @Autowired
-    lateinit var target: GenreRestGateway
+    lateinit var target: GenreRestClient
 
     @SpykBean
     lateinit var credentialsManager: ClientCredentialsManager

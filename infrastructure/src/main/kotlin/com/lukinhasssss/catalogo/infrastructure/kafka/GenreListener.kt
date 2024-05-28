@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.lukinhasssss.catalogo.application.genre.delete.DeleteGenreUseCase
 import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
-import com.lukinhasssss.catalogo.infrastructure.genre.GenreGateway
+import com.lukinhasssss.catalogo.infrastructure.genre.GenreClient
 import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreEvent
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Operation
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class GenreListener(
-    private val genreGateway: GenreGateway,
+    private val genreClient: GenreClient,
     private val saveGenreUseCase: SaveGenreUseCase,
     private val deleteGenreUseCase: DeleteGenreUseCase
 ) {
@@ -52,7 +52,7 @@ class GenreListener(
         if (Operation.isDelete(operation)) {
             deleteGenreUseCase.execute(DeleteGenreUseCase.Input(messagePayload.before?.id))
         } else {
-            genreGateway.genreOfId(messagePayload.after?.id)?.run {
+            genreClient.genreOfId(messagePayload.after?.id)?.run {
                 val input = SaveGenreUseCase.Input(id, name, isActive, categoriesId, createdAt, updatedAt, deletedAt)
                 saveGenreUseCase.execute(input)
             }

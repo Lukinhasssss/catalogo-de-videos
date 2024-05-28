@@ -1,6 +1,6 @@
 cache:
   type: cache2k
-  names: admin-categories, admin-genres
+  names: admin-categories, admin-genres, admin-videos
   max-entries: 200
   ttl: 60 # seconds
 
@@ -13,7 +13,7 @@ graphql:
 
 kafka:
   auto-create-topics: false
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   pool-timeout: 1_000
   consumers:
     categories:
@@ -37,6 +37,13 @@ kafka:
       topics: adm_videos_postgresql.public.genres
       group-id: catalogo-de-videos
       max-attempts: 4
+    videos:
+      auto-offset-reset: earliest
+      concurrency: 1
+      id: kafka-listener-videos
+      topics: adm_videos_postgresql.public.videos
+      group-id: catalogo-de-videos
+      max-attempts: 4
 
 keycloak:
   token-uri: /protocol/openid-connect/token
@@ -50,6 +57,9 @@ rest-client:
     read-timeout: 1_000
   genres:
     base-url: ${rest-client.base-url}/api/genres
+    read-timeout: 1_000
+  videos:
+    base-url: ${rest-client.base-url}/api/videos
     read-timeout: 1_000
 
 logging:
@@ -85,6 +95,8 @@ spring:
   graphql:
     graphiql:
       enabled: ${graphql.graphiql}
+  kafka:
+    bootstrap-servers: ${kafka.bootstrap-servers}
   servlet:
     multipart:
       max-file-size: 10GB
@@ -105,6 +117,8 @@ resilience4j.bulkhead:
     categories:
       baseConfig: default
     genres:
+      baseConfig: default
+    videos:
       baseConfig: default
 
 resilience4j.retry:
@@ -127,6 +141,8 @@ resilience4j.retry:
     categories:
       baseConfig: default
     genres:
+      baseConfig: default
+    videos:
       baseConfig: default
 
 resilience4j.circuitbreaker:
@@ -156,6 +172,8 @@ resilience4j.circuitbreaker:
     categories:
       baseConfig: default
     genres:
+      baseConfig: default
+    videos:
       baseConfig: default
 
 management:
