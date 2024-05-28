@@ -10,6 +10,9 @@ elasticsearch:
   username: elastic
   password: elastic
 
+kafka:
+  bootstrap-servers: localhost:9092
+
 keycloak:
   client-id: clientId
   client-secret: clientSecret
@@ -19,7 +22,7 @@ keycloak:
 rest-client:
   base-url: http://localhost:${wiremock.server.port:8001}
   keycloak:
-    read-timeout: 300
+    read-timeout: 1000
   categories:
     read-timeout: 300
   genres:
