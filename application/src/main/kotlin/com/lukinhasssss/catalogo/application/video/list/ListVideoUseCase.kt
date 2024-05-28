@@ -5,6 +5,7 @@ import com.lukinhasssss.catalogo.domain.pagination.Pagination
 import com.lukinhasssss.catalogo.domain.video.Video
 import com.lukinhasssss.catalogo.domain.video.VideoGateway
 import com.lukinhasssss.catalogo.domain.video.VideoSearchQuery
+import java.time.Instant
 
 class ListVideoUseCase(
     private val videoGateway: VideoGateway
@@ -33,8 +34,8 @@ class ListVideoUseCase(
         val terms: String,
         val sort: String,
         val direction: String,
-        val rating: String,
-        val launchedAt: Int,
+        val rating: String? = null,
+        val launchedAt: Int? = null,
         val categories: Set<String> = setOf(),
         val castMembers: Set<String> = setOf(),
         val genres: Set<String> = setOf()
@@ -44,17 +45,21 @@ class ListVideoUseCase(
         val id: String,
         val title: String,
         val description: String,
-        val published: Boolean,
-        val launchYear: Int,
+        val yearLaunched: Int,
         val rating: String,
+        val duration: Double,
+        val opened: Boolean,
+        val published: Boolean,
         val banner: String? = null,
         val thumbnail: String? = null,
         val thumbnailHalf: String? = null,
         val trailer: String? = null,
         val video: String? = null,
-        val categories: Set<String>,
-        val castMembers: Set<String>,
-        val genres: Set<String>
+        val categoriesId: Set<String>,
+        val castMembersId: Set<String>,
+        val genresId: Set<String>,
+        val createdAt: Instant,
+        val updatedAt: Instant
     ) {
         companion object {
             fun from(video: Video) = with(video) {
@@ -62,17 +67,21 @@ class ListVideoUseCase(
                     id = id,
                     title = title,
                     description = description,
-                    published = published,
-                    launchYear = launchedAt.value,
+                    yearLaunched = launchedAt.value,
                     rating = rating.name,
+                    duration = duration,
+                    opened = opened,
+                    published = published,
                     banner = banner,
                     thumbnail = thumbnail,
                     thumbnailHalf = thumbnailHalf,
                     trailer = trailer,
                     video = this.video,
-                    categories = categories,
-                    castMembers = castMembers,
-                    genres = genres
+                    categoriesId = categories,
+                    castMembersId = castMembers,
+                    genresId = genres,
+                    createdAt = createdAt,
+                    updatedAt = updatedAt
                 )
             }
         }

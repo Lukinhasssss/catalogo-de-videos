@@ -3,7 +3,7 @@ package com.lukinhasssss.catalogo.infrastructure.category.models
 import com.lukinhasssss.catalogo.domain.category.Category
 import java.time.Instant
 
-data class CategoryInput(
+data class GqlCategoryInput(
     val id: String,
     val name: String,
     val description: String? = null,

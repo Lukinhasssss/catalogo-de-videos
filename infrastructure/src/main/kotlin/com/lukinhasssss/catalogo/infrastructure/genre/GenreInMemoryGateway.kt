@@ -4,8 +4,11 @@ import com.lukinhasssss.catalogo.domain.genre.Genre
 import com.lukinhasssss.catalogo.domain.genre.GenreGateway
 import com.lukinhasssss.catalogo.domain.genre.GenreSearchQuery
 import com.lukinhasssss.catalogo.domain.pagination.Pagination
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
 
-// @Component
+@Component
+@Profile("development")
 class GenreInMemoryGateway(
     private val db: MutableMap<String, Genre> = mutableMapOf()
 ) : GenreGateway {
