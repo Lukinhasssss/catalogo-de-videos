@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Categories
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Genres
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Keycloak
+import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Videos
 import com.lukinhasssss.catalogo.infrastructure.configuration.properties.RestClientProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -56,6 +57,11 @@ class RestClientConfig {
     fun genreRestClientProperties() = RestClientProperties()
 
     @Bean
+    @ConfigurationProperties(prefix = "rest-client.videos")
+    @Videos
+    fun videoRestClientProperties() = RestClientProperties()
+
+    @Bean
     @Keycloak
     fun keycloakHttpClient(
         @Keycloak properties: RestClientProperties,
@@ -73,6 +79,13 @@ class RestClientConfig {
     @Genres
     fun genreHttpClient(
         @Genres properties: RestClientProperties,
+        objectMapper: ObjectMapper
+    ) = restClient(properties, objectMapper)
+
+    @Bean
+    @Videos
+    fun videoHttpClient(
+        @Videos properties: RestClientProperties,
         objectMapper: ObjectMapper
     ) = restClient(properties, objectMapper)
 }

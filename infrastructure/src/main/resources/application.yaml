@@ -1,6 +1,6 @@
 cache:
   type: cache2k
-  names: admin-categories, admin-genres
+  names: admin-categories, admin-genres, admin-videos
   max-entries: 200
   ttl: 60 # seconds
 
@@ -50,6 +50,9 @@ rest-client:
     read-timeout: 1_000
   genres:
     base-url: ${rest-client.base-url}/api/genres
+    read-timeout: 1_000
+  videos:
+    base-url: ${rest-client.base-url}/api/videos
     read-timeout: 1_000
 
 logging:
@@ -106,6 +109,8 @@ resilience4j.bulkhead:
       baseConfig: default
     genres:
       baseConfig: default
+    videos:
+      baseConfig: default
 
 resilience4j.retry:
   configs:
@@ -127,6 +132,8 @@ resilience4j.retry:
     categories:
       baseConfig: default
     genres:
+      baseConfig: default
+    videos:
       baseConfig: default
 
 resilience4j.circuitbreaker:
@@ -156,6 +163,8 @@ resilience4j.circuitbreaker:
     categories:
       baseConfig: default
     genres:
+      baseConfig: default
+    videos:
       baseConfig: default
 
 management:
