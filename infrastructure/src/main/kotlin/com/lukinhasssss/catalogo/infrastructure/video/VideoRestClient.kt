@@ -1,7 +1,6 @@
 package com.lukinhasssss.catalogo.infrastructure.video
 
 import com.lukinhasssss.catalogo.infrastructure.authentication.GetClientCredentials
-import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Keycloak
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Videos
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
 import com.lukinhasssss.catalogo.infrastructure.video.models.VideoDTO
@@ -14,7 +13,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
-private const val NAMESPACE = "videos"
 private const val VIDEO_CACHE_NAME = "admin-videos"
 private const val VIDEO_CACHE_KEY = "#videoId"
 
@@ -22,8 +20,12 @@ private const val VIDEO_CACHE_KEY = "#videoId"
 @CacheConfig(cacheNames = [VIDEO_CACHE_NAME])
 class VideoRestClient(
     @Videos private val restClient: RestClient,
-    @Keycloak private val getClientCredentials: GetClientCredentials
+    private val getClientCredentials: GetClientCredentials
 ) : VideoClient, HttpClient {
+
+    companion object {
+        const val NAMESPACE = "videos"
+    }
 
     override fun namespace(): String = NAMESPACE
 

@@ -25,7 +25,7 @@ import org.springframework.http.MediaType
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class CategoryRestGatewayTest : AbstractRestClientTest() {
+class CategoryRestClientTest : AbstractRestClientTest() {
 
     @Autowired
     lateinit var target: CategoryRestClient

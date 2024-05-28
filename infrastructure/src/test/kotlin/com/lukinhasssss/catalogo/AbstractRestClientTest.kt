@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.lukinhasssss.catalogo.infrastructure.category.CategoryRestClient
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
 import com.lukinhasssss.catalogo.infrastructure.genre.GenreRestClient
+import com.lukinhasssss.catalogo.infrastructure.video.VideoRestClient
 import io.github.resilience4j.bulkhead.BulkheadRegistry
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
@@ -30,6 +31,7 @@ abstract class AbstractRestClientTest {
     companion object {
         const val CATEGORY = CategoryRestClient.NAMESPACE
         const val GENRE = GenreRestClient.NAMESPACE
+        const val VIDEO = VideoRestClient.NAMESPACE
     }
 
     @Autowired
@@ -51,6 +53,7 @@ abstract class AbstractRestClientTest {
         resetAllCaches()
         listOf(CATEGORY).forEach { resetFaultTolerance(it) }
         listOf(GENRE).forEach { resetFaultTolerance(it) }
+        listOf(VIDEO).forEach { resetFaultTolerance(it) }
     }
 
     fun cache(name: String) = cacheManager.getCache(name)
