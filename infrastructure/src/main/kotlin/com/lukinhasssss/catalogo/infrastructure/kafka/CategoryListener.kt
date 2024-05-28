@@ -3,7 +3,7 @@ package com.lukinhasssss.catalogo.infrastructure.kafka
 import com.fasterxml.jackson.core.type.TypeReference
 import com.lukinhasssss.catalogo.application.category.delete.DeleteCategoryUseCase
 import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
-import com.lukinhasssss.catalogo.infrastructure.category.CategoryGateway
+import com.lukinhasssss.catalogo.infrastructure.category.CategoryClient
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryEvent
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CategoryListener(
-    private val categoryGateway: CategoryGateway,
+    private val categoryClient: CategoryClient,
     private val saveCategoryUseCase: SaveCategoryUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase
 ) {
@@ -52,7 +52,7 @@ class CategoryListener(
         if (Operation.isDelete(operation)) {
             deleteCategoryUseCase.execute(messagePayload.before?.id)
         } else {
-            categoryGateway.categoryOfId(messagePayload.after?.id).let {
+            categoryClient.categoryOfId(messagePayload.after?.id).let {
                 saveCategoryUseCase.execute(it)
             }
         }
@@ -68,7 +68,7 @@ class CategoryListener(
         if (Operation.isDelete(operation)) {
             deleteCategoryUseCase.execute(messagePayload.before?.id)
         } else {
-            categoryGateway.categoryOfId(messagePayload.after?.id).let {
+            categoryClient.categoryOfId(messagePayload.after?.id).let {
                 saveCategoryUseCase.execute(it)
             }
         }

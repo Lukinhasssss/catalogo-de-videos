@@ -28,7 +28,7 @@ import kotlin.test.assertNull
 class CategoryRestGatewayTest : AbstractRestClientTest() {
 
     @Autowired
-    lateinit var target: CategoryRestGateway
+    lateinit var target: CategoryRestClient
 
     @SpykBean
     lateinit var credentialsManager: ClientCredentialsManager

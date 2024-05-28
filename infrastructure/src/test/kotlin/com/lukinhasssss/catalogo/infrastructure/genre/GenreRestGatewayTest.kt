@@ -28,7 +28,7 @@ import kotlin.test.assertNull
 class GenreRestGatewayTest : AbstractRestClientTest() {
 
     @Autowired
-    lateinit var target: GenreRestGateway
+    lateinit var target: GenreRestClient
 
     @SpykBean
     lateinit var credentialsManager: ClientCredentialsManager

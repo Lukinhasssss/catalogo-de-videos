@@ -5,7 +5,7 @@ import com.lukinhasssss.catalogo.application.genre.delete.DeleteGenreUseCase
 import com.lukinhasssss.catalogo.application.genre.save.SaveGenreUseCase
 import com.lukinhasssss.catalogo.domain.Fixture.Genres.tech
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
-import com.lukinhasssss.catalogo.infrastructure.genre.GenreGateway
+import com.lukinhasssss.catalogo.infrastructure.genre.GenreClient
 import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreDTO
 import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreEvent
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
@@ -33,7 +33,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
     private lateinit var saveGenreUseCase: SaveGenreUseCase
 
     @MockkBean
-    private lateinit var genreGateway: GenreGateway
+    private lateinit var genreClient: GenreClient
 
     @SpykBean
     private lateinit var genreListener: GenreListener
@@ -122,7 +122,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { saveGenreUseCase.execute(any()) } answers { latch.countDown(); SaveGenreUseCase.Output(id) }
-            every { genreGateway.genreOfId(any()) } returns GenreDTO.from(this)
+            every { genreClient.genreOfId(any()) } returns GenreDTO.from(this)
 
             // when
             producer.send(ProducerRecord(genreTopics, message)).get(10, TimeUnit.SECONDS)
@@ -130,7 +130,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             assertTrue(latch.await(1, TimeUnit.MINUTES))
 
             // then
-            verify { genreGateway.genreOfId(id) }
+            verify { genreClient.genreOfId(id) }
             verify { saveGenreUseCase.execute(SaveGenreUseCase.Input(id, name, isActive, categories, createdAt, updatedAt, deletedAt)) }
         }
     }
@@ -146,7 +146,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { saveGenreUseCase.execute(any()) } answers { latch.countDown(); SaveGenreUseCase.Output(id) }
-            every { genreGateway.genreOfId(any()) } returns GenreDTO.from(this)
+            every { genreClient.genreOfId(any()) } returns GenreDTO.from(this)
 
             // when
             producer.send(ProducerRecord(genreTopics, message)).get(10, TimeUnit.SECONDS)
@@ -154,7 +154,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             assertTrue(latch.await(1, TimeUnit.MINUTES))
 
             // then
-            verify { genreGateway.genreOfId(id) }
+            verify { genreClient.genreOfId(id) }
             verify { saveGenreUseCase.execute(SaveGenreUseCase.Input(id, name, isActive, categories, createdAt, updatedAt, deletedAt)) }
         }
     }
@@ -170,7 +170,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             val latch = CountDownLatch(1)
 
             every { deleteGenreUseCase.execute(any()) } answers { latch.countDown() }
-            every { genreGateway.genreOfId(any()) } returns GenreDTO.from(this)
+            every { genreClient.genreOfId(any()) } returns GenreDTO.from(this)
 
             // when
             producer.send(ProducerRecord(genreTopics, message)).get(10, TimeUnit.SECONDS)

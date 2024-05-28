@@ -15,10 +15,10 @@ import org.springframework.web.client.RestClient
 
 @Component
 @CacheConfig(cacheNames = ["admin-genres"])
-class GenreRestGateway(
+class GenreRestClient(
     @Genres private val restClient: RestClient,
     private val getClientCredentials: GetClientCredentials
-) : GenreGateway, HttpClient {
+) : GenreClient, HttpClient {
 
     companion object {
         const val NAMESPACE = "genres"

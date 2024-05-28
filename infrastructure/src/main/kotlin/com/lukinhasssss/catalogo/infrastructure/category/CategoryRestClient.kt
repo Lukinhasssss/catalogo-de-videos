@@ -16,10 +16,10 @@ import org.springframework.web.client.RestClient
 
 @Component
 @CacheConfig(cacheNames = ["admin-categories"])
-class CategoryRestGateway(
+class CategoryRestClient(
     @Categories private val restClient: RestClient,
     private val getClientCredentials: GetClientCredentials
-) : CategoryGateway, HttpClient {
+) : CategoryClient, HttpClient {
 
     companion object {
         const val NAMESPACE = "categories"
