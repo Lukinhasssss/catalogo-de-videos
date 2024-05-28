@@ -4,7 +4,7 @@ import com.lukinhasssss.catalogo.AbstractEmbeddedKafkaTest
 import com.lukinhasssss.catalogo.application.category.delete.DeleteCategoryUseCase
 import com.lukinhasssss.catalogo.application.category.save.SaveCategoryUseCase
 import com.lukinhasssss.catalogo.domain.Fixture
-import com.lukinhasssss.catalogo.infrastructure.category.CategoryGateway
+import com.lukinhasssss.catalogo.infrastructure.category.CategoryClient
 import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryEvent
 import com.lukinhasssss.catalogo.infrastructure.configuration.json.Json
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.MessageValue
@@ -32,7 +32,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
     private lateinit var saveCategoryUseCase: SaveCategoryUseCase
 
     @MockkBean
-    private lateinit var categoryGateway: CategoryGateway
+    private lateinit var categoryClient: CategoryClient
 
     @SpykBean
     private lateinit var categoryListener: CategoryListener
@@ -117,7 +117,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         val latch = CountDownLatch(1)
 
         every { saveCategoryUseCase.execute(any()) } answers { latch.countDown(); aulas }
-        every { categoryGateway.categoryOfId(any()) } returns aulas
+        every { categoryClient.categoryOfId(any()) } returns aulas
 
         // when
         producer.send(ProducerRecord(categoryTopic, message)).get(10, TimeUnit.SECONDS)
@@ -125,7 +125,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         assertTrue(latch.await(1, TimeUnit.MINUTES))
 
         // then
-        verify { categoryGateway.categoryOfId(aulas.id) }
+        verify { categoryClient.categoryOfId(aulas.id) }
         verify { saveCategoryUseCase.execute(aulas) }
     }
 
@@ -140,7 +140,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         val latch = CountDownLatch(1)
 
         every { saveCategoryUseCase.execute(any()) } answers { latch.countDown(); aulas }
-        every { categoryGateway.categoryOfId(any()) } returns aulas
+        every { categoryClient.categoryOfId(any()) } returns aulas
 
         // when
         producer.send(ProducerRecord(categoryTopic, message)).get(10, TimeUnit.SECONDS)
@@ -148,7 +148,7 @@ class CategoryListenerTest : AbstractEmbeddedKafkaTest() {
         assertTrue(latch.await(1, TimeUnit.MINUTES))
 
         // then
-        verify { categoryGateway.categoryOfId(aulas.id) }
+        verify { categoryClient.categoryOfId(aulas.id) }
         verify { saveCategoryUseCase.execute(aulas) }
     }
 

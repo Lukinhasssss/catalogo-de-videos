@@ -1,8 +1,9 @@
-package com.lukinhasssss.catalogo.infrastructure.genre
+package com.lukinhasssss.catalogo.infrastructure.category
 
+import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.infrastructure.authentication.GetClientCredentials
-import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Genres
-import com.lukinhasssss.catalogo.infrastructure.genre.models.GenreDTO
+import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
+import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Categories
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
@@ -14,32 +15,33 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
 @Component
-@CacheConfig(cacheNames = ["admin-genres"])
-class GenreRestGateway(
-    @Genres private val restClient: RestClient,
+@CacheConfig(cacheNames = ["admin-categories"])
+class CategoryRestClient(
+    @Categories private val restClient: RestClient,
     private val getClientCredentials: GetClientCredentials
-) : GenreGateway, HttpClient {
+) : CategoryClient, HttpClient {
 
     companion object {
-        const val NAMESPACE = "genres"
+        const val NAMESPACE = "categories"
     }
+
+    override fun namespace(): String = NAMESPACE
 
     // Resilience4j default order: Bulkhead -> TimeLimiter -> RateLimiter -> CircuitBreaker -> Retry
     @Retry(name = NAMESPACE)
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
-    @Cacheable(key = "#genreId")
-    override fun genreOfId(genreId: String?): GenreDTO? = doGet(genreId) {
+    @Cacheable(key = "#categoryId")
+    override fun categoryOfId(categoryId: String?): Category? = doGet(categoryId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
-                .uri("/{id}", genreId)
+                .uri("/{id}", categoryId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
                 .retrieve()
-                .onStatus(isNotFound(), notFoundHandler(genreId))
-                .onStatus(is5xx(), serverErrorHandler(genreId))
-                .body(GenreDTO::class.java)
+                .onStatus(isNotFound(), notFoundHandler(categoryId))
+                .onStatus(is5xx(), serverErrorHandler(categoryId))
+                .body(CategoryDTO::class.java)
+                ?.toCategory()
         }
     }
-
-    override fun namespace() = NAMESPACE
 }

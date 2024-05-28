@@ -1,10 +1,9 @@
-package com.lukinhasssss.catalogo.infrastructure.category
+package com.lukinhasssss.catalogo.infrastructure.video
 
-import com.lukinhasssss.catalogo.domain.category.Category
 import com.lukinhasssss.catalogo.infrastructure.authentication.GetClientCredentials
-import com.lukinhasssss.catalogo.infrastructure.category.models.CategoryDTO
-import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Categories
+import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Videos
 import com.lukinhasssss.catalogo.infrastructure.utils.HttpClient
+import com.lukinhasssss.catalogo.infrastructure.video.models.VideoDTO
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.github.resilience4j.retry.annotation.Retry
@@ -14,15 +13,18 @@ import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 
+private const val VIDEO_CACHE_NAME = "admin-videos"
+private const val VIDEO_CACHE_KEY = "#videoId"
+
 @Component
-@CacheConfig(cacheNames = ["admin-categories"])
-class CategoryRestGateway(
-    @Categories private val restClient: RestClient,
+@CacheConfig(cacheNames = [VIDEO_CACHE_NAME])
+class VideoRestClient(
+    @Videos private val restClient: RestClient,
     private val getClientCredentials: GetClientCredentials
-) : CategoryGateway, HttpClient {
+) : VideoClient, HttpClient {
 
     companion object {
-        const val NAMESPACE = "categories"
+        const val NAMESPACE = "videos"
     }
 
     override fun namespace(): String = NAMESPACE
@@ -31,17 +33,16 @@ class CategoryRestGateway(
     @Retry(name = NAMESPACE)
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
-    @Cacheable(key = "#categoryId")
-    override fun categoryOfId(categoryId: String?): Category? = doGet(categoryId) {
+    @Cacheable(key = VIDEO_CACHE_KEY, unless = "#result == null")
+    override fun videoOfId(videoId: String?): VideoDTO? = doGet(videoId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
-                .uri("/{id}", categoryId)
+                .uri("/{id}", videoId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
                 .retrieve()
-                .onStatus(isNotFound(), notFoundHandler(categoryId))
-                .onStatus(is5xx(), serverErrorHandler(categoryId))
-                .body(CategoryDTO::class.java)
-                ?.toCategory()
+                .onStatus(isNotFound(), notFoundHandler(videoId))
+                .onStatus(is5xx(), serverErrorHandler(videoId))
+                .body(VideoDTO::class.java)
         }
     }
 }

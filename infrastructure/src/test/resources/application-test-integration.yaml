@@ -20,6 +20,8 @@ rest-client:
     read-timeout: 300
   genres:
     read-timeout: 300
+  videos:
+    read-timeout: 300
 
 resilience4j.retry:
   configs:
