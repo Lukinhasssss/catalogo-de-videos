@@ -27,10 +27,6 @@ class SecurityConfig {
 
     companion object {
         private const val ROLE_ADMIN = "CATALOGO_ADMIN"
-        private const val ROLE_CAST_MEMBERS = "CATALOGO_CAST_MEMBERS"
-        private const val ROLE_CATEGORIES = "CATALOGO_CATEGORIES"
-        private const val ROLE_GENRES = "CATALOGO_GENRES"
-        private const val ROLE_VIDEOS = "CATALOGO_VIDEOS"
 
         private const val REALM_ACCESS = "realm_access"
         private const val RESOURCE_ACCESS = "resource_access"
@@ -46,11 +42,8 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests {
                 it.requestMatchers("/actuator/**").permitAll()
-                it.requestMatchers("/cast_members/**").hasAnyRole(ROLE_ADMIN, ROLE_CAST_MEMBERS)
-                it.requestMatchers("/categories/**").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIES)
-                it.requestMatchers("/genres/**").hasAnyRole(ROLE_ADMIN, ROLE_GENRES)
-                it.requestMatchers("/videos/**").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS)
-                it.anyRequest().hasAuthority("ROLE_ADMIN")
+                it.requestMatchers("/graphql", "graphiql").permitAll()
+                it.anyRequest().hasRole(ROLE_ADMIN)
             }
             .oauth2ResourceServer {
                 it.jwt { jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(KeycloakJwtConverter()) }
