@@ -20,4 +20,7 @@ class IntegrationTestConfiguration {
 
     @Bean
     fun videoRepository() = mockk<VideoRepository>()
+
+    @Bean
+    fun webGraphQlSecurityInterceptor() = WebGraphQlSecurityInterceptor()
 }
