@@ -6,9 +6,11 @@ import com.lukinhasssss.catalogo.domain.category.CategorySearchQuery
 import com.lukinhasssss.catalogo.infrastructure.category.GqlCategoryPresenter
 import com.lukinhasssss.catalogo.infrastructure.category.models.GqlCategory
 import com.lukinhasssss.catalogo.infrastructure.category.models.GqlCategoryInput
+import com.lukinhasssss.catalogo.infrastructure.configuration.security.Roles
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.security.access.annotation.Secured
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -18,6 +20,7 @@ class CategoryGraphQLController(
 ) {
 
     @QueryMapping
+    @Secured(Roles.ADMIN, Roles.CATEGORIES, Roles.SUBSCRIBER)
     fun categories(
         @Argument search: String,
         @Argument page: Int,
@@ -37,6 +40,7 @@ class CategoryGraphQLController(
     }
 
     @MutationMapping
+    @Secured(Roles.ADMIN, Roles.CATEGORIES, Roles.SUBSCRIBER)
     fun saveCategory(@Argument input: GqlCategoryInput): GqlCategory =
         GqlCategoryPresenter.present(saveCategoryUseCase.execute(input.toCategory()))
 }
