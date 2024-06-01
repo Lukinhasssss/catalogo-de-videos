@@ -104,8 +104,8 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(expectedCategories, categories)
             assertEquals(expectedCastMembers, castMembers)
             assertEquals(expectedGenres, genres)
-            assertEquals(expectedCreatedAt.toString(), createdAt)
-            assertEquals(expectedUpdatedAt.toString(), updatedAt)
+            assertEquals(expectedCreatedAt, createdAt)
+            assertEquals(expectedUpdatedAt, updatedAt)
         }
     }
 
@@ -155,8 +155,8 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
             assertEquals(expectedRating.name, rating)
             assertEquals(expectedOpened, opened)
             assertEquals(expectedPublished, published)
-            assertEquals(expectedCreatedAt.toString(), createdAt)
-            assertEquals(expectedUpdatedAt.toString(), updatedAt)
+            assertEquals(expectedCreatedAt, createdAt)
+            assertEquals(expectedUpdatedAt, updatedAt)
         }
     }
 

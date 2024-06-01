@@ -7,7 +7,7 @@ import org.springframework.http.client.observation.ClientRequestObservationConve
 class RestClientObservationConfig : ClientRequestObservationConvention {
 
     override fun getName(): String {
-        // will be used as the metric name
+        // will be used as the metric name the default is "http_client_requests_seconds"
         return "rest_client"
     }
 
@@ -48,3 +48,12 @@ class RestClientObservationConfig : ClientRequestObservationConvention {
         return super.getHighCardinalityKeyValues(context)
     }
 }
+
+/**
+ * Por padrão, as métricas serão geradas no seguinte formato:
+ *
+ * http_client_requests_seconds_count{application="catalogo-de-videos",client_name="localhost",error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/categories/{id}",} 1.0
+ *
+ * Obs: O 'client_name' é o host da URI e a 'uri' é o que vem depois do host. O valor da 'uri' será o valor que foi definido na chamada do Rest Client
+ *      enquanto o 'client_name' é a base_url que foi definida no RestClient.builder().baseUrl(baseUrl).
+ */

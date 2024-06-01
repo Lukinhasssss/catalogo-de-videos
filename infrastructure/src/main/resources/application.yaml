@@ -53,13 +53,13 @@ rest-client:
     base-url: ${keycloak.host}/realms/${keycloak.realm}
     read-timeout: 1_000
   categories:
-    base-url: ${rest-client.base-url}/api/categories
+    base-url: ${rest-client.base-url}/api
     read-timeout: 1_000
   genres:
-    base-url: ${rest-client.base-url}/api/genres
+    base-url: ${rest-client.base-url}/api
     read-timeout: 1_000
   videos:
-    base-url: ${rest-client.base-url}/api/videos
+    base-url: ${rest-client.base-url}/api
     read-timeout: 1_000
 
 logging:

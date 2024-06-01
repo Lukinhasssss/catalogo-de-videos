@@ -37,7 +37,7 @@ class VideoRestClient(
     override fun videoOfId(videoId: String?): VideoDTO? = doGet(videoId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
-                .uri("/{id}", videoId)
+                .uri("/videos/{id}", videoId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
                 .retrieve()
                 .onStatus(isNotFound(), notFoundHandler(videoId))

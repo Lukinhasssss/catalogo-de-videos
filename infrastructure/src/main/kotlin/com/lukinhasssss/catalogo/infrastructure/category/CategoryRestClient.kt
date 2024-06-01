@@ -35,7 +35,7 @@ class CategoryRestClient(
     override fun categoryOfId(categoryId: String?): Category? = doGet(categoryId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
-                .uri("/{id}", categoryId)
+                .uri("/categories/{id}", categoryId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
                 .retrieve()
                 .onStatus(isNotFound(), notFoundHandler(categoryId))

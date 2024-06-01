@@ -37,7 +37,7 @@ class RestClientConfig {
                     converters.add(FormHttpMessageConverter())
                 }
                 .observationRegistry(observationRegistry)
-                .observationConvention(RestClientObservationConfig())
+                // .observationConvention(RestClientObservationConfig())
                 .build()
         }
 
