@@ -2,6 +2,7 @@ package com.lukinhasssss.catalogo
 
 import com.lukinhasssss.catalogo.infrastructure.configuration.WebServerConfig
 import com.lukinhasssss.catalogo.infrastructure.kafka.models.connect.Source
+import io.mockk.clearAllMocks
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.producer.Producer
@@ -40,6 +41,7 @@ abstract class AbstractEmbeddedKafkaTest {
 
     @BeforeAll
     fun init() {
+        clearAllMocks()
         admin = AdminClient.create(mapOf(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaBroker.brokersAsString))
         producer = DefaultKafkaProducerFactory(KafkaTestUtils.producerProps(kafkaBroker), StringSerializer(), StringSerializer()).createProducer()
     }
@@ -47,9 +49,9 @@ abstract class AbstractEmbeddedKafkaTest {
     @AfterAll
     fun shutdown() = producer.close()
 
-    protected val source = Source(
+    protected fun source(tableName: String) = Source(
         name = "adm_videos_postgresql",
         database = "adm_videos",
-        table = "categories"
+        table = tableName
     )
 }

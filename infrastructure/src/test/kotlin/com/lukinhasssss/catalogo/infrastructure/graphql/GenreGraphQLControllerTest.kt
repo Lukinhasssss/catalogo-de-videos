@@ -166,7 +166,7 @@ class GenreGraphQLControllerTest {
         val input = mapOf(
             "id" to expectedId,
             "name" to expectedName,
-            "active" to expectedIsActive.toString(),
+            "active" to expectedIsActive,
             "categories" to expectedCategories,
             "createdAt" to expectedCreatedAt.toString(),
             "updatedAt" to expectedUpdatedAt.toString(),
@@ -219,7 +219,7 @@ class GenreGraphQLControllerTest {
         val input = mapOf(
             "id" to expectedId,
             "name" to expectedName,
-            "active" to expectedIsActive.toString(),
+            "active" to expectedIsActive,
             "categories" to expectedCategories,
             "createdAt" to expectedCreatedAt.toString(),
             "updatedAt" to expectedUpdatedAt.toString()

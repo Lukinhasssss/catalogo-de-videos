@@ -77,7 +77,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
         val tech = tech()
         val techEvent = GenreEvent(tech.id)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, techEvent, source, Operation.DELETE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, techEvent, source("genres"), Operation.DELETE)))
 
         val latch = CountDownLatch(5)
 
@@ -117,7 +117,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val techEvent = GenreEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(null, techEvent, source, Operation.CREATE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(null, techEvent, source("genres"), Operation.CREATE)))
 
             val latch = CountDownLatch(1)
 
@@ -141,7 +141,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val techEvent = GenreEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, techEvent, source, Operation.UPDATE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, techEvent, source("genres"), Operation.UPDATE)))
 
             val latch = CountDownLatch(1)
 
@@ -165,7 +165,7 @@ class GenreListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val techEvent = GenreEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, null, source, Operation.DELETE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(techEvent, null, source("genres"), Operation.DELETE)))
 
             val latch = CountDownLatch(1)
 
