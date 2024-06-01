@@ -230,8 +230,8 @@ class VideoElasticsearchGatewayTest : AbstractElasticsearchTest() {
                 categories = expectedCategories,
                 castMembers = expectedCastMembers,
                 genres = expectedGenres,
-                createdAt = expectedCreatedAt.toString(),
-                updatedAt = expectedUpdatedAt.toString()
+                createdAt = expectedCreatedAt,
+                updatedAt = expectedUpdatedAt
             )
         )
 

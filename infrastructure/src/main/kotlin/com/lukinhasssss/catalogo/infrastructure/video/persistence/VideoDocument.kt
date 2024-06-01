@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
 import org.springframework.data.elasticsearch.annotations.InnerField
 import org.springframework.data.elasticsearch.annotations.MultiField
+import java.time.Instant
 
 @Document(indexName = "videos")
 data class VideoDocument(
@@ -63,10 +64,10 @@ data class VideoDocument(
     val genres: Set<String> = setOf(),
 
     @Field(type = FieldType.Date, name = "created_at")
-    val createdAt: String,
+    val createdAt: Instant,
 
     @Field(type = FieldType.Date, name = "updated_at")
-    val updatedAt: String
+    val updatedAt: Instant
 ) {
 
     companion object {
@@ -88,8 +89,8 @@ data class VideoDocument(
                 categories = categories,
                 castMembers = castMembers,
                 genres = genres,
-                createdAt = createdAt.toString(),
-                updatedAt = updatedAt.toString()
+                createdAt = createdAt,
+                updatedAt = updatedAt
             )
         }
     }
@@ -111,7 +112,7 @@ data class VideoDocument(
         categories = categories,
         castMembers = castMembers,
         genres = genres,
-        createdAt = createdAt,
-        updatedAt = updatedAt
+        createdAt = createdAt.toString(),
+        updatedAt = updatedAt.toString()
     )
 }
