@@ -6,6 +6,7 @@ import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Genres
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Keycloak
 import com.lukinhasssss.catalogo.infrastructure.configuration.annotations.Videos
 import com.lukinhasssss.catalogo.infrastructure.configuration.properties.RestClientProperties
+import io.micrometer.observation.ObservationRegistry
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,7 +20,11 @@ import org.springframework.web.client.RestClient
 class RestClientConfig {
 
     companion object {
-        fun restClient(properties: RestClientProperties, objectMapper: ObjectMapper) = with(properties) {
+        fun restClient(
+            properties: RestClientProperties,
+            objectMapper: ObjectMapper,
+            observationRegistry: ObservationRegistry
+        ) = with(properties) {
             val factory = JdkClientHttpRequestFactory()
             factory.setReadTimeout(readTimeout)
 
@@ -31,6 +36,8 @@ class RestClientConfig {
                     converters.add(jsonConverter(objectMapper))
                     converters.add(FormHttpMessageConverter())
                 }
+                .observationRegistry(observationRegistry)
+                .observationConvention(RestClientObservationConfig())
                 .build()
         }
 
@@ -65,27 +72,31 @@ class RestClientConfig {
     @Keycloak
     fun keycloakHttpClient(
         @Keycloak properties: RestClientProperties,
-        objectMapper: ObjectMapper
-    ) = restClient(properties, objectMapper)
+        objectMapper: ObjectMapper,
+        observationRegistry: ObservationRegistry
+    ) = restClient(properties, objectMapper, observationRegistry)
 
     @Bean
     @Categories
     fun categoryHttpClient(
         @Categories properties: RestClientProperties,
-        objectMapper: ObjectMapper
-    ) = restClient(properties, objectMapper)
+        objectMapper: ObjectMapper,
+        observationRegistry: ObservationRegistry
+    ) = restClient(properties, objectMapper, observationRegistry)
 
     @Bean
     @Genres
     fun genreHttpClient(
         @Genres properties: RestClientProperties,
-        objectMapper: ObjectMapper
-    ) = restClient(properties, objectMapper)
+        objectMapper: ObjectMapper,
+        observationRegistry: ObservationRegistry
+    ) = restClient(properties, objectMapper, observationRegistry)
 
     @Bean
     @Videos
     fun videoHttpClient(
         @Videos properties: RestClientProperties,
-        objectMapper: ObjectMapper
-    ) = restClient(properties, objectMapper)
+        objectMapper: ObjectMapper,
+        observationRegistry: ObservationRegistry
+    ) = restClient(properties, objectMapper, observationRegistry)
 }
