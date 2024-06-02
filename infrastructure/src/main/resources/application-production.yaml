@@ -12,7 +12,7 @@ keycloak:
 rest-client:
   base-url: ${BASE_URL}
   keycloak:
-    read-timeout: 1_000
+    read-timeout: 5_000
 
 kafka:
   bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}

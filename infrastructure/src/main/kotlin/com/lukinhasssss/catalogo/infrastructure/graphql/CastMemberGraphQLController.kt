@@ -6,9 +6,11 @@ import com.lukinhasssss.catalogo.domain.castmember.CastMemberSearchQuery
 import com.lukinhasssss.catalogo.infrastructure.castmember.GqlCastMemberPresenter
 import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMember
 import com.lukinhasssss.catalogo.infrastructure.castmember.models.GqlCastMemberInput
+import com.lukinhasssss.catalogo.infrastructure.configuration.security.Roles
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.security.access.annotation.Secured
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -18,6 +20,7 @@ class CastMemberGraphQLController(
 ) {
 
     @QueryMapping
+    @Secured(Roles.ADMIN, Roles.CAST_MEMBERS, Roles.SUBSCRIBER)
     fun castMembers(
         @Argument search: String,
         @Argument page: Int,
@@ -37,6 +40,7 @@ class CastMemberGraphQLController(
     }
 
     @MutationMapping
+    @Secured(Roles.ADMIN, Roles.CAST_MEMBERS, Roles.SUBSCRIBER)
     fun saveCastMember(@Argument input: GqlCastMemberInput): GqlCastMember =
         GqlCastMemberPresenter.present(saveCastMemberUseCase.execute(input.toCastMember()))
 }

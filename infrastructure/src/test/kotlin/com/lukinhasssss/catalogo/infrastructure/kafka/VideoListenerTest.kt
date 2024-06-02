@@ -81,7 +81,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
         val cleanCode = cleanCode()
         val cleanCodeEvent = VideoEvent(cleanCode.id)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, cleanCodeEvent, source, Operation.DELETE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, cleanCodeEvent, source("videos"), Operation.DELETE)))
 
         val latch = CountDownLatch(5)
 
@@ -121,7 +121,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val cleanCodeEvent = VideoEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(null, cleanCodeEvent, source, Operation.CREATE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(null, cleanCodeEvent, source("videos"), Operation.CREATE)))
 
             val latch = CountDownLatch(1)
 
@@ -168,7 +168,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val cleanCodeEvent = VideoEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, cleanCodeEvent, source, Operation.UPDATE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, cleanCodeEvent, source("videos"), Operation.UPDATE)))
 
             val latch = CountDownLatch(1)
 
@@ -215,7 +215,7 @@ class VideoListenerTest : AbstractEmbeddedKafkaTest() {
             // given
             val cleanCodeEvent = VideoEvent(id)
 
-            val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, null, source, Operation.DELETE)))
+            val message = Json.writeValueAsString(MessageValue(ValuePayload(cleanCodeEvent, null, source("videos"), Operation.DELETE)))
 
             val latch = CountDownLatch(1)
 

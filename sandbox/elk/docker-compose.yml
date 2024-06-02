@@ -3,12 +3,12 @@ version: '3.9'
 name: elasticsearch-catalogo-de-videos
 
 services:
-  elasticsearch-codeflix:
+  elasticsearch-catalogo-de-videos:
     container_name: elasticsearch-catalogo-de-videos
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
     restart: on-failure
     volumes:
-      - elasticsearch-codeflix:/usr/share/elasticsearch/data
+      - elasticsearch-catalogo-de-videos:/usr/share/elasticsearch/data
     environment:
       - cluster.name=codeflix
       - discovery.type=single-node
@@ -32,12 +32,12 @@ services:
       - "9200:9200"
       - "9300:9300"
     networks:
-      - elasticsearch-codeflix
+      - elasticsearch-catalogo-de-videos
 
 networks:
-  elasticsearch-codeflix:
+  elasticsearch-catalogo-de-videos:
     external: true
 
 volumes:
-  elasticsearch-codeflix:
+  elasticsearch-catalogo-de-videos:
     external: true

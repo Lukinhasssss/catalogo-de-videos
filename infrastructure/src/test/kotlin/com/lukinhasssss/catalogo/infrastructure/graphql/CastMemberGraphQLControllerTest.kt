@@ -157,9 +157,9 @@ class CastMemberGraphQLControllerTest {
         val input = mapOf(
             "id" to expectedId,
             "name" to expectedName,
-            "type" to expectedType,
-            "createdAt" to expectedCreatedAt,
-            "updatedAt" to expectedUpdatedAt
+            "type" to expectedType.name,
+            "createdAt" to expectedCreatedAt.toString(),
+            "updatedAt" to expectedUpdatedAt.toString()
         )
 
         val query = """
