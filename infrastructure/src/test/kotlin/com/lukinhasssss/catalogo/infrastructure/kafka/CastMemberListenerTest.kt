@@ -72,7 +72,7 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         val nami = Fixture.CastMembers.nami()
         val namiEvent = CastMemberEvent.from(nami)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, namiEvent, source, Operation.DELETE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, namiEvent, source("cast_members"), Operation.DELETE)))
 
         val latch = CountDownLatch(5)
 
@@ -112,7 +112,7 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         val nami = Fixture.CastMembers.nami()
         val namiEvent = CastMemberEvent.from(nami)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(null, namiEvent, source, Operation.CREATE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(null, namiEvent, source("cast_members"), Operation.CREATE)))
 
         val latch = CountDownLatch(1)
 
@@ -134,7 +134,7 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         val nami = Fixture.CastMembers.nami()
         val namiEvent = CastMemberEvent.from(nami)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, namiEvent, source, Operation.UPDATE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, namiEvent, source("cast_members"), Operation.UPDATE)))
 
         val latch = CountDownLatch(1)
 
@@ -156,7 +156,7 @@ class CastMemberListenerTest : AbstractEmbeddedKafkaTest() {
         val nami = Fixture.CastMembers.nami()
         val namiEvent = CastMemberEvent.from(nami)
 
-        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, null, source, Operation.DELETE)))
+        val message = Json.writeValueAsString(MessageValue(ValuePayload(namiEvent, null, source("cast_members"), Operation.DELETE)))
 
         val latch = CountDownLatch(1)
 

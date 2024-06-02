@@ -4,12 +4,12 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
       <env name="KEYCLOAK_CLIENT_ID" value="admin-do-catalogo" />
-      <env name="KEYCLOAK_CLIENT_SECRET" value="Td5scdSINqzhib0ket0UFUnvEPP6KAal" />
+      <env name="KEYCLOAK_CLIENT_SECRET" value="AMs8T4dChEF5KCgRZiYP2nAsQVgm4MUy" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="com.lukinhasssss.catalogo.infrastructure.CatalogoDeVideosKt" />
     <module name="catalogo-de-videos.infrastructure.main" />
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=development" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=sandbox" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

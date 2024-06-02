@@ -155,9 +155,9 @@ class CategoryGraphQLControllerTest {
             "name" to expectedName,
             "description" to expectedDescription,
             "active" to expectedIsActive,
-            "createdAt" to expectedCreatedAt,
-            "updatedAt" to expectedUpdatedAt,
-            "deletedAt" to expectedDeletedAt
+            "createdAt" to expectedCreatedAt.toString(),
+            "updatedAt" to expectedUpdatedAt.toString(),
+            "deletedAt" to expectedDeletedAt.toString()
         )
 
         val query = """

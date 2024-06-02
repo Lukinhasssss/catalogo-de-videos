@@ -32,7 +32,7 @@ class GenreRestClient(
     override fun genreOfId(genreId: String?): GenreDTO? = doGet(genreId) {
         getClientCredentials.retrieve().let { token ->
             restClient.get()
-                .uri("/{id}", genreId)
+                .uri("/genres/{id}", genreId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
                 .retrieve()
                 .onStatus(isNotFound(), notFoundHandler(genreId))
